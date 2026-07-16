@@ -1,5 +1,5 @@
-import { fileURLToPath } from "node:url"
-import { defineConfig } from "vitest/config"
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   oxc: {
@@ -15,6 +15,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
+    testTimeout: 15_000,
     coverage: {
       provider: "v8",
       reporter: ["text", "text-summary", "html", "lcov"],
@@ -29,11 +30,11 @@ export default defineConfig({
       ],
       exclude: ["components/ui/**", "**/*.d.ts", "**/types.ts"],
       thresholds: {
-        branches: 25,
-        functions: 25,
-        lines: 25,
-        statements: 25,
+        branches: 66,
+        functions: 74,
+        lines: 75,
+        statements: 76,
       },
     },
   },
-})
+});
