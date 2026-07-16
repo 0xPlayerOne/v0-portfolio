@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
-import { useState, useCallback, memo, useMemo } from "react"
-import { NAV_BG_COLOR, NAV_BORDER_COLOR, NAV_TEXT_COLOR, NAV_HOVER_COLOR } from "@/constants/colors"
-import { smoothScrollToSection } from "@/lib/smooth-scroll"
-import { NAVIGATION_SECTIONS } from "@/constants/navigation"
-import { cn } from "@/lib/utils"
+import { useState, useCallback, memo, useMemo } from 'react'
+import { NAV_BG_COLOR, NAV_BORDER_COLOR, NAV_TEXT_COLOR, NAV_HOVER_COLOR } from '@/constants/colors'
+import { smoothScrollToSection } from '@/lib/smooth-scroll'
+import { NAVIGATION_SECTIONS } from '@/constants/navigation'
+import { cn } from '@/lib/utils'
 
 interface RetroNavbarProps {
   height: number
@@ -20,7 +20,7 @@ const NavItem = memo(function NavItem({
   onHover,
   hoveredItem,
 }: {
-  item: typeof NAVIGATION_SECTIONS[number]
+  item: (typeof NAVIGATION_SECTIONS)[number]
   isActive: boolean
   height: number
   onHover: (id: string | null) => void
@@ -42,20 +42,20 @@ const NavItem = memo(function NavItem({
       <button
         onClick={handleClick}
         className={cn(
-          "transition-colors block whitespace-nowrap px-1 sm:px-2",
-          "font-pixel leading-none py-2.5"
+          'block whitespace-nowrap px-1 transition-colors sm:px-2',
+          'font-pixel py-2.5 leading-none'
         )}
         style={{
           color: isHovered ? NAV_HOVER_COLOR : NAV_TEXT_COLOR,
-          borderColor: isActive ? NAV_BORDER_COLOR : "transparent",
-          borderBottomWidth: "1px",
-          borderBottomStyle: "solid",
-          padding: "10px 0",
-          margin: "0",
-          verticalAlign: "baseline",
-          textRendering: "optimizeSpeed",
-          WebkitFontSmoothing: "none",
-          MozOsxFontSmoothing: "unset",
+          borderColor: isActive ? NAV_BORDER_COLOR : 'transparent',
+          borderBottomWidth: '1px',
+          borderBottomStyle: 'solid',
+          padding: '10px 0',
+          margin: '0',
+          verticalAlign: 'baseline',
+          textRendering: 'optimizeSpeed',
+          WebkitFontSmoothing: 'none',
+          MozOsxFontSmoothing: 'unset',
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -67,31 +67,31 @@ const NavItem = memo(function NavItem({
 })
 
 // Memoize the entire navbar component
-export const RetroNavbar = memo(function RetroNavbar({ 
-  height = 100, 
-  isSticky = false, 
-  activeSection = "" 
+export const RetroNavbar = memo(function RetroNavbar({
+  height = 100,
+  isSticky = false,
+  activeSection = '',
 }: RetroNavbarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   // Memoize the nav style to prevent recreation on each render
-  const navStyle = useMemo(() => ({
-    height: `${height}px`,
-    backgroundColor: isSticky ? `${NAV_BG_COLOR}f8` : NAV_BG_COLOR,
-    boxShadow: `0 0 0 1px ${NAV_BORDER_COLOR}, 0 0 10px ${NAV_BORDER_COLOR}60`,
-    backdropFilter: isSticky ? "blur(4px)" : "none",
-    WebkitBackdropFilter: isSticky ? "blur(4px)" : "none",
-    display: "flex",
-    marginTop: "1px",
-  }), [height, isSticky])
+  const navStyle = useMemo(
+    () => ({
+      height: `${height}px`,
+      backgroundColor: isSticky ? `${NAV_BG_COLOR}f8` : NAV_BG_COLOR,
+      boxShadow: `0 0 0 1px ${NAV_BORDER_COLOR}, 0 0 10px ${NAV_BORDER_COLOR}60`,
+      backdropFilter: isSticky ? 'blur(4px)' : 'none',
+      WebkitBackdropFilter: isSticky ? 'blur(4px)' : 'none',
+      display: 'flex',
+      marginTop: '1px',
+    }),
+    [height, isSticky]
+  )
 
   return (
-    <nav
-      className="flex items-center border-0"
-      style={navStyle}
-    >
-      <div className="container mx-auto px-2 sm:px-4 w-full">
-        <ul className="flex justify-evenly sm:justify-center space-x-2 sm:space-x-4 md:space-x-6 lg:space-x-8 font-['Press_Start_2P'] text-xs sm:text-sm md:text-base lg:text-lg">
+    <nav className="flex items-center border-0" style={navStyle}>
+      <div className="container mx-auto w-full px-2 sm:px-4">
+        <ul className="flex justify-evenly space-x-2 font-['Press_Start_2P'] text-xs sm:justify-center sm:space-x-4 sm:text-sm md:space-x-6 md:text-base lg:space-x-8 lg:text-lg">
           {NAVIGATION_SECTIONS.map((item) => (
             <NavItem
               key={item.id}

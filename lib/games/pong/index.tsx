@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { useEffect, useRef, useCallback } from "react"
-import type { GameState, PongColors } from "./types"
-import { createGame, updateGame } from "./game"
-import { render } from "./renderer"
+import { useEffect, useRef, useCallback } from 'react'
+import type { GameState, PongColors } from './types'
+import { createGame, updateGame } from './game'
+import { render } from './renderer'
 
-export type { PongColors } from "./types"
+export type { PongColors } from './types'
 
 interface PongGameProps {
   navbarHeight: number
@@ -40,7 +40,7 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const ctx = canvas.getContext("2d", { alpha: false }) // Optimize by disabling alpha
+    const ctx = canvas.getContext('2d', { alpha: false }) // Optimize by disabling alpha
     if (!ctx) return
 
     // Initial resize
@@ -63,18 +63,18 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
     }
     loop()
 
-    window.addEventListener("resize", handleResize)
+    window.addEventListener('resize', handleResize)
     return () => {
       cancelAnimationFrame(animationIdRef.current)
       clearTimeout(resizeTimeout)
-      window.removeEventListener("resize", handleResize)
+      window.removeEventListener('resize', handleResize)
     }
   }, [resize])
 
   return (
     <canvas
       ref={canvasRef}
-      className={`w-full h-full block ${className || ""}`}
+      className={`block h-full w-full ${className || ''}`}
       aria-label="Retro pong header with pixel art"
     />
   )

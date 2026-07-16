@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config';
-import path from 'node:path';
+import { defineConfig } from 'vitest/config'
+import path from 'node:path'
 
 export default defineConfig({
   resolve: {
@@ -12,4 +12,4 @@ export default defineConfig({
     include: ['lib/**/*.test.ts', 'lib/**/*.test.tsx'],
     globals: true,
   },
-});
+})

@@ -1,10 +1,10 @@
 // ===== BASE COLORS =====
-const BG = "#18161a" // Modern black with grey undertone
-const NEON_GREEN = "#33FF33" // Bright, vivid green
-const DARK_NEON_GREEN = "#226622" // Darker green with glow
-const LIGHT_GREEN = "#90EE90" // Classic, soft, and highly readable
-const NEON_PURPLE = "#9933FF" // Bright, vivid purple
-const LIGHT_PURPLE = "#B19CD9" // Classic, soft, and highly readable
+const BG = '#18161a' // Modern black with grey undertone
+const NEON_GREEN = '#33FF33' // Bright, vivid green
+const DARK_NEON_GREEN = '#226622' // Darker green with glow
+const LIGHT_GREEN = '#90EE90' // Classic, soft, and highly readable
+const NEON_PURPLE = '#9933FF' // Bright, vivid purple
+const LIGHT_PURPLE = '#B19CD9' // Classic, soft, and highly readable
 
 // ===== PONG GAME COLORS =====
 export const CANVAS_COLOR = BG

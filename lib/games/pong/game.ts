@@ -1,4 +1,4 @@
-import type { GameState, PongColors, Pixel, Particle } from "./types"
+import type { GameState, PongColors, Pixel, Particle } from './types'
 import {
   BALL_SPEED,
   BALL_SIZE,
@@ -14,10 +14,15 @@ import {
   PARTICLE_COUNT,
   PARTICLE_LIFE,
   PARTICLE_DECAY,
-} from "./constants"
+} from './constants'
 
 // Create a game state with optimized initialization
-export function createGame(width: number, height: number, colors: PongColors, headerText: string[]): GameState {
+export function createGame(
+  width: number,
+  height: number,
+  colors: PongColors,
+  headerText: string[]
+): GameState {
   const scale = Math.min(width / 1000, height / 600)
   const ballRadius = Math.max(3, BALL_SIZE * scale)
   const paddleWidth = Math.max(4, PADDLE_WIDTH * scale)
@@ -94,14 +99,14 @@ export function updateGame(game: GameState): GameState {
   updatePaddles(game)
   const newParticles = checkPixelCollisions(game)
   updateParticles(game, newParticles)
-  
+
   return game
 }
 
 // Separated ball update logic for better organization and performance
 function updateBall(game: GameState): void {
   const { ball, width, height } = game
-  
+
   // Update ball position
   ball.x += ball.dx
   ball.y += ball.dy
@@ -114,7 +119,7 @@ function updateBall(game: GameState): void {
     ball.y = height - ball.radius
     ball.dy = -Math.abs(ball.dy)
   }
-  
+
   if (ball.x <= ball.radius) {
     ball.x = ball.radius
     ball.dx = Math.abs(ball.dx)
@@ -127,7 +132,7 @@ function updateBall(game: GameState): void {
 // Separated paddle update logic
 function updatePaddles(game: GameState): void {
   const { ball, paddles, width, height } = game
-  
+
   for (const paddle of paddles) {
     // Update paddle target position
     if (paddle.isVertical) {
@@ -159,15 +164,11 @@ function handlePaddleCollision(ball: GameState['ball'], paddle: GameState['paddl
   if (paddle.isVertical) {
     const isLeftSide = ball.x < paddle.x + paddle.width / 2
     ball.dx = isLeftSide ? -Math.abs(ball.dx) : Math.abs(ball.dx)
-    ball.x = isLeftSide 
-      ? paddle.x - ball.radius - 1
-      : paddle.x + paddle.width + ball.radius + 1
+    ball.x = isLeftSide ? paddle.x - ball.radius - 1 : paddle.x + paddle.width + ball.radius + 1
   } else {
     const isTopSide = ball.y < paddle.y + paddle.height / 2
     ball.dy = isTopSide ? -Math.abs(ball.dy) : Math.abs(ball.dy)
-    ball.y = isTopSide
-      ? paddle.y - ball.radius - 1
-      : paddle.y + paddle.height + ball.radius + 1
+    ball.y = isTopSide ? paddle.y - ball.radius - 1 : paddle.y + paddle.height + ball.radius + 1
   }
 }
 
@@ -175,10 +176,10 @@ function handlePaddleCollision(ball: GameState['ball'], paddle: GameState['paddl
 function checkPixelCollisions(game: GameState): Particle[] {
   const { ball, pixels } = game
   const newParticles: Particle[] = []
-  
+
   // Only check non-hit pixels for collision
-  const activePixels = pixels.filter(pixel => !pixel.hit)
-  
+  const activePixels = pixels.filter((pixel) => !pixel.hit)
+
   for (const pixel of activePixels) {
     if (
       ball.x + ball.radius > pixel.x &&
@@ -188,10 +189,10 @@ function checkPixelCollisions(game: GameState): Particle[] {
     ) {
       pixel.hit = true
       game.score++
-      
+
       // Create particles
       createParticles(pixel, newParticles)
-      
+
       // Handle ball bounce
       const centerX = pixel.x + pixel.size / 2
       const centerY = pixel.y + pixel.size / 2
@@ -202,7 +203,7 @@ function checkPixelCollisions(game: GameState): Particle[] {
       }
     }
   }
-  
+
   return newParticles
 }
 
@@ -210,7 +211,7 @@ function checkPixelCollisions(game: GameState): Particle[] {
 function createParticles(pixel: Pixel, particles: Particle[]): void {
   const centerX = pixel.x + pixel.size / 2
   const centerY = pixel.y + pixel.size / 2
-  
+
   for (let i = 0; i < PARTICLE_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2
     const speed = 0.5 + Math.random() * 1.5
@@ -240,7 +241,7 @@ function updateParticles(game: GameState, newParticles: Particle[]): void {
 }
 
 // Optimized text generation with memoization for character maps
-const charMapCache = new Map<string, boolean[][]>()
+const charMapCache = new Map<string, number[][]>()
 
 function generateText(width: number, height: number, scale: number, headerText: string[]): Pixel[] {
   const pixels: Pixel[] = []
@@ -276,7 +277,13 @@ function generateText(width: number, height: number, scale: number, headerText: 
   return pixels
 }
 
-function addText(text: string, canvasWidth: number, startY: number, pixelSize: number, pixels: Pixel[]): void {
+function addText(
+  text: string,
+  canvasWidth: number,
+  startY: number,
+  pixelSize: number,
+  pixels: Pixel[]
+): void {
   const textWidth = getTextWidth(text, pixelSize)
   let x = (canvasWidth - textWidth) / 2
 
@@ -289,7 +296,7 @@ function addText(text: string, canvasWidth: number, startY: number, pixelSize: n
         charMapCache.set(char, map)
       }
     }
-    
+
     if (map) {
       map.forEach((row, i) => {
         row.forEach((cell, j) => {
@@ -316,13 +323,13 @@ function getTextWidth(text: string, pixelSize: number): number {
   if (textWidthCache.has(cacheKey)) {
     return textWidthCache.get(cacheKey)!
   }
-  
+
   let width = 0
   for (const char of text) {
     const charWidth = PIXEL_MAP[char as keyof typeof PIXEL_MAP]?.[0]?.length ?? 0
     width += (charWidth + LETTER_SPACING) * pixelSize
   }
-  
+
   const result = width - LETTER_SPACING * pixelSize
   textWidthCache.set(cacheKey, result)
   return result

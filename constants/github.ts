@@ -1,11 +1,10 @@
-import { PinnedRepo, PinnedRepoConfig } from '@/types/github';
+import { PinnedRepo, PinnedRepoConfig } from '@/types/github'
 
+export const MAX_LANGUAGES = 5
+export const MAX_PROJECTS = 6
 
-export const MAX_LANGUAGES = 5;
-export const MAX_PROJECTS = 6;
-
-export const LANGUAGES_DISPLAYED = 3;
-export const PROJECTS_DISPLAYED = MAX_PROJECTS;
+export const LANGUAGES_DISPLAYED = 3
+export const PROJECTS_DISPLAYED = MAX_PROJECTS
 
 export const PINNED_REPO_CONFIGS: PinnedRepoConfig[] = [
   {
@@ -18,7 +17,7 @@ export const PINNED_REPO_CONFIGS: PinnedRepoConfig[] = [
     repo: 'nifty-smart-contracts',
     displayName: 'Nifty League Contracts',
   },
-];
+]
 
 export const FALLBACK_PINNED_REPOS: PinnedRepo[] = [
   {
@@ -48,7 +47,7 @@ export const FALLBACK_PINNED_REPOS: PinnedRepo[] = [
     ],
     isPinned: true,
   },
-];
+]
 
 export const FALLBACK_POPULAR_REPOS: PinnedRepo[] = [
   {
@@ -77,4 +76,4 @@ export const FALLBACK_POPULAR_REPOS: PinnedRepo[] = [
     ],
     isPinned: false,
   },
-];
+]
