@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 import { PongHeader } from '@/components/header'
 import { AboutSection } from '@/views/about-section'
 import { SkillsSection } from '@/views/skills-section'
 import { ProjectsSection } from '@/views/projects-section'
 import { ContactSection } from '@/views/contact-section'
+=======
+import { PongHeader } from "@/components/header";
+import { AboutSection } from "@/views/about-section";
+import { SkillsSection } from "@/views/skills-section";
+import { ProjectsSection } from "@/views/projects-section";
+import { ContactSection } from "@/views/contact-section";
+>>>>>>> origin/staging
 
 export default function Home() {
   return (
@@ -15,5 +23,5 @@ export default function Home() {
         <ContactSection />
       </main>
     </div>
-  )
+  );
 }

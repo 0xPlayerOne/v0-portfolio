@@ -1,12 +1,23 @@
+<<<<<<< HEAD
 'use client'
 
 import { useTheme } from 'next-themes'
 import { Toaster as Sonner } from 'sonner'
+=======
+"use client";
 
-type ToasterProps = React.ComponentProps<typeof Sonner>
+import { useTheme } from "next-themes";
+import { Toaster as Sonner } from "sonner";
+>>>>>>> origin/staging
+
+type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
+<<<<<<< HEAD
   const { theme = 'system' } = useTheme()
+=======
+  const { theme = "system" } = useTheme();
+>>>>>>> origin/staging
 
   return (
     <Sonner
@@ -23,7 +34,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       {...props}
     />
-  )
-}
+  );
+};
 
-export { Toaster }
+export { Toaster };
