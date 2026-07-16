@@ -1,47 +1,60 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ExternalLink, Star, GitFork, RefreshCw, Github, Pin } from "lucide-react"
+import { useState, useEffect } from "react";
+import {
+  ExternalLink,
+  Star,
+  GitFork,
+  RefreshCw,
+  Github,
+  Pin,
+} from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Section } from "@/components/ui/section"
-import { Typography } from "@/components/ui/typography"
-import { GameCreditsCard } from "@/components/game-credits"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Section } from "@/components/ui/section";
+import { Typography } from "@/components/ui/typography";
+import { GameCreditsCard } from "@/components/game-credits";
 
-import type { PinnedRepo } from "@/types/github"
-import { GITHUB_LINK } from "@/constants/links"
-import { LANGUAGES_DISPLAYED, PROJECTS_DISPLAYED } from "@/constants/github"
-import { SITE_CARD_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR, CANVAS_COLOR, SITE_TEXT_COLOR } from "@/constants/colors"
-import { fetchPinnedRepos } from "@/lib/github"
-import { getLanguageColor } from "@/lib/language-colors"
-import { cn } from "@/lib/utils"
+import type { PinnedRepo } from "@/types/github";
+import { GITHUB_LINK } from "@/constants/links";
+import { LANGUAGES_DISPLAYED, PROJECTS_DISPLAYED } from "@/constants/github";
+import {
+  SITE_CARD_COLOR,
+  SITE_BORDER_COLOR,
+  SITE_BTN_COLOR,
+  CANVAS_COLOR,
+  SITE_TEXT_COLOR,
+} from "@/constants/colors";
+import { fetchPinnedRepos } from "@/lib/github";
+import { getLanguageColor } from "@/lib/language-colors";
+import { cn } from "@/lib/utils";
 
 export function ProjectsSection() {
-  const [projects, setProjects] = useState<PinnedRepo[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [projects, setProjects] = useState<PinnedRepo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const loadProjects = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      const repos = await fetchPinnedRepos()
-      setProjects(repos)
-      setLastUpdated(new Date())
+      setLoading(true);
+      setError(null);
+      const repos = await fetchPinnedRepos();
+      setProjects(repos);
+      setLastUpdated(new Date());
     } catch (err) {
-      setError("Failed to load projects")
-      console.error("Error loading projects:", err)
+      setError("Failed to load projects");
+      console.error("Error loading projects:", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loadProjects()
-  }, [])
+    loadProjects();
+  }, []);
 
   return (
     <Section id="projects">
@@ -116,10 +129,10 @@ export function ProjectsSection() {
                   boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
+                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
+                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`;
                 }}
               >
                 {project.isPinned && (
@@ -140,8 +153,17 @@ export function ProjectsSection() {
 
                 <CardContent className="p-6 sm:p-8">
                   <div className="flex items-start justify-between mb-4">
-                    <div className={cn("flex-1 pr-4", project.isPinned ? "mt-8" : "")}>
-                      <Typography variant="h3" color="secondary" className="mb-2">
+                    <div
+                      className={cn(
+                        "flex-1 pr-4",
+                        project.isPinned ? "mt-8" : "",
+                      )}
+                    >
+                      <Typography
+                        variant="h3"
+                        color="secondary"
+                        className="mb-2"
+                      >
                         {project.title}
                       </Typography>
                     </div>
@@ -155,8 +177,14 @@ export function ProjectsSection() {
                     >
                       {project.forks > 0 && (
                         <div className="flex items-center gap-1">
-                          <GitFork size={14} style={{ color: SITE_BTN_COLOR }} />
-                          <Typography variant="caption" style={{ color: SITE_TEXT_COLOR }}>
+                          <GitFork
+                            size={14}
+                            style={{ color: SITE_BTN_COLOR }}
+                          />
+                          <Typography
+                            variant="caption"
+                            style={{ color: SITE_TEXT_COLOR }}
+                          >
                             {project.forks}
                           </Typography>
                         </div>
@@ -164,7 +192,10 @@ export function ProjectsSection() {
                       {project.stars > 0 && (
                         <div className="flex items-center gap-1">
                           <Star size={14} style={{ color: SITE_BTN_COLOR }} />
-                          <Typography variant="caption" style={{ color: SITE_TEXT_COLOR }}>
+                          <Typography
+                            variant="caption"
+                            style={{ color: SITE_TEXT_COLOR }}
+                          >
                             {project.stars}
                           </Typography>
                         </div>
@@ -179,22 +210,38 @@ export function ProjectsSection() {
                   {/* Languages display - horizontal layout */}
                   {project.languages.length > 0 && (
                     <div className="flex flex-wrap items-center gap-2 mb-4">
-                      {project.languages.slice(0, LANGUAGES_DISPLAYED).map((lang, langIndex) => (
-                        <div key={langIndex} className="flex items-center gap-1.5 text-sm">
+                      {project.languages
+                        .slice(0, LANGUAGES_DISPLAYED)
+                        .map((lang, langIndex) => (
                           <div
-                            className="w-3 h-3 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: getLanguageColor(lang.name) }}
-                          />
-                          <span className="text-sm" style={{ color: SITE_TEXT_COLOR }}>
-                            {lang.name}
-                          </span>
-                          <span className="text-xs" style={{ color: SITE_TEXT_COLOR }}>
-                            ({lang.percentage}%)
-                          </span>
-                        </div>
-                      ))}
+                            key={langIndex}
+                            className="flex items-center gap-1.5 text-sm"
+                          >
+                            <div
+                              className="w-3 h-3 rounded-full flex-shrink-0"
+                              style={{
+                                backgroundColor: getLanguageColor(lang.name),
+                              }}
+                            />
+                            <span
+                              className="text-sm"
+                              style={{ color: SITE_TEXT_COLOR }}
+                            >
+                              {lang.name}
+                            </span>
+                            <span
+                              className="text-xs"
+                              style={{ color: SITE_TEXT_COLOR }}
+                            >
+                              ({lang.percentage}%)
+                            </span>
+                          </div>
+                        ))}
                       {project.languages.length > LANGUAGES_DISPLAYED && (
-                        <span className="text-sm" style={{ color: SITE_TEXT_COLOR }}>
+                        <span
+                          className="text-sm"
+                          style={{ color: SITE_TEXT_COLOR }}
+                        >
                           +{project.languages.length - LANGUAGES_DISPLAYED} more
                         </span>
                       )}
@@ -207,7 +254,10 @@ export function ProjectsSection() {
                         <Badge
                           key={techIndex}
                           variant="secondary"
-                          style={{ backgroundColor: SITE_BTN_COLOR, color: CANVAS_COLOR }}
+                          style={{
+                            backgroundColor: SITE_BTN_COLOR,
+                            color: CANVAS_COLOR,
+                          }}
                         >
                           {tech}
                         </Badge>
@@ -227,7 +277,11 @@ export function ProjectsSection() {
                         borderColor: SITE_BTN_COLOR,
                       }}
                     >
-                      <a href={project.url} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <Github size={16} className="mr-2" />
                         Code
                       </a>
@@ -238,9 +292,16 @@ export function ProjectsSection() {
                         size="sm"
                         asChild
                         className="flex-1 hover:scale-105 transition-transform duration-300"
-                        style={{ backgroundColor: SITE_BTN_COLOR, color: CANVAS_COLOR }}
+                        style={{
+                          backgroundColor: SITE_BTN_COLOR,
+                          color: CANVAS_COLOR,
+                        }}
                       >
-                        <a href={project.homepage} target="_blank" rel="noopener noreferrer">
+                        <a
+                          href={project.homepage}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <ExternalLink size={16} className="mr-2" />
                           Live
                         </a>
@@ -273,8 +334,8 @@ export function ProjectsSection() {
       </div>
 
       <div className="mt-16 flex justify-center">
-        <GameCreditsCard  />
+        <GameCreditsCard />
       </div>
     </Section>
-  )
+  );
 }
