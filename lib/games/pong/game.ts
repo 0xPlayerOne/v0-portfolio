@@ -240,7 +240,7 @@ function updateParticles(game: GameState, newParticles: Particle[]): void {
 }
 
 // Optimized text generation with memoization for character maps
-const charMapCache = new Map<string, boolean[][]>()
+const charMapCache = new Map<string, number[][]>()
 
 function generateText(width: number, height: number, scale: number, headerText: string[]): Pixel[] {
   const pixels: Pixel[] = []
