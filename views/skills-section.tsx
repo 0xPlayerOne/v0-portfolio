@@ -27,8 +27,9 @@ export function SkillsSection() {
         <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8")}>
           {SKILLS_DATA.map((skillGroup, index) => {
             const IconComponent = SKILL_ICONS[skillGroup.category as keyof typeof SKILL_ICONS]
+            const skills: ReadonlyArray<{ name: string; level: number }> = skillGroup.skills
             const avgLevel = Math.round(
-              skillGroup.skills.reduce((sum, skill) => sum + skill.level, 0) / skillGroup.skills.length,
+              skills.reduce((sum, skill) => sum + skill.level, 0) / skills.length,
             )
 
             return (
@@ -66,7 +67,7 @@ export function SkillsSection() {
                   </div>
 
                   <div className="space-y-3">
-                    {skillGroup.skills.map((skill, skillIndex) => {
+                    {skills.map((skill, skillIndex) => {
                       const filledDots = Math.round((skill.level / 100) * 5)
                       return (
                         <div key={skillIndex} className="group/skill">
@@ -106,7 +107,7 @@ export function SkillsSection() {
 
                   <div className="mt-4 pt-4 border-t" style={{ borderColor: `${SITE_BORDER_COLOR}40` }}>
                     <div className="flex items-center justify-between text-xs">
-                      <span style={{ color: SITE_TEXT_COLOR }}>{skillGroup.skills.length} core skills</span>
+                      <span style={{ color: SITE_TEXT_COLOR }}>{skills.length} core skills</span>
                       <span className="px-2 py-1 rounded font-mono" style={{ backgroundColor: `${SITE_BTN_COLOR}20` }}>
                         <Typography variant="caption" color="textSecondary">LVL {avgLevel}</Typography>
                       </span>

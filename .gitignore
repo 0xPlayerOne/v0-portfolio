@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/.vitest
+/coverage
 
 # next.js
 /.next/

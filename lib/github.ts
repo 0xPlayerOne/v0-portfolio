@@ -7,6 +7,14 @@ import {
   PINNED_REPO_CONFIGS,
 } from '@/constants/github';
 
+const GITHUB_FETCH_OPTIONS: RequestInit & { next: { revalidate: number } } = {
+  headers: {
+    Accept: 'application/vnd.github.v3+json',
+    'User-Agent': 'AndrewMF-Portfolio',
+  },
+  next: { revalidate: 3600 },
+};
+
 export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
   try {
     const pinnedRepos = await fetchSpecificRepos(PINNED_REPO_CONFIGS, true);
@@ -59,13 +67,7 @@ async function fetchSpecificRepos(
 
   for (const config of repoConfigs) {
     try {
-      const response = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}`, {
-        headers: {
-          Accept: 'application/vnd.github.v3+json',
-          'User-Agent': 'AndrewMF-Portfolio',
-        },
-        next: { revalidate: 3600 }, // Cache for 1 hour
-      });
+      const response = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}`, GITHUB_FETCH_OPTIONS);
 
       if (response.status === 403) {
         console.warn(`Rate limited for ${config.owner}/${config.repo}`);
@@ -95,13 +97,10 @@ async function fetchSpecificRepos(
 
 async function fetchPopularRepositories(): Promise<Omit<PinnedRepo, 'languages'>[]> {
   try {
-    const response = await fetch('https://api.github.com/users/0xPlayerOne/repos?sort=stars&per_page=20', {
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-        'User-Agent': 'AndrewMF-Portfolio',
-      },
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
+    const response = await fetch(
+      'https://api.github.com/users/0xPlayerOne/repos?sort=stars&per_page=20',
+      GITHUB_FETCH_OPTIONS,
+    );
 
     if (response.status === 403) {
       console.warn('GitHub API rate limited, using fallback projects');
@@ -146,13 +145,7 @@ async function fetchPopularRepositories(): Promise<Omit<PinnedRepo, 'languages'>
 
 async function fetchRepoLanguages(owner: string, repoName: string): Promise<{ name: string; percentage: number }[]> {
   try {
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repoName}/languages`, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-        'User-Agent': 'AndrewMF-Portfolio',
-      },
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repoName}/languages`, GITHUB_FETCH_OPTIONS);
 
     if (response.status === 403) {
       console.warn(`Rate limited for languages ${owner}/${repoName}`);
