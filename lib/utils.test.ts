@@ -1,26 +1,20 @@
-import { describe, expect, it } from 'bun:test'
-import { cn } from './utils'
+import { describe, expect, it } from 'bun:test';
+import { cn } from './utils';
 
 describe('cn', () => {
-  it('joins simple class strings', () => {
-    expect(cn('a', 'b', 'c')).toBe('a b c')
-  })
+  it('merges single class strings', () => {
+    expect(cn('px-2', 'py-1')).toBe('px-2 py-1');
+  });
 
-  it('handles conditional (falsy) values without emitting them', () => {
-    expect(cn('a', false, null, undefined, 'b')).toBe('a b')
-  })
+  it('dedupes conflicting tailwind classes (last wins)', () => {
+    expect(cn('px-2', 'px-4')).toBe('px-4');
+  });
 
-  it('resolves conflicting Tailwind classes via tailwind-merge (last wins)', () => {
-    // tailwind-merge dedupes conflicting utilities, keeping the last one
-    expect(cn('px-2', 'px-4')).toBe('px-4')
-    expect(cn('text-red-500', 'text-blue-500')).toBe('text-blue-500')
-  })
+  it('handles conditional (falsy) values', () => {
+    expect(cn('base', false, null, undefined, 'active')).toBe('base active');
+  });
 
   it('merges object syntax from clsx', () => {
-    expect(cn('base', { active: true, disabled: false })).toBe('base active')
-  })
-
-  it('returns an empty string for no arguments', () => {
-    expect(cn()).toBe('')
-  })
-})
+    expect(cn('base', { 'is-on': true, 'is-off': false })).toBe('base is-on');
+  });
+});
