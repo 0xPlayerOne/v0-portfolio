@@ -1,4 +1,4 @@
-import {describe, expect, it, spyOn} from 'bun:test'
+import { describe, expect, it, spyOn } from 'bun:test'
 
 import { PARTICLE_COUNT, PARTICLE_LIFE } from '@/lib/games/pong/constants'
 import { createGame, updateGame } from '@/lib/games/pong/game'

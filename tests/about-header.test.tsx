@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test'
+import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 const smoothScrollToSection = mock()
 const useScrollSpy = mock(() => 'skills')
@@ -72,7 +72,9 @@ describe('PongHeader', () => {
     render(<PongHeader />)
 
     expect(screen.getByTestId('pong-game')?.getAttribute('data-navbar-height')).toBe('100')
-    expect(screen.getByTestId('pong-game')?.textContent).toContain('ANDREW M-F / CEO OF NIFTY LEAGUE')
+    expect(screen.getByTestId('pong-game')?.textContent).toContain(
+      'ANDREW M-F / CEO OF NIFTY LEAGUE'
+    )
     expect(useScrollSpy).toHaveBeenCalledWith({
       sectionIds: ['about', 'skills', 'projects', 'contact'],
       offset: 150,

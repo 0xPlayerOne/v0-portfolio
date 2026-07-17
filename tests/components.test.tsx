@@ -40,7 +40,9 @@ describe('portfolio sections', () => {
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'Skills & Expertise' })).not.toBeNull()
       expect(screen.getByRole('heading', { name: 'Game Credits' })).not.toBeNull()
-      expect(screen.getByRole('link', { name: /github/i })?.getAttribute('href')).toContain('github.com')
+      expect(screen.getByRole('link', { name: /github/i })?.getAttribute('href')).toContain(
+        'github.com'
+      )
     })
 
     const gameCredits = screen.getByRole('heading', { name: 'Game Credits' }).closest('div')

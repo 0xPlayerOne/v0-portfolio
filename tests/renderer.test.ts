@@ -1,4 +1,4 @@
-import {describe, expect, it, mock} from 'bun:test'
+import { describe, expect, it, mock } from 'bun:test'
 
 import { render } from '@/lib/games/pong/renderer'
 import type { GameState } from '@/lib/games/pong/types'

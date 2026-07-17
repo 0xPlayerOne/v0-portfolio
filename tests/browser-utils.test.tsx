@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import {beforeEach, describe, expect, it, jest, mock, spyOn} from 'bun:test'
+import { beforeEach, describe, expect, it, jest, mock, spyOn } from 'bun:test'
 
 import { SITE_BTN_COLOR } from '@/constants/colors'
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
