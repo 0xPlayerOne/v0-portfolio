@@ -1,6 +1,5 @@
 import type { GameState, Pixel, Particle, Paddle } from './types'
 
-
 // Optimized renderer with batched rendering and reduced state changes
 export function render(ctx: CanvasRenderingContext2D, game: GameState): void {
   const { width, height, pixels, ball, paddles, particles, colors, score } = game
