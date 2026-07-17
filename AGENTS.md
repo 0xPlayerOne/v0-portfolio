@@ -1,0 +1,68 @@
+## Stack
+
+| Layer | Choice |
+|-------|--------|
+| **Framework** | Next.js 15.5.18 (App Router) |
+| **Language** | TypeScript 5.9 (`strict: true`, `moduleResolution: "bundler"`) |
+| **Runtime / Package Manager** | Bun 1.3.14 (see `packageManager` in `package.json`) |
+| **Styling** | Tailwind CSS 3.4 + PostCSS + `autoprefixer` |
+| **UI Primitives** | Radix UI (accordion, dialog, dropdown, tooltip, toast, tabs, select, etc.) + `lucide-react` icons |
+| **State / Forms** | `react-hook-form` + `zod` validation |
+| **Testing** | Vitest 4.1 + `jsdom` env + `@testing-library/react` + `@vitest/coverage-v8` |
+| **Linting** | ESLint 9 (`eslint.config.mjs`) + `eslint-config-next` |
+| **Formatting** | Prettier 3.9 |
+| **Deploy** | Vercel (project: `nifty-andy/v0-portfolio`) |
+
+## Commands
+
+All commands use `bun` (not `npm` or `yarn`).
+
+| Action | Script |
+|--------|--------|
+| Development server | `bun dev` |
+| Production build | `bun build` |
+| Start production server | `bun start` |
+| Lint (zero warnings) | `bun lint` |
+| Format all | `bun format` |
+| Check formatting | `bun format:check` |
+| Type-check | `bun typecheck` |
+| Run tests (once) | `bun test` |
+| Watch tests | `bun test:watch` |
+| Test with coverage | `bun test:coverage` |
+
+**Test details** (from `vitest.config.ts`):
+- Environment: `jsdom`
+- Setup: `tests/setup.ts`
+- Coverage provider: `v8`
+- Thresholds: branches 72 %, functions 85 %, lines 83 %, statements 84 %
+- Coverage includes: `app/**`, `components/**`, `constants/**`, `hooks/**`, `lib/**`, `views/**`
+- Coverage excludes: `components/ui/**`, `**/*.d.ts`, `**/types.ts`
+
+## Entry Points
+
+| Path | Purpose |
+|------|---------|
+| `app/layout.tsx` | Root layout — wraps all pages, loads Inter font, sets HTML metadata |
+| `app/page.tsx` | Main landing page |
+| `app/globals.css` | Global CSS / Tailwind directives |
+
+**Router**: App Router only — no `pages/` directory. All pages go under `app/`.
+
+**Key directories**:
+- `components/ui/` — Shadcn-style Radix UI wrappers (toast, tooltip, dialog, buttons, inputs, etc.)
+- `views/` — Section-level page components (`about-section`, `contact-section`, `projects-section`, `skills-section`)
+- `lib/` — Utilities (`utils`, `github`, `smooth-scroll`, `language-colors`) and Pong game (`lib/games/pong/`)
+- `hooks/` — Custom hooks (`use-toast`, `use-scroll-spy`, `use-mobile`)
+- `constants/` — Configuration constants (`navigation`, `links`, `content`, `github`, `colors`)
+- `types/` — Shared TypeScript types (`github`, `typography`)
+- `tests/` — Unit and integration tests
+- `public/` — Static assets (favicons, app icons)
+
+## Conventions / Gotchas
+
+- **Path alias**: `@/*` maps to the project root (e.g. `import { utils } from '@/lib/utils'`). This is configured in both `tsconfig.json` and `vitest.config.ts`.
+- **Build quirks**: `next.config.mjs` sets `eslint.ignoreDuringBuilds: true` and `typescript.ignoreBuildErrors: true` — so `bun build` skips both lint and type checks. To catch issues, always run `bun lint` and `bun typecheck` before pushing, not just `bun build`.
+- **Images**: `next.config.mjs` sets `images.unoptimized: true` — the static `next/image` optimization is disabled (intentional for static export or Vercel).
+- **Forbidden / auto-generated dirs** (from `.gitignore`): `node_modules/`, `.next/`, `out/`, `build/`, `coverage/`, `.vitest/`, `.vercel/`, `.env`, `*.tsbuildinfo`, `next-env.d.ts`. None of these should ever be committed or hand-edited.
+- **Auto-synced repo**: This repository is synced from [v0.dev](https://v0.dev/chat/projects/UNx27p7EMON). Changes made in the v0 chat are automatically pushed here. Direct commits are fine too but may be overwritten on the next v0 deploy.
+- **Bun, not npm/yarn/pnpm**: The `packageManager` field locks this to `bun@1.3.14`. Running `npm install` will work but will create a lockfile mismatch.
