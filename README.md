@@ -28,3 +28,24 @@ Continue building your app on:
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
+
+## Environment Variables
+
+Environment variables are managed in **Vercel** (source of truth). Sync them locally:
+
+```bash
+# Link this project to its Vercel project (one-time)
+vercel link 
+
+# Pull all env vars into .env.local (gitignored)
+vercel env pull .env.local
+```
+
+To push local changes back to Vercel:
+
+```bash
+vercel env push .env.local
+# or set them per-environment (Production / Preview) in the Vercel dashboard
+```
+
+> Never commit `.env.local` — it is gitignored. For team projects use `vercel --scope niftyleague`.
