@@ -1,8 +1,5 @@
 import type { GameState, Pixel, Particle, Paddle } from './types'
 
-// Cache for pixel rendering to avoid redundant state changes
-let lastPixelHit = false
-let lastPixelColor = ''
 
 // Optimized renderer with batched rendering and reduced state changes
 export function render(ctx: CanvasRenderingContext2D, game: GameState): void {
