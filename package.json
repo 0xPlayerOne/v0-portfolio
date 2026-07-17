@@ -15,9 +15,10 @@
     "type:check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "bun test",
-    "test:coverage": "bun test --coverage",
-    "prepare": "husky"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky",
+    "test:watch": "vitest"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs,json,md,yml,yaml,css}": "bunx prettier --write --ignore-unknown"
@@ -73,9 +74,13 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^9.39.5",
     "eslint-config-next": "15.5.18",
     "husky": "^9.1.7",
@@ -86,7 +91,6 @@
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/jest-dom": "^6.9.1"
+    "vitest": "^4.1.10"
   }
 }
