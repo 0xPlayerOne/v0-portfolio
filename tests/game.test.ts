@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import {describe, expect, it, spyOn} from 'bun:test'
 
 import { PARTICLE_COUNT, PARTICLE_LIFE } from '@/lib/games/pong/constants'
 import { createGame, updateGame } from '@/lib/games/pong/game'
@@ -42,7 +42,7 @@ describe('pong game', () => {
   })
 
   it('marks a pixel hit, updates the score, and expires particles', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.5)
+    spyOn(Math, 'random').mockReturnValue(0.5)
     const game = createGame(600, 400, colors, ['A', 'B'])
     const target = game.pixels[0]
     target.x = game.width / 2

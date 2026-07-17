@@ -1,16 +1,16 @@
-import { describe, expect, it, vi } from 'vitest'
+import {describe, expect, it, mock} from 'bun:test'
 
 import { render } from '@/lib/games/pong/renderer'
 import type { GameState } from '@/lib/games/pong/types'
 
 function createContext() {
   return {
-    arc: vi.fn(),
-    beginPath: vi.fn(),
-    fill: vi.fn(),
-    fillRect: vi.fn(),
-    fillText: vi.fn(),
-    strokeText: vi.fn(),
+    arc: mock(),
+    beginPath: mock(),
+    fill: mock(),
+    fillRect: mock(),
+    fillText: mock(),
+    strokeText: mock(),
     fillStyle: '',
     font: '',
     globalAlpha: 1,

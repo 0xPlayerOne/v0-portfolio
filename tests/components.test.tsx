@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 import { GameCreditsCard } from '@/components/game-credits'
 import { ContactSection } from '@/views/contact-section'
@@ -18,15 +18,13 @@ const project: PinnedRepo = {
   isPinned: true,
 }
 
-const { fetchPinnedRepos } = vi.hoisted(() => ({
-  fetchPinnedRepos: vi.fn<() => Promise<PinnedRepo[]>>(),
-}))
+const fetchPinnedRepos = mock<() => Promise<PinnedRepo[]>>()
 
-vi.mock('@/lib/github', () => ({ fetchPinnedRepos }))
+mock.module('@/lib/github', () => ({ fetchPinnedRepos }))
 
 describe('portfolio sections', () => {
   beforeEach(() => {
-    fetchPinnedRepos.mockReset()
+    fetchPinnedRepos.mockClear()
     fetchPinnedRepos.mockResolvedValue([project])
   })
 
@@ -39,12 +37,14 @@ describe('portfolio sections', () => {
       </>
     )
 
-    expect(screen.getByRole('heading', { name: 'Skills & Expertise' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Game Credits' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /github/i })).toHaveAttribute(
-      'href',
-      expect.stringContaining('github.com')
-    )
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'Skills & Expertise' })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Game Credits' })).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /github/i })).toHaveAttribute(
+        'href',
+        expect.stringContaining('github.com')
+      )
+    })
 
     const gameCredits = screen.getByRole('heading', { name: 'Game Credits' }).closest('div')
     if (gameCredits) {

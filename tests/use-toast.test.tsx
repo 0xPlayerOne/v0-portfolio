@@ -1,11 +1,11 @@
 import { act, renderHook } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, jest } from 'bun:test'
 
 import { reducer, toast, useToast } from '@/hooks/use-toast'
 
 describe('toast state', () => {
   afterEach(() => {
-    vi.useRealTimers()
+    jest.useRealTimers()
   })
 
   it('adds, updates, dismisses, and removes toasts', () => {
@@ -29,7 +29,7 @@ describe('toast state', () => {
   })
 
   it('notifies the hook when toast helpers mutate state', () => {
-    vi.useFakeTimers()
+    jest.useFakeTimers()
     const { result, unmount } = renderHook(() => useToast())
 
     let controls!: ReturnType<typeof toast>
@@ -53,7 +53,7 @@ describe('toast state', () => {
     expect(result.current.toasts[0]?.open).toBe(false)
 
     act(() => {
-      vi.runAllTimers()
+      jest.runAllTimers()
     })
     expect(result.current.toasts).toEqual([])
     unmount()

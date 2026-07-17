@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test'
 
 import { fetchPinnedRepos } from '@/lib/github'
 
@@ -24,12 +24,12 @@ function jsonResponse(body: unknown, status = 200) {
 
 describe('GitHub project loading', () => {
   beforeEach(() => {
-    vi.spyOn(console, 'error').mockImplementation(() => undefined)
-    vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    spyOn(console, 'error').mockImplementation(() => undefined)
+    spyOn(console, 'warn').mockImplementation(() => undefined)
   })
 
   it('combines pinned and popular repositories and calculates languages', async () => {
-    const fetchMock = vi.fn(async (input: string | URL | Request) => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
       const url = String(input)
 
       if (url.endsWith('/repos/NiftyLeague/nifty-fe-monorepo')) {
@@ -60,7 +60,7 @@ describe('GitHub project loading', () => {
 
       return jsonResponse({}, 404)
     })
-    vi.stubGlobal('fetch', fetchMock)
+    globalThis.fetch = fetchMock as any
 
     const projects = await fetchPinnedRepos()
 
@@ -81,7 +81,7 @@ describe('GitHub project loading', () => {
   })
 
   it('uses fallback projects when the popular-repository request fails', async () => {
-    const fetchMock = vi.fn(async (input: string | URL | Request) => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
       const url = String(input)
 
       if (url.includes('/users/0xPlayerOne/repos')) {
@@ -92,7 +92,7 @@ describe('GitHub project loading', () => {
       }
       return jsonResponse({}, 403)
     })
-    vi.stubGlobal('fetch', fetchMock)
+    globalThis.fetch = fetchMock as any
 
     const projects = await fetchPinnedRepos()
 

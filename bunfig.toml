@@ -1,0 +1,4 @@
+[test]
+preload = ["./tests/dom-globals.ts", "./tests/setup.ts"]
+exclude = ["dist/**", "node_modules/**", "coverage/**"]
+mockClear = true

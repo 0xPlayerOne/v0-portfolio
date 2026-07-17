@@ -1,14 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test'
 
-const { smoothScrollToSection, useScrollSpy } = vi.hoisted(() => ({
-  smoothScrollToSection: vi.fn(),
-  useScrollSpy: vi.fn(() => 'skills'),
-}))
+const smoothScrollToSection = mock()
+const useScrollSpy = mock(() => 'skills')
 
-vi.mock('@/lib/smooth-scroll', () => ({ smoothScrollToSection }))
-vi.mock('@/hooks/use-scroll-spy', () => ({ useScrollSpy }))
-vi.mock('@/lib/games/pong', () => ({
+mock.module('@/lib/smooth-scroll', () => ({ smoothScrollToSection }))
+mock.module('@/hooks/use-scroll-spy', () => ({ useScrollSpy }))
+mock.module('@/lib/games/pong', () => ({
   PongGame: ({ navbarHeight, headerText }: { navbarHeight: number; headerText: string[] }) => (
     <div data-testid="pong-game" data-navbar-height={navbarHeight}>
       {headerText.join(' / ')}
@@ -20,13 +18,13 @@ import { PongHeader } from '@/components/header'
 import { AboutSection } from '@/views/about-section'
 
 beforeEach(() => {
-  vi.clearAllMocks()
+  mock.restore()
   Object.defineProperty(window, 'innerHeight', {
     configurable: true,
     value: 900,
   })
   Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 })
-  vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+  spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
     callback(0)
     return 1
   })

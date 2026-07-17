@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import {beforeEach, describe, expect, it, jest, mock, spyOn} from 'bun:test'
 
 import { SITE_BTN_COLOR } from '@/constants/colors'
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
@@ -28,7 +28,7 @@ describe('browser utilities', () => {
   })
 
   it('smoothly scrolls to an existing section and reuses its cached position', () => {
-    vi.useFakeTimers()
+    jest.useFakeTimers()
     const section = document.createElement('section')
     section.id = 'projects'
     Object.defineProperty(section, 'offsetTop', {
@@ -36,11 +36,11 @@ describe('browser utilities', () => {
       value: 500,
     })
     document.body.append(section)
-    const scrollTo = vi.fn()
-    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+    const scrollTo = mock()
+    globalThis.requestAnimationFrame = ((callback: FrameRequestCallback) => {
       callback(0)
       return 1
-    })
+    }) as any
     window.scrollTo = scrollTo
 
     smoothScrollToSection('projects', 80)
@@ -55,12 +55,12 @@ describe('browser utilities', () => {
       behavior: 'smooth',
     })
 
-    vi.advanceTimersByTime(3_000)
-    vi.useRealTimers()
+    jest.advanceTimersByTime(3_000)
+    jest.useRealTimers()
   })
 
   it('tracks the closest section above the viewport', async () => {
-    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+    spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
       callback(0)
       return 1
     })

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'bun:test'
 import { getLanguageColor } from './language-colors'
 
 // SITE_BTN_COLOR fallback (from @/constants/colors -> LIGHT_PURPLE)
