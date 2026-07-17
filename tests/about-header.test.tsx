@@ -34,10 +34,10 @@ describe('AboutSection', () => {
   it('renders overview values and drives their hover styles', () => {
     render(<AboutSection />)
 
-    expect(screen.getByRole('heading', { name: 'About Me' })).toBeInTheDocument()
-    expect(screen.getByText('Innovation')).toBeInTheDocument()
-    expect(screen.getByText('Years Experience')).toBeInTheDocument()
-    expect(screen.getByText('10+')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'About Me' })).not.toBeNull()
+    expect(screen.getByText('Innovation')).not.toBeNull()
+    expect(screen.getByText('Years Experience')).not.toBeNull()
+    expect(screen.getByText('10+')).not.toBeNull()
 
     const valueCard = screen.getByText('Innovation').closest('div[class]')?.parentElement
     if (!valueCard) throw new Error('Innovation card was not rendered')
@@ -58,12 +58,12 @@ describe('AboutSection', () => {
     render(<AboutSection />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Journey' }))
-    expect(screen.getByText('Started Coding')).toBeInTheDocument()
-    expect(screen.getByText('Founded Nifty League')).toBeInTheDocument()
-    expect(screen.queryByText('Innovation')).not.toBeInTheDocument()
+    expect(screen.getByText('Started Coding')).not.toBeNull()
+    expect(screen.getByText('Founded Nifty League')).not.toBeNull()
+    expect(screen.queryByText('Innovation')).toBeNull()
 
     fireEvent.click(screen.getByRole('button', { name: 'Overview' }))
-    expect(screen.getByText('Innovation')).toBeInTheDocument()
+    expect(screen.getByText('Innovation')).not.toBeNull()
   })
 })
 
@@ -71,8 +71,8 @@ describe('PongHeader', () => {
   it('renders the game and active navigation behavior', () => {
     render(<PongHeader />)
 
-    expect(screen.getByTestId('pong-game')).toHaveAttribute('data-navbar-height', '100')
-    expect(screen.getByTestId('pong-game')).toHaveTextContent('ANDREW M-F / CEO OF NIFTY LEAGUE')
+    expect(screen.getByTestId('pong-game')?.getAttribute('data-navbar-height')).toBe('100')
+    expect(screen.getByTestId('pong-game')?.textContent).toContain('ANDREW M-F / CEO OF NIFTY LEAGUE')
     expect(useScrollSpy).toHaveBeenCalledWith({
       sectionIds: ['about', 'skills', 'projects', 'contact'],
       offset: 150,

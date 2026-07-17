@@ -38,12 +38,9 @@ describe('portfolio sections', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Skills & Expertise' })).toBeInTheDocument()
-      expect(screen.getByRole('heading', { name: 'Game Credits' })).toBeInTheDocument()
-      expect(screen.getByRole('link', { name: /github/i })).toHaveAttribute(
-        'href',
-        expect.stringContaining('github.com')
-      )
+      expect(screen.getByRole('heading', { name: 'Skills & Expertise' })).not.toBeNull()
+      expect(screen.getByRole('heading', { name: 'Game Credits' })).not.toBeNull()
+      expect(screen.getByRole('link', { name: /github/i })?.getAttribute('href')).toContain('github.com')
     })
 
     const gameCredits = screen.getByRole('heading', { name: 'Game Credits' }).closest('div')
@@ -62,9 +59,9 @@ describe('portfolio sections', () => {
     const { ProjectsSection } = await import('@/views/projects-section')
     render(<ProjectsSection />)
 
-    expect(await screen.findByRole('heading', { name: 'Test Project' })).toBeInTheDocument()
-    expect(screen.getByText('A reliable test project')).toBeInTheDocument()
-    expect(screen.getByText('TypeScript')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Test Project' })).not.toBeNull()
+    expect(screen.getByText('A reliable test project')).not.toBeNull()
+    expect(screen.getByText('TypeScript')).not.toBeNull()
 
     fireEvent.click(screen.getByRole('button'))
     await waitFor(() => expect(fetchPinnedRepos).toHaveBeenCalledTimes(2))
