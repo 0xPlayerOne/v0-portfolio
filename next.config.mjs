@@ -9,10 +9,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-};
+}
 
-<<<<<<< HEAD
 export default nextConfig
-=======
-export default nextConfig;
->>>>>>> origin/staging

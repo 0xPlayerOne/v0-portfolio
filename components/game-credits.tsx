@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Gamepad2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -8,21 +7,6 @@ import { Typography } from '@/components/ui/typography'
 import { GAME_CREDITS } from '@/constants/content'
 import { MOBY_GAMES_LINK } from '@/constants/links'
 import { SITE_CARD_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/colors'
-=======
-import { Gamepad2 } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Typography } from "@/components/ui/typography";
-
-import { GAME_CREDITS } from "@/constants/content";
-import { MOBY_GAMES_LINK } from "@/constants/links";
-import {
-  SITE_CARD_COLOR,
-  SITE_BORDER_COLOR,
-  SITE_BTN_COLOR,
-} from "@/constants/colors";
->>>>>>> origin/staging
 
 const GameCreditsCard = () => {
   return (
@@ -33,10 +17,10 @@ const GameCreditsCard = () => {
         boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`;
+        e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`;
+        e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
       }}
     >
       <CardContent className="p-6 sm:p-8">
@@ -102,4 +86,4 @@ const GameCreditsCard = () => {
   )
 }
 
-export { GameCreditsCard };
+export { GameCreditsCard }

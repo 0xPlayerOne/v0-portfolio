@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
@@ -13,56 +12,28 @@ export function PongHeader() {
   // Memoize section IDs to prevent unnecessary recalculations
   const sectionIds = useMemo(() => NAVIGATION_SECTIONS.map((section) => section.id), [])
   const activeSection = useScrollSpy({ sectionIds, offset: NAVBAR_HEIGHT + 50 })
-=======
-"use client";
-
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { RetroCanvas } from "./retro-canvas";
-import { RetroNavbar } from "./retro-navbar";
-import { useScrollSpy } from "@/hooks/use-scroll-spy";
-import { NAVBAR_HEIGHT, NAVIGATION_SECTIONS } from "@/constants/navigation";
-
-export function PongHeader() {
-  const [isSticky, setIsSticky] = useState(false);
-
-  // Memoize section IDs to prevent unnecessary recalculations
-  const sectionIds = useMemo(
-    () => NAVIGATION_SECTIONS.map((section) => section.id),
-    [],
-  );
-  const activeSection = useScrollSpy({
-    sectionIds,
-    offset: NAVBAR_HEIGHT + 50,
-  });
->>>>>>> origin/staging
 
   // Helper function to check sticky state
   const checkStickyState = useCallback(() => {
-    const scrollPosition = window.scrollY;
+    const scrollPosition = window.scrollY
     // The navbar should stick when we scroll past the header minus the navbar height
     // This ensures the navbar is at the bottom of the header and sticks when scrolled past
-<<<<<<< HEAD
     const headerHeight = window.innerHeight - NAVBAR_HEIGHT
     const shouldBeSticky = scrollPosition > headerHeight
-=======
-    const headerHeight = window.innerHeight - NAVBAR_HEIGHT;
-    const shouldBeSticky = scrollPosition > headerHeight;
->>>>>>> origin/staging
 
     // Only update state if the sticky state has changed
     if (shouldBeSticky !== isSticky) {
-      setIsSticky(shouldBeSticky);
+      setIsSticky(shouldBeSticky)
     }
-  }, [isSticky]);
+  }, [isSticky])
 
   // Optimized scroll handler with throttling and useCallback
   const handleScroll = useCallback(() => {
     if (!window.requestAnimationFrame) {
-      checkStickyState();
-      return;
+      checkStickyState()
+      return
     }
 
-<<<<<<< HEAD
     window.requestAnimationFrame(checkStickyState)
   }, [checkStickyState])
 
@@ -79,27 +50,6 @@ export function PongHeader() {
 
   // Memoize the active section string to prevent unnecessary re-renders
   const activeSectionString = useMemo(() => activeSection || '', [activeSection])
-=======
-    window.requestAnimationFrame(checkStickyState);
-  }, [checkStickyState]);
-
-  useEffect(() => {
-    // Use passive event listener for better performance
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    // Initial check on mount
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
-
-  // Memoize the active section string to prevent unnecessary re-renders
-  const activeSectionString = useMemo(
-    () => activeSection || "",
-    [activeSection],
-  );
->>>>>>> origin/staging
 
   return (
     <>
@@ -119,19 +69,10 @@ export function PongHeader() {
 
       {/* When sticky, show a fixed navbar at the top */}
       {isSticky && (
-<<<<<<< HEAD
         <div className="fixed left-0 right-0 top-0 z-50">
           <RetroNavbar height={NAVBAR_HEIGHT} isSticky={true} activeSection={activeSectionString} />
-=======
-        <div className="fixed top-0 left-0 right-0 z-50">
-          <RetroNavbar
-            height={NAVBAR_HEIGHT}
-            isSticky={true}
-            activeSection={activeSectionString}
-          />
->>>>>>> origin/staging
         </div>
       )}
     </>
-  );
+  )
 }

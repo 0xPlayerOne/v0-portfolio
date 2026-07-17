@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 'use client'
 
 import { Section } from '@/components/ui/section'
@@ -9,22 +8,6 @@ import { SITE_CARD_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/
 import { cn } from '@/lib/utils'
 import { ABOUT_CONTENT } from '@/constants/content'
 import { useState, useMemo, memo, useCallback } from 'react'
-=======
-"use client";
-
-import { Section } from "@/components/ui/section";
-import { Typography } from "@/components/ui/typography";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  SITE_CARD_COLOR,
-  SITE_BORDER_COLOR,
-  SITE_BTN_COLOR,
-} from "@/constants/colors";
-import { cn } from "@/lib/utils";
-import { ABOUT_CONTENT } from "@/constants/content";
-import { useState, useMemo, memo, useCallback } from "react";
->>>>>>> origin/staging
 import {
   Zap,
   Rocket,
@@ -37,11 +20,7 @@ import {
   FlaskRoundIcon as Flask,
   BarChartIcon as ChartNoAxesCombined,
   Eye,
-<<<<<<< HEAD
 } from 'lucide-react'
-=======
-} from "lucide-react";
->>>>>>> origin/staging
 
 // Memoize the icon map to prevent recreation on each render
 const ICON_MAP = {
@@ -56,33 +35,26 @@ const ICON_MAP = {
   flask: Flask,
   'chart-no-axes-combined': ChartNoAxesCombined,
   eye: Eye,
-} as const;
+} as const
 
 // Memoized tab button component
 const TabButton = memo(function TabButton({
-  id: _id,
+  id,
   label,
   isActive,
   onClick,
 }: {
-  id: string;
-  label: string;
-  isActive: boolean;
-  onClick: () => void;
+  id: string
+  label: string
+  isActive: boolean
+  onClick: () => void
 }) {
   return (
     <button
       onClick={onClick}
       className={cn(
-<<<<<<< HEAD
         'rounded-md border-0 px-4 py-2 text-sm font-medium transition-all duration-300',
         isActive ? 'scale-105' : 'transition-transform duration-300 hover:scale-105'
-=======
-        "px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 border-0",
-        isActive
-          ? "scale-105"
-          : "hover:scale-105 transition-transform duration-300",
->>>>>>> origin/staging
       )}
       style={{
         backgroundColor: isActive ? SITE_BTN_COLOR : 'transparent',
@@ -92,25 +64,18 @@ const TabButton = memo(function TabButton({
     >
       {label}
     </button>
-  );
-});
+  )
+})
 
 // Memoized value card component
 const ValueCard = memo(function ValueCard({
   keyId,
   value,
 }: {
-<<<<<<< HEAD
   keyId: string
   value: (typeof ABOUT_CONTENT.values)[keyof typeof ABOUT_CONTENT.values]
 }) {
   const IconComponent = ICON_MAP[value.icon as keyof typeof ICON_MAP]
-=======
-  keyId: string;
-  value: (typeof ABOUT_CONTENT.values)[keyof typeof ABOUT_CONTENT.values];
-}) {
-  const IconComponent = ICON_MAP[value.icon as keyof typeof ICON_MAP];
->>>>>>> origin/staging
 
   // Memoize the card style
   const cardStyle = useMemo(
@@ -118,33 +83,22 @@ const ValueCard = memo(function ValueCard({
       backgroundColor: SITE_CARD_COLOR,
       boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   // Memoize the icon container style
   const iconContainerStyle = useMemo(
     () => ({
       backgroundColor: `${SITE_BTN_COLOR}20`,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   // Memoize the icon style
   const iconStyle = useMemo(
     () => ({
       color: SITE_BTN_COLOR,
     }),
-<<<<<<< HEAD
     []
   )
 
@@ -156,25 +110,6 @@ const ValueCard = memo(function ValueCard({
   const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
   }, [])
-=======
-    [],
-  );
-
-  // Optimize mouse event handlers
-  const handleMouseEnter = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`;
-    },
-    [],
-  );
-
-  const handleMouseLeave = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`;
-    },
-    [],
-  );
->>>>>>> origin/staging
 
   return (
     <Card
@@ -205,21 +140,12 @@ const ValueCard = memo(function ValueCard({
         </Typography>
       </CardContent>
     </Card>
-  );
-});
+  )
+})
 
 // Memoized stat card component
-<<<<<<< HEAD
 const StatCard = memo(function StatCard({ stat }: { stat: (typeof ABOUT_CONTENT.stats)[number] }) {
   const IconComponent = ICON_MAP[stat.icon as keyof typeof ICON_MAP]
-=======
-const StatCard = memo(function StatCard({
-  stat,
-}: {
-  stat: (typeof ABOUT_CONTENT.stats)[number];
-}) {
-  const IconComponent = ICON_MAP[stat.icon as keyof typeof ICON_MAP];
->>>>>>> origin/staging
 
   // Memoize the card style
   const cardStyle = useMemo(
@@ -227,33 +153,22 @@ const StatCard = memo(function StatCard({
       backgroundColor: SITE_CARD_COLOR,
       boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   // Memoize the icon container style
   const iconContainerStyle = useMemo(
     () => ({
       backgroundColor: `${SITE_BTN_COLOR}20`,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   // Memoize the icon style
   const iconStyle = useMemo(
     () => ({
       color: SITE_BTN_COLOR,
     }),
-<<<<<<< HEAD
     []
   )
 
@@ -265,25 +180,6 @@ const StatCard = memo(function StatCard({
   const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
   }, [])
-=======
-    [],
-  );
-
-  // Optimize mouse event handlers
-  const handleMouseEnter = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 25px ${SITE_BTN_COLOR}50`;
-    },
-    [],
-  );
-
-  const handleMouseLeave = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`;
-    },
-    [],
-  );
->>>>>>> origin/staging
 
   return (
     <Card
@@ -318,22 +214,16 @@ const StatCard = memo(function StatCard({
         </Typography>
       </CardContent>
     </Card>
-  );
-});
+  )
+})
 
 // Memoized journey item component
 const JourneyItem = memo(function JourneyItem({
   item,
 }: {
-<<<<<<< HEAD
   item: (typeof ABOUT_CONTENT.journey)[number]
 }) {
   const IconComponent = ICON_MAP[item.icon as keyof typeof ICON_MAP]
-=======
-  item: (typeof ABOUT_CONTENT.journey)[number];
-}) {
-  const IconComponent = ICON_MAP[item.icon as keyof typeof ICON_MAP];
->>>>>>> origin/staging
 
   // Memoize the timeline dot style
   const timelineDotStyle = useMemo(
@@ -341,13 +231,8 @@ const JourneyItem = memo(function JourneyItem({
       backgroundColor: SITE_CARD_COLOR,
       boxShadow: `0 0 0 2px ${SITE_BORDER_COLOR}, 0 0 15px ${SITE_BTN_COLOR}60`,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   // Memoize the card style
   const cardStyle = useMemo(
@@ -355,13 +240,8 @@ const JourneyItem = memo(function JourneyItem({
       backgroundColor: SITE_CARD_COLOR,
       boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   // Memoize the badge style
   const badgeStyle = useMemo(
@@ -369,26 +249,16 @@ const JourneyItem = memo(function JourneyItem({
       backgroundColor: SITE_BTN_COLOR,
       color: SITE_CARD_COLOR,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   // Memoize the icon style
   const iconStyle = useMemo(
     () => ({
       color: SITE_BTN_COLOR,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   return (
     <div className="relative flex items-start gap-6">
@@ -405,11 +275,7 @@ const JourneyItem = memo(function JourneyItem({
         style={cardStyle}
       >
         <CardContent className="p-6">
-<<<<<<< HEAD
           <div className="mb-2 flex items-center gap-3">
-=======
-          <div className="flex items-center gap-3 mb-2">
->>>>>>> origin/staging
             <Badge variant="secondary" style={badgeStyle}>
               {item.year}
             </Badge>
@@ -421,57 +287,36 @@ const JourneyItem = memo(function JourneyItem({
         </CardContent>
       </Card>
     </div>
-  );
-});
+  )
+})
 
 // Main component with optimizations
 export const AboutSection = memo(function AboutSection() {
-<<<<<<< HEAD
   const [activeTab, setActiveTab] = useState<'overview' | 'journey' | 'stats'>('overview')
-=======
-  const [activeTab, setActiveTab] = useState<"overview" | "journey" | "stats">(
-    "overview",
-  );
->>>>>>> origin/staging
 
   // Memoize the tab container style
   const tabContainerStyle = useMemo(
     () => ({
       backgroundColor: `${SITE_CARD_COLOR}80`,
     }),
-<<<<<<< HEAD
     []
   )
-=======
-    [],
-  );
->>>>>>> origin/staging
 
   // Memoize the timeline line style
   const timelineLineStyle = useMemo(
     () => ({
       backgroundColor: SITE_BORDER_COLOR,
     }),
-<<<<<<< HEAD
     []
   )
 
   // Memoize tab click handlers
   const handleOverviewClick = useCallback(() => setActiveTab('overview'), [])
   const handleJourneyClick = useCallback(() => setActiveTab('journey'), [])
-=======
-    [],
-  );
-
-  // Memoize tab click handlers
-  const handleOverviewClick = useCallback(() => setActiveTab("overview"), []);
-  const handleJourneyClick = useCallback(() => setActiveTab("journey"), []);
->>>>>>> origin/staging
 
   // Memoize the tabs array
   const tabs = useMemo(
     () => [
-<<<<<<< HEAD
       { id: 'overview', label: 'Overview', onClick: handleOverviewClick },
       { id: 'journey', label: 'Journey', onClick: handleJourneyClick },
     ],
@@ -483,22 +328,9 @@ export const AboutSection = memo(function AboutSection() {
 
   // Memoize the journey items to prevent recreation on each render
   const journeyItems = useMemo(() => ABOUT_CONTENT.journey, [])
-=======
-      { id: "overview", label: "Overview", onClick: handleOverviewClick },
-      { id: "journey", label: "Journey", onClick: handleJourneyClick },
-    ],
-    [handleOverviewClick, handleJourneyClick],
-  );
-
-  // Memoize the values entries to prevent recreation on each render
-  const valuesEntries = useMemo(() => Object.entries(ABOUT_CONTENT.values), []);
-
-  // Memoize the journey items to prevent recreation on each render
-  const journeyItems = useMemo(() => ABOUT_CONTENT.journey, []);
->>>>>>> origin/staging
 
   // Memoize the stats items to prevent recreation on each render
-  const statsItems = useMemo(() => ABOUT_CONTENT.stats, []);
+  const statsItems = useMemo(() => ABOUT_CONTENT.stats, [])
 
   return (
     <Section id="about">
@@ -544,13 +376,7 @@ export const AboutSection = memo(function AboutSection() {
             </div>
 
             {/* Stats Cards - Always visible */}
-<<<<<<< HEAD
             <div className={cn('grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4')}>
-=======
-            <div
-              className={cn("grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8")}
-            >
->>>>>>> origin/staging
               {statsItems.map((stat, index) => (
                 <StatCard key={index} stat={stat} />
               ))}
@@ -563,14 +389,7 @@ export const AboutSection = memo(function AboutSection() {
           <div className="mx-auto max-w-4xl">
             <div className="relative">
               {/* Timeline line */}
-<<<<<<< HEAD
               <div className="absolute bottom-0 left-8 top-0 w-0.5" style={timelineLineStyle} />
-=======
-              <div
-                className="absolute left-8 top-0 bottom-0 w-0.5"
-                style={timelineLineStyle}
-              />
->>>>>>> origin/staging
 
               <div className="space-y-8">
                 {journeyItems.map((item, index) => (
@@ -582,5 +401,5 @@ export const AboutSection = memo(function AboutSection() {
         )}
       </div>
     </Section>
-  );
-});
+  )
+})

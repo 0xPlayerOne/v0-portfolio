@@ -1,5 +1,4 @@
 .next
-<<<<<<< HEAD
 next-env.d.ts
 node_modules
 dist
@@ -9,9 +8,3 @@ coverage
 *.lock
 pnpm-lock.yaml
 bun.lock
-=======
-coverage
-node_modules
-public
-pnpm-lock.yaml
->>>>>>> origin/staging

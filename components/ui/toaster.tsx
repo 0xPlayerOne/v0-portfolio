@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 'use client'
 
 import { useToast } from '@/hooks/use-toast'
-=======
-"use client";
-
-import { useToast } from "@/hooks/use-toast";
->>>>>>> origin/staging
 import {
   Toast,
   ToastClose,
@@ -14,14 +8,10 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-<<<<<<< HEAD
 } from '@/components/ui/toast'
-=======
-} from "@/components/ui/toast";
->>>>>>> origin/staging
 
 export function Toaster() {
-  const { toasts } = useToast();
+  const { toasts } = useToast()
 
   return (
     <ToastProvider>
@@ -35,9 +25,9 @@ export function Toaster() {
             {action}
             <ToastClose />
           </Toast>
-        );
+        )
       })}
       <ToastViewport />
     </ToastProvider>
-  );
+  )
 }
