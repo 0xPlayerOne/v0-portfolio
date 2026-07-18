@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react'
 import { afterEach, beforeEach, mock } from 'bun:test'
 
-(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true
+;(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
 beforeEach(() => {
   Object.defineProperty(window, 'requestAnimationFrame', {
