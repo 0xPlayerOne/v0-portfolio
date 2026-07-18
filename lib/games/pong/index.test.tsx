@@ -32,7 +32,17 @@ beforeEach(() => {
 describe('PongGame', () => {
   it('mounts a full-size canvas with the retro pong aria label', () => {
     const { container } = render(
-      <PongGame navbarHeight={40} colors={{ background: '#000', pixel: '#0f0', hitPixel: '#0a0', ball: '#fff', paddle: '#fff' }} headerText={['HI','THERE']} />,
+      <PongGame
+        navbarHeight={40}
+        colors={{
+          background: '#000',
+          pixel: '#0f0',
+          hitPixel: '#0a0',
+          ball: '#fff',
+          paddle: '#fff',
+        }}
+        headerText={['HI', 'THERE']}
+      />
     )
     const canvas = container.querySelector('canvas')
     expect(canvas).not.toBeNull()
@@ -42,7 +52,17 @@ describe('PongGame', () => {
 
   it('initializes a game on the canvas context and starts the loop', () => {
     render(
-      <PongGame navbarHeight={40} colors={{ background: '#000', pixel: '#0f0', hitPixel: '#0a0', ball: '#fff', paddle: '#fff' }} headerText={['A', 'B']} />,
+      <PongGame
+        navbarHeight={40}
+        colors={{
+          background: '#000',
+          pixel: '#0f0',
+          hitPixel: '#0a0',
+          ball: '#fff',
+          paddle: '#fff',
+        }}
+        headerText={['A', 'B']}
+      />
     )
     // The stubbed 2d context means the effect reached createGame + render
     expect(stubCtx.fillRect).toHaveBeenCalled()
@@ -50,7 +70,18 @@ describe('PongGame', () => {
 
   it('applies the optional className', () => {
     const { container } = render(
-      <PongGame navbarHeight={0} colors={{ background: '#000', pixel: '#0f0', hitPixel: '#0a0', ball: '#0f0', paddle: '#0f0' }} headerText={['X', 'Y']} className="extra" />,
+      <PongGame
+        navbarHeight={0}
+        colors={{
+          background: '#000',
+          pixel: '#0f0',
+          hitPixel: '#0a0',
+          ball: '#0f0',
+          paddle: '#0f0',
+        }}
+        headerText={['X', 'Y']}
+        className="extra"
+      />
     )
     expect(container.querySelector('canvas')?.className).toContain('extra')
   })

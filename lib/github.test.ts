@@ -26,10 +26,14 @@ describe('fetchPinnedRepos', () => {
       const u = String(url)
       if (u.includes('/languages')) return makeResponse({ TypeScript: 800, JavaScript: 200 })
       if (u.includes('users/0xPlayerOne/repos')) {
-        return makeResponse([repoJson('other-repo', 'An open project', 'https://github.com/0xPlayerOne/other-repo')])
+        return makeResponse([
+          repoJson('other-repo', 'An open project', 'https://github.com/0xPlayerOne/other-repo'),
+        ])
       }
       // specific repo fetches (pinned configs)
-      return makeResponse(repoJson('nifty-fe', 'The monorepo', 'https://github.com/NiftyLeague/nifty-fe-monorepo'))
+      return makeResponse(
+        repoJson('nifty-fe', 'The monorepo', 'https://github.com/NiftyLeague/nifty-fe-monorepo')
+      )
     }) as any
 
     const repos = await fetchPinnedRepos()
