@@ -14,7 +14,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['tests/**/*.{ts,tsx}'],
+    files: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', 'tests/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
