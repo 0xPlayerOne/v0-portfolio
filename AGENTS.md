@@ -84,4 +84,3 @@ All commands use `bun` (not `npm` or `yarn`).
 - **Forbidden / auto-generated dirs** (from `.gitignore`): `node_modules/`, `.next/`, `out/`, `build/`, `coverage/`, `.vitest/`, `.vercel/`, `.env`, `*.tsbuildinfo`, `next-env.d.ts`. None of these should ever be committed or hand-edited.
 - **Auto-synced repo**: This repository is synced from [v0.dev](https://v0.dev/chat/projects/UNx27p7EMON). Changes made in the v0 chat are automatically pushed here. Direct commits are fine too but may be overwritten on the next v0 deploy.
 - **Bun, not npm/yarn/pnpm**: The `packageManager` field locks this to `bun@1.3.14`. Running `npm install` will work but will create a lockfile mismatch.
-
