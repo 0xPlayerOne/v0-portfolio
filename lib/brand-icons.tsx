@@ -3,7 +3,9 @@
 
 import type { SVGProps } from 'react'
 
-export function Github(props: SVGProps<SVGSVGElement>) {
+type BrandIconProps = SVGProps<SVGSVGElement> & { size?: number }
+
+export function Github(props: BrandIconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -18,7 +20,7 @@ export function Github(props: SVGProps<SVGSVGElement>) {
   )
 }
 
-export function Linkedin(props: SVGProps<SVGSVGElement>) {
+export function Linkedin(props: BrandIconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
