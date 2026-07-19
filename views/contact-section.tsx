@@ -12,7 +12,8 @@ import {
 } from '@/constants/colors'
 import { cn } from '@/lib/utils'
 import { CONTACT_LINKS, CONTACT_CONTENT } from '@/constants/content'
-import { Twitter, Github, Linkedin, Mail } from 'lucide-react'
+import { X, Mail } from 'lucide-react'
+import { Github, Linkedin } from '@/lib/brand-icons'
 
 export function ContactSection() {
   return (
@@ -29,7 +30,7 @@ export function ContactSection() {
             const getIcon = (platform: string) => {
               switch (platform.toLowerCase()) {
                 case 'twitter':
-                  return <Twitter size={24} style={{ color: SITE_BTN_COLOR }} />
+                  return <X size={24} style={{ color: SITE_BTN_COLOR }} />
                 case 'github':
                   return <Github size={24} style={{ color: SITE_BTN_COLOR }} />
                 case 'linkedin':

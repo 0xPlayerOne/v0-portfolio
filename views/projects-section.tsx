@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ExternalLink, Star, GitFork, RefreshCw, Github, Pin } from 'lucide-react'
+import { ExternalLink, Star, GitFork, RefreshCw, Pin } from 'lucide-react'
+import { Github } from '@/lib/brand-icons'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
