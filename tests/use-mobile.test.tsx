@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'bun:test';
 import { renderHook } from '@testing-library/react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
