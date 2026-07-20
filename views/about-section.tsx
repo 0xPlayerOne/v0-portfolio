@@ -271,7 +271,7 @@ const JourneyItem = memo(function JourneyItem({
       </div>
 
       <Card
-        className="hover:scale-102 group flex-1 border-0 transition-all duration-300"
+        className="group flex-1 border-0 transition-all duration-300 hover:scale-102"
         style={cardStyle}
       >
         <CardContent className="p-6">
@@ -389,7 +389,7 @@ export const AboutSection = memo(function AboutSection() {
           <div className="mx-auto max-w-4xl">
             <div className="relative">
               {/* Timeline line */}
-              <div className="absolute bottom-0 left-8 top-0 w-0.5" style={timelineLineStyle} />
+              <div className="absolute top-0 bottom-0 left-8 w-0.5" style={timelineLineStyle} />
 
               <div className="space-y-8">
                 {journeyItems.map((item, index) => (

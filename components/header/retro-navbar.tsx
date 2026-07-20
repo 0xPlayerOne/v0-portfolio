@@ -42,7 +42,7 @@ const NavItem = memo(function NavItem({
       <button
         onClick={handleClick}
         className={cn(
-          'block whitespace-nowrap px-1 transition-colors sm:px-2',
+          'block px-1 whitespace-nowrap transition-colors sm:px-2',
           'font-pixel py-2.5 leading-none'
         )}
         style={{

@@ -130,7 +130,7 @@ export function ProjectsSection() {
                 }}
               >
                 {project.isPinned && (
-                  <div className="absolute left-3 top-3 z-10">
+                  <div className="absolute top-3 left-3 z-10">
                     <div
                       className="flex items-center gap-1 rounded-full px-2 py-1 text-xs"
                       style={{

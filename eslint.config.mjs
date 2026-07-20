@@ -1,12 +1,18 @@
-import { FlatCompat } from '@eslint/eslintrc'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import next from 'eslint-config-next'
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals'
 
-const compat = new FlatCompat({ baseDirectory: import.meta.dirname })
-export default defineConfig([
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+/** @type {import('eslint').Linter.Config[]} */
+const config = [
+  ...next,
+  ...nextCoreWebVitals,
   {
+    files: ['**/*.{ts,tsx}'],
     rules: {
       '@next/next/no-page-custom-font': 'off',
+      // react-hooks v7 added this rule; it over-fires on standard idioms
+      // (matchMedia init in effect, rAF-throttled scroll spy). Next.js's own
+      // config does not enable it. Disabled to avoid false-positive churn.
+      'react-hooks/set-state-in-effect': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
@@ -24,5 +30,9 @@ export default defineConfig([
     files: ['tailwind.config.js'],
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
-  globalIgnores(['.next/**', 'coverage/**', 'next-env.d.ts', 'public/**']),
-])
+  {
+    ignores: ['.next/**', 'coverage/**', 'next-env.d.ts', 'public/**'],
+  },
+]
+
+export default config
