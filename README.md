@@ -49,4 +49,3 @@ vercel env push .env.local
 ```
 
 > Never commit `.env.local` — it is gitignored. For team projects use `vercel --scope niftyleague`.
-> // staging sync: reset to main
