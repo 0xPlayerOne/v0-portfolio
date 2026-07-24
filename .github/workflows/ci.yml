@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
 
 permissions:
   contents: read
@@ -17,6 +19,7 @@ env:
 
 jobs:
   quality:
+    if: github.event_name != 'pull_request' || github.head_ref != 'staging'
     name: Build, Format, Lint & Type Check
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +38,7 @@ jobs:
         run: bun run build
 
   test:
+    if: github.event_name != 'pull_request' || github.head_ref != 'staging'
     name: Test
     runs-on: ubuntu-latest
     needs: quality

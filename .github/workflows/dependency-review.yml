@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   dependency-review:
+    if: github.head_ref != 'staging'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
