@@ -11,11 +11,32 @@ permissions:
   contents: read
 
 jobs:
-  ci:
-    name: CI
-    uses: 0xPlayerOne/code-foundry/.github/workflows/ci.yml@v0.31.13
-    with:
-      runtime-repository: 0xPlayerOne/code-foundry
-      runtime-ref: v0.31.13
-      runner: ubuntu-latest
-    secrets: inherit
+  quality:
+    name: Build, Format, Lint & Type Check
+    if: github.event_name != 'pull_request' || github.head_ref != 'staging'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jdx/mise-action@v4
+        with:
+          cache: true
+      - run: bun install --frozen-lockfile
+      - name: Format check
+        run: bun run format:check
+      - name: Lint
+        run: bun run lint
+      - name: Type check
+        run: bun run type:check
+      - name: Build
+        run: bun run build
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: jdx/mise-action@v4
+        with:
+          cache: true
+      - run: bun install --frozen-lockfile
+      - name: Test
+        run: bun run test
