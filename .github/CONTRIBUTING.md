@@ -1,7 +1,7 @@
-# Contributing to V0 Portfolio Frontend Monorepo
+# Contributing to V0 Portfolio
 
-Welcome! This document is the **single source of truth** for the contribution workflow across all V0 Portfolio repositories.  
-All agents (Hermes and other automation) must read and follow this document before working on any repo in the fleet.
+Welcome! This document is the **single source of truth** for the contribution workflow for the V0 Portfolio repository.  
+All agents (Hermes and other automation) must read and follow this document before working on this repo.
 
 - [Code of Conduct](./CODE_OF_CONDUCT.md)
 - [Security Policy](./SECURITY.md)
@@ -26,29 +26,20 @@ All agents (Hermes and other automation) must read and follow this document befo
 
 ## 1. Repository Overview
 
-This is a **Turborepo** monorepo managed with **Bun** (v1.3.14) and **Node.js** (v24.18.0) via `mise`.
-
-### Apps
-
-| App        | Stack                      | Port |
-| ---------- | -------------------------- | ---- |
-| `app`      | Next.js (Web3 dashboard)   | —    |
-| `docs`     | Docusaurus                 | —    |
-| `web`      | Next.js (company website)  | —    |
-| `smashers` | Next.js (game site)        | —    |
-| `template` | Next.js (new-app scaffold) | —    |
+This is a standalone **Next.js 16** app managed with **Bun** (v1.3.14) and **Node.js** (v24.18.0) via `mise`.
 
 ### Commands
 
-| Command            | What it does                            |
-| ------------------ | --------------------------------------- |
-| `turbo build`      | Build all apps & packages               |
-| `turbo dev`        | Run everything in dev mode              |
-| `turbo test`       | Run tests (bun native, not vitest/jest) |
-| `turbo format`     | Check formatting                        |
-| `turbo format:fix` | Auto-format                             |
-| `turbo lint`       | ESLint + Prettier                       |
-| `turbo type-check` | TypeScript checks                       |
+| Script            | What it does                            |
+| ----------------- | --------------------------------------- |
+| `bun run dev`     | Start Next.js dev server (Turbopack)    |
+| `bun run build`   | Production build (`next build`)         |
+| `bun run start`   | Serve production build (`next start`)   |
+| `bun run lint`    | ESLint (zero warnings enforced)         |
+| `bun run type:check` | TypeScript type checking (`tsc --noEmit`) |
+| `bun run format`  | Auto-format with Prettier               |
+| `bun run format:check` | Check formatting with Prettier    |
+| `bun run test`    | Run all tests (`bun test --dom --isolate`) |
 
 ---
 
@@ -116,19 +107,19 @@ mise install
 bun install --frozen-lockfile
 
 # Run everything in dev mode
-turbo dev
+bun run dev
 ```
 
 ### Before committing
 
 ```bash
-turbo lint           # ESLint + Prettier
-turbo type-check     # TypeScript type checking
-turbo test           # Run all tests
-turbo format:fix     # Auto-format (runs via husky pre-commit too)
+bun run lint           # ESLint (zero warnings)
+bun run type:check     # TypeScript type checking (tsc --noEmit)
+bun run test           # Run all tests (bun test --dom --isolate)
+bun run format:check   # Check formatting (Prettier)
 ```
 
-> **Note:** Husky + lint-staged are active. Pre-commit hooks run `turbo format:fix` on staged files.  
+> **Note:** Husky + lint-staged are active. Pre-commit hooks run `prettier --write` then `eslint --fix --max-warnings=0` on staged files.  
 > Never use `--no-verify` to skip hooks — if a hook fails, fix the issue.
 
 ---
@@ -263,7 +254,7 @@ Since a commit can never be simultaneously pushed to `main`/`staging` AND be a P
 | Job                                | What it checks                              |
 | ---------------------------------- | ------------------------------------------- |
 | `Build, Format, Lint & Type Check` | Compilation, formatting, ESLint, TypeScript |
-| `Test`                             | `turbo test` — all unit + integration tests |
+| `Test`                             | `bun run test` — all unit + integration tests |
 | `Vercel Preview Comments`          | Preview deployment verification             |
 
 ### If CI fails
