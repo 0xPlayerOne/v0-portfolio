@@ -48,7 +48,8 @@ export function Typography({
     overline: { element: 'span', classes: 'text-xs uppercase tracking-wide' },
   }
 
-  const { element: Element, classes } = variantMap[variant]
+  const resolved = variantMap[variant] ?? variantMap.body1
+  const { element: Element, classes } = resolved
   const Component = component || Element
   const style = { color: colorMap[color] || SITE_TEXT_COLOR }
 

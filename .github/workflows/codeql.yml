@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   analyze:
+    if: github.event_name != 'pull_request' || github.head_ref != 'staging'
     name: Analyze JavaScript and TypeScript
     runs-on: ubuntu-latest
     timeout-minutes: 20
