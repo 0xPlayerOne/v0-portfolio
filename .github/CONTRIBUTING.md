@@ -1,7 +1,7 @@
-# Contributing to V0 Portfolio
+# Contributing to V0 Portfolio Frontend Monorepo
 
-Welcome! This document is the **single source of truth** for the contribution workflow for the V0 Portfolio repository.  
-All agents (Hermes and other automation) must read and follow this document before working on this repo.
+Welcome! This document is the **single source of truth** for the contribution workflow across all V0 Portfolio repositories.  
+All agents (Hermes and other automation) must read and follow this document before working on any repo in the fleet.
 
 - [Code of Conduct](./CODE_OF_CONDUCT.md)
 - [Security Policy](./SECURITY.md)
@@ -26,20 +26,29 @@ All agents (Hermes and other automation) must read and follow this document befo
 
 ## 1. Repository Overview
 
-This is a standalone **Next.js 16** app managed with **Bun** (v1.3.14) and **Node.js** (v24.18.0) via `mise`.
+This is a **Turborepo** monorepo managed with **Bun** (v1.3.14) and **Node.js** (v24.18.0) via `mise`.
+
+### Apps
+
+| App        | Stack                      | Port |
+| ---------- | -------------------------- | ---- |
+| `app`      | Next.js (Web3 dashboard)   | —    |
+| `docs`     | Docusaurus                 | —    |
+| `web`      | Next.js (company website)  | —    |
+| `smashers` | Next.js (game site)        | —    |
+| `template` | Next.js (new-app scaffold) | —    |
 
 ### Commands
 
-| Script                 | What it does                               |
-| ---------------------- | ------------------------------------------ |
-| `bun run dev`          | Start Next.js dev server (Turbopack)       |
-| `bun run build`        | Production build (`next build`)            |
-| `bun run start`        | Serve production build (`next start`)      |
-| `bun run lint`         | ESLint (zero warnings enforced)            |
-| `bun run type:check`   | TypeScript type checking (`tsc --noEmit`)  |
-| `bun run format`       | Auto-format with Prettier                  |
-| `bun run format:check` | Check formatting with Prettier             |
-| `bun run test`         | Run all tests (`bun test --dom --isolate`) |
+| Command            | What it does                            |
+| ------------------ | --------------------------------------- |
+| `turbo build`      | Build all apps & packages               |
+| `turbo dev`        | Run everything in dev mode              |
+| `turbo test`       | Run tests (bun native, not vitest/jest) |
+| `turbo format`     | Check formatting                        |
+| `turbo format:fix` | Auto-format                             |
+| `turbo lint`       | ESLint + Prettier                       |
+| `turbo type-check` | TypeScript checks                       |
 
 ---
 
@@ -107,19 +116,19 @@ mise install
 bun install --frozen-lockfile
 
 # Run everything in dev mode
-bun run dev
+turbo dev
 ```
 
 ### Before committing
 
 ```bash
-bun run lint           # ESLint (zero warnings)
-bun run type:check     # TypeScript type checking (tsc --noEmit)
-bun run test           # Run all tests (bun test --dom --isolate)
-bun run format:check   # Check formatting (Prettier)
+turbo lint           # ESLint + Prettier
+turbo type-check     # TypeScript type checking
+turbo test           # Run all tests
+turbo format:fix     # Auto-format (runs via husky pre-commit too)
 ```
 
-> **Note:** Husky + lint-staged are active. Pre-commit hooks run `prettier --write` then `eslint --fix --max-warnings=0` on staged files.  
+> **Note:** Husky + lint-staged are active. Pre-commit hooks run `turbo format:fix` on staged files.  
 > Never use `--no-verify` to skip hooks — if a hook fails, fix the issue.
 
 ---
@@ -251,11 +260,11 @@ Since a commit can never be simultaneously pushed to `main`/`staging` AND be a P
 
 ### CI jobs
 
-| Job                                | What it checks                                |
-| ---------------------------------- | --------------------------------------------- |
-| `Build, Format, Lint & Type Check` | Compilation, formatting, ESLint, TypeScript   |
-| `Test`                             | `bun run test` — all unit + integration tests |
-| `Vercel Preview Comments`          | Preview deployment verification               |
+| Job                                | What it checks                              |
+| ---------------------------------- | ------------------------------------------- |
+| `Build, Format, Lint & Type Check` | Compilation, formatting, ESLint, TypeScript |
+| `Test`                             | `turbo test` — all unit + integration tests |
+| `Vercel Preview Comments`          | Preview deployment verification             |
 
 ### If CI fails
 
@@ -312,11 +321,11 @@ Release PRs follow the same template but add a release summary describing the ba
 
 ## 9. Merge Protocol
 
-| From                     | To        | Method       | Reviewer                 | Notes                                    |
-| ------------------------ | --------- | ------------ | ------------------------ | ---------------------------------------- |
-| Sub-branch               | `staging` | Squash merge | Optional (self-merge OK) | Delete branch after merge; auto-draft PR |
-| Direct push to `staging` | `staging` | Push         | N/A                      | For small fixes or urgent bugs           |
-| `staging`                | `main`    | Squash merge | Admin (0xPlayerOne)      | Only when all CI passes on staging       |
+| From                     | To        | Method       | Reviewer                          | Notes                                    |
+| ------------------------ | --------- | ------------ | --------------------------------- | ---------------------------------------- |
+| Sub-branch               | `staging` | Squash merge | Optional (self-merge OK)          | Delete branch after merge; auto-draft PR |
+| Direct push to `staging` | `staging` | Push         | N/A                               | For small fixes or urgent bugs           |
+| `staging`                | `main`    | Squash merge | Admin (0xPlayerOne) | Only when all CI passes on staging       |
 
 ### Squash merge convention
 
