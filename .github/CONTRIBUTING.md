@@ -1,6 +1,7 @@
-# Contributing
+# Contributing to V0 Portfolio Frontend Monorepo
 
-This guide is the operating contract for humans and automation contributing to this repository.
+Welcome! This document is the **single source of truth** for the contribution workflow across all V0 Portfolio repositories.  
+All agents (Hermes and other automation) must read and follow this document before working on any repo in the fleet.
 
 It applies to TypeScript, Rust, Python, and mixed-language projects using this template.
 
@@ -14,21 +15,29 @@ Quick links: [Code of Conduct](./CODE_OF_CONDUCT.md) · [Security Policy](./SECU
 
 Agents must follow these rules before changing code:
 
-1. Read this file, `AGENTS.md`, and the relevant project documentation.
-2. Inspect the current branch, worktree, remotes, and existing changes before editing.
-3. Preserve user-owned changes. Never discard or overwrite unrelated work.
-4. Branch from `staging` and target pull requests at `staging`; do not work directly on `main`.
-5. Keep the change focused. Do not expand scope without documenting why.
-6. Run the applicable format, lint, type-check, build, unit, integration, E2E, smoke, and security checks.
-7. Report exact validation results, skipped checks, known limitations, and remaining risks.
-8. Never commit secrets, credentials, local environment files, generated artifacts, or machine-specific paths.
+This is a **Turborepo** monorepo managed with **Bun** (v1.3.14) and **Node.js** (v24.18.0) via `mise`.
+
+### Apps
+
+| App        | Stack                      | Port |
+| ---------- | -------------------------- | ---- |
+| `app`      | Next.js (Web3 dashboard)   | —    |
+| `docs`     | Docusaurus                 | —    |
+| `web`      | Next.js (company website)  | —    |
+| `smashers` | Next.js (game site)        | —    |
+| `template` | Next.js (new-app scaffold) | —    |
 
 Agents must not:
 
-- Use destructive Git operations, force pushes, or history rewriting without explicit authorization.
-- Bypass hooks or required checks to hide a failure.
-- Change branch protections, secrets, deployments, or external systems unless that action is explicitly in scope.
-- Claim completion when tests, deployment checks, or required reviews are still pending.
+| Command            | What it does                            |
+| ------------------ | --------------------------------------- |
+| `turbo build`      | Build all apps & packages               |
+| `turbo dev`        | Run everything in dev mode              |
+| `turbo test`       | Run tests (bun native, not vitest/jest) |
+| `turbo format`     | Check formatting                        |
+| `turbo format:fix` | Auto-format                             |
+| `turbo lint`       | ESLint + Prettier                       |
+| `turbo type-check` | TypeScript checks                       |
 
 ## Branching model
 
@@ -62,30 +71,43 @@ The default Git workflow is `staging-release`: topic branches merge into `stagin
 
 ### Worktree and branch
 
-```sh
-git status --short --branch
-git fetch origin
-git switch staging
-git pull --ff-only origin staging
-git switch -c feat/short-description
+---
+
+## 3. Development Setup
+
+### Prerequisites
+
+- `mise` (toolchain version manager) — installs bun and node at pinned versions
+- `git` (obviously)
+
+### One-time setup
+
+```bash
+# Clone
+git clone git@github.com:0xPlayerOne/v0-portfolio.git
+cd v0-portfolio
+
+# Install toolchain (reads mise.toml → installs bun 1.3.14 + node 24.18.0)
+mise install
+
+# Install dependencies
+bun install --frozen-lockfile
+
+# Run everything in dev mode
+turbo dev
 ```
 
 If the worktree is dirty, stop and understand the existing changes before switching branches or editing overlapping files.
 
-## Local validation
-
-The repository runtime detects supported tools and skips checks that do not apply:
-
-```sh
-npx code-foundry doctor
-npm run format:check   # or the package manager's equivalent
-npm run lint
-npm run type-check
-npm test
-Security and dependency audits run through the GitHub Security workflow.
+```bash
+turbo lint           # ESLint + Prettier
+turbo type-check     # TypeScript type checking
+turbo test           # Run all tests
+turbo format:fix     # Auto-format (runs via husky pre-commit too)
 ```
 
-Run the checks relevant to the change. For a release or security-sensitive change, run the complete set. Record the commands and results in the pull request.
+> **Note:** Husky + lint-staged are active. Pre-commit hooks run `turbo format:fix` on staged files.  
+> Never use `--no-verify` to skip hooks — if a hook fails, fix the issue.
 
 ## Internal contribution workflow
 
@@ -192,4 +214,160 @@ For an urgent production or security issue:
 4. Request the appropriate maintainer review.
 5. Record follow-up work, remediation, and rollback information.
 
-CI bypasses are for documented infrastructure emergencies only and require a follow-up fix. Never use a bypass to hide a code or test failure.
+- **Target:** `staging` (not main).
+- **Title:** Conventional commit style.
+- **Description:** What does this change? Why? Any screenshots?
+- **Link to related issue** if applicable.
+- CI runs automatically. Waiting for it to pass is appreciated.
+
+### 5.5 After merge
+
+- Your commits will be squash-merged into `staging`.
+- You can delete your feature branch after merge.
+
+---
+
+## 6. CI & Testing Discipline
+
+### What runs when
+
+| Event                                              | CI trigger                                | Reason                                                          |
+| -------------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------- |
+| Push to `main` or `staging`                        | `push` trigger → **full CI runs**         | Covers direct pushes to staging, and staging→main merge commits |
+| PR opened/synchronized targeting `staging`         | `pull_request` trigger → **full CI runs** | Covers sub-branch→staging PRs                                   |
+| Push to a feature branch (`feat/*`, `fix/*`, etc.) | **No CI**                                 | CI only runs when a PR is opened into staging                   |
+| Direct push to `main`                              | **Blocked by branch protection**          | Only possible via staging→main merge                            |
+
+### Why no duplicates
+
+CI runs on `push` events (to main/staging) and `pull_request` events (targeting main/staging). These fire on **different refs**:
+
+- `push` trigger fires on commits pushed directly to `main` or `staging` branches
+- `pull_request` trigger fires on the **head commit** of a PR (which lives on a feature branch, not main/staging)
+
+Since a commit can never be simultaneously pushed to `main`/`staging` AND be a PR's head commit from a different branch, **no commit ever triggers CI twice**.
+
+| Scenario                            | Push trigger?                | PR trigger?      | Double? |
+| ----------------------------------- | ---------------------------- | ---------------- | ------- |
+| Push to sub-branch `feat/foo`       | No (wrong branch)            | No (no PR event) | ✅ No   |
+| Open PR `feat/foo` → `staging`      | No (commit is on sub-branch) | Yes              | ✅ No   |
+| Push to `staging` directly          | Yes                          | No               | ✅ No   |
+| Merge staging→main (push to `main`) | Yes                          | No               | ✅ No   |
+
+### CI jobs
+
+| Job                                | What it checks                              |
+| ---------------------------------- | ------------------------------------------- |
+| `Build, Format, Lint & Type Check` | Compilation, formatting, ESLint, TypeScript |
+| `Test`                             | `turbo test` — all unit + integration tests |
+| `Vercel Preview Comments`          | Preview deployment verification             |
+
+### If CI fails
+
+- **On your feature branch:** Push a fix, CI re-runs automatically.
+- **On staging after merge:** Fix directly on staging (push a fix commit) or revert the failing change.
+- **Before staging→main:** CI must be **all green** on the staging branch's latest commit.
+
+---
+
+## 7. Pull Request Guidelines
+
+Every PR must use the [pull request template](./PULL_REQUEST_TEMPLATE.md) — do not delete sections.
+
+The template covers:
+
+- **Description** — what changed and why
+- **CI Status** — checkbox for each required check
+- **Compliance Checklist** — locking, format, dep hygiene, no generated artifacts
+- **Additional Context** — breaking changes, migration steps, related PRs
+
+Since feature branches are already prefixed (`feat/`, `fix/`, `chore/`, etc.) and all PRs target `staging`, the template intentionally omits type-picker and target-branch fields — they are inferred from the branch and CI context.
+
+### Staging→main (release) PRs
+
+Release PRs follow the same template but add a release summary describing the batch.
+
+- Prefer small, focused PRs (under 400 lines changed when possible).
+- Large features should be broken into multiple PRs targeting staging.
+- If a PR exceeds 1000 lines, consider splitting it.
+
+---
+
+## 8. Code Review Standards
+
+### Internal PRs (sub-branch → staging)
+
+- **No review required.** Self-merge is fine.
+- Peer reviews are encouraged but not mandatory.
+- If you want feedback, request a review explicitly.
+
+### Staging → Main PRs
+
+- **Only admins can merge into `main`.** The daily review agent picks up PRs once they are approved by an admin on GitHub (via review approval).
+- Focused on: does CI pass? Are there breaking changes? Is the release summary complete?
+- This is a release gate, not a code-level review (code review happened on sub-branch→staging).
+
+### External PRs (fork → staging)
+
+- **Review is required** from at least one maintainer.
+- Focus on: correctness, security, style alignment, test coverage.
+- External contributors should expect feedback and iteration.
+
+---
+
+## 9. Merge Protocol
+
+| From                     | To        | Method       | Reviewer                          | Notes                                    |
+| ------------------------ | --------- | ------------ | --------------------------------- | ---------------------------------------- |
+| Sub-branch               | `staging` | Squash merge | Optional (self-merge OK)          | Delete branch after merge; auto-draft PR |
+| Direct push to `staging` | `staging` | Push         | N/A                               | For small fixes or urgent bugs           |
+| `staging`                | `main`    | Squash merge | Admin (0xPlayerOne) | Only when all CI passes on staging       |
+
+### Squash merge convention
+
+All merges use **squash merge** — every PR becomes a single commit on the target branch. This keeps history clean and linear.
+
+When squashing, the commit message should be:
+
+```
+<type>(<scope>): <summary>
+
+<optional body with details>
+```
+
+---
+
+## 10. Workflow Discipline
+
+Branch protections are a safety net, not a workflow definition. The workflow defined in sections 2–9 is authoritative regardless of whether GitHub's API enforces every rule. Always follow the documented process — do not bypass quality gates even when technically possible.
+
+---
+
+## 11. Emergency Procedures
+
+### Urgent hotfix (security / production outage)
+
+1. Create a branch off `staging`: `git checkout staging && git checkout -b hotfix/urgent-fix`
+2. Fix the issue, push, open a PR into `staging`.
+3. Self-merge once CI passes.
+4. Open a staging→main PR and flag as urgent.
+5. If staging→main merge is blocked by CI issues unrelated to your change, contact 0xPlayerOne.
+
+### Rollback
+
+If a staging→main merge introduces a production issue:
+
+1. Revert the merge commit on staging: `git revert -m 1 <merge-sha>`
+2. Push directly to staging: `git push origin staging`
+3. Open a new staging→main PR.
+4. Fix the root cause on a sub-branch and re-merge.
+
+### Skip-CI (rare emergencies only)
+
+In genuine emergencies where CI is blocked by infrastructure (not code), you may push with `[skip-ci]` in the commit message.  
+This must be followed by a CI-fixing follow-up commit within 24 hours. Abuse of skip-ci will result in access revocation.
+
+---
+
+_Last updated: 2026-07-25_  
+_Maintainers: V0 Portfolio engineering team_
