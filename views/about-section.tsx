@@ -292,7 +292,7 @@ const JourneyItem = memo(function JourneyItem({
 
 // Main component with optimizations
 export const AboutSection = memo(function AboutSection() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'journey' | 'stats'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'journey'>('overview')
 
   // Memoize the tab container style
   const tabContainerStyle = useMemo(
