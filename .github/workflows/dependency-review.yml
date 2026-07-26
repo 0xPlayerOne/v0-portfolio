@@ -9,12 +9,14 @@ permissions:
 
 jobs:
   dependency-review:
-    if: github.head_ref != 'staging'
+    name: Review dependency changes
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Checkout repository
         uses: actions/checkout@v7
-      - name: Review dependency changes
+
+      - name: Review dependencies
         uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: high
+          license-check: true
