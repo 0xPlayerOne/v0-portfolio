@@ -19,16 +19,16 @@ This is a standalone **Next.js 16** app managed with **Bun** (v1.3.14) and **Nod
 
 Agents must not:
 
-| Script            | What it does                            |
-| ----------------- | --------------------------------------- |
-| `bun run dev`     | Start Next.js dev server (Turbopack)    |
-| `bun run build`   | Production build (`next build`)         |
-| `bun run start`   | Serve production build (`next start`)   |
-| `bun run lint`    | ESLint (zero warnings enforced)         |
-| `bun run type:check` | TypeScript type checking (`tsc --noEmit`) |
-| `bun run format`  | Auto-format with Prettier               |
-| `bun run format:check` | Check formatting with Prettier    |
-| `bun run test`    | Run all tests (`bun test --dom --isolate`) |
+| Script                 | What it does                               |
+| ---------------------- | ------------------------------------------ |
+| `bun run dev`          | Start Next.js dev server (Turbopack)       |
+| `bun run build`        | Production build (`next build`)            |
+| `bun run start`        | Serve production build (`next start`)      |
+| `bun run lint`         | ESLint (zero warnings enforced)            |
+| `bun run type:check`   | TypeScript type checking (`tsc --noEmit`)  |
+| `bun run format`       | Auto-format with Prettier                  |
+| `bun run format:check` | Check formatting with Prettier             |
+| `bun run test`         | Run all tests (`bun test --dom --isolate`) |
 
 ## Branching model
 
@@ -247,11 +247,11 @@ Since a commit can never be simultaneously pushed to `main`/`staging` AND be a P
 
 ### CI jobs
 
-| Job                                | What it checks                              |
-| ---------------------------------- | ------------------------------------------- |
-| `Build, Format, Lint & Type Check` | Compilation, formatting, ESLint, TypeScript |
+| Job                                | What it checks                                |
+| ---------------------------------- | --------------------------------------------- |
+| `Build, Format, Lint & Type Check` | Compilation, formatting, ESLint, TypeScript   |
 | `Test`                             | `bun run test` — all unit + integration tests |
-| `Vercel Preview Comments`          | Preview deployment verification             |
+| `Vercel Preview Comments`          | Preview deployment verification               |
 
 ### If CI fails
 
@@ -308,11 +308,11 @@ Release PRs follow the same template but add a release summary describing the ba
 
 ## 9. Merge Protocol
 
-| From                     | To        | Method       | Reviewer                          | Notes                                    |
-| ------------------------ | --------- | ------------ | --------------------------------- | ---------------------------------------- |
-| Sub-branch               | `staging` | Squash merge | Optional (self-merge OK)          | Delete branch after merge; auto-draft PR |
-| Direct push to `staging` | `staging` | Push         | N/A                               | For small fixes or urgent bugs           |
-| `staging`                | `main`    | Squash merge | Admin (0xPlayerOne) | Only when all CI passes on staging       |
+| From                     | To        | Method       | Reviewer                 | Notes                                    |
+| ------------------------ | --------- | ------------ | ------------------------ | ---------------------------------------- |
+| Sub-branch               | `staging` | Squash merge | Optional (self-merge OK) | Delete branch after merge; auto-draft PR |
+| Direct push to `staging` | `staging` | Push         | N/A                      | For small fixes or urgent bugs           |
+| `staging`                | `main`    | Squash merge | Admin (0xPlayerOne)      | Only when all CI passes on staging       |
 
 ### Squash merge convention
 
