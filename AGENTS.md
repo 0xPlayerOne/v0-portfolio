@@ -1,69 +1,152 @@
-## Stack
+# Agent Instructions
 
-- Next.js 16.2.10 (App Router, Turbopack) + React 19.2.7
-- TypeScript 5.9.3 (pinned: typescript-eslint / eslint-config-next@16 require `<6.1.0`), `strict: true`, path alias `@/*` → `./*`
-- Tailwind CSS 4.3.3 (`@import "tailwindcss"` in CSS, theme via `@theme` in `app/globals.css`) + shadcn/ui (Radix primitives) + `lucide-react` icons. **No `tailwind.config.js`** — v4 uses CSS-first config. `tw-animate-css` replaces `tailwindcss-animate`.
-- Bun 1.3.14 (frozen lockfile committed). `packageManager: bun@1.3.14` in `package.json`
-- Toolchain pinned in `mise.toml`: `node = 24.18.0`, `bun = 1.3.14`. CI installs via `jdx/mise-action` — local devs should `mise use` or match exactly, otherwise `bun.lock` resolution drifts
-- Tests: Bun native `bun:test` + `@testing-library/react` v16 + `happy-dom` (registered via `@happy-dom/global-registrator`)
-- Lint/format: ESLint 9 flat config (`eslint-config-next` v16 — native flat config, consumed directly in `eslint.config.mjs`, NOT via `FlatCompat`) + Prettier 3.9 with `prettier-plugin-tailwindcss`
-- Pre-commit: husky + lint-staged (prettier + eslint on changed files)
-- Deploy: Vercel, auto-syncs from v0.dev chats
+These instructions are the repository-level operating contract for coding agents, including Hermes, OpenCode, and other automation.
 
-## Commands
+They complement `CONTRIBUTING.md`. More specific instructions in nested `AGENTS.md` files and project documentation take precedence for their directory.
 
-All scripts are real entries in `package.json`. Run via `bun run <name>` unless noted.
+## Mission
 
-| Script       | Command                                                          | Use                                                                                                     |
-| ------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| install      | `bun install --frozen-lockfile`                                  | always; never `npm i` / `yarn` / `pnpm`. In CI-shaped envs, `--frozen-lockfile` is mandatory            |
-| dev          | `bun run dev` (`next dev`)                                       | local dev server                                                                                        |
-| build        | `bun run build` (`next build`)                                   | production build                                                                                        |
-| start        | `bun run start` (`next start`)                                   | serve production build                                                                                  |
-| lint         | `bun run lint` (`eslint . --max-warnings=0`)                     | zero warnings, will fail CI on any                                                                      |
-| type-check   | `bun run type:check` (alias of `typecheck`, both `tsc --noEmit`) | either name works — pick one and stick with it                                                          |
-| format       | `bun run format` (`prettier --write .`)                          | write fixes                                                                                             |
-| format:check | `bun run format:check` (`prettier --check .`)                    | CI uses this, not `format`                                                                              |
-| test         | `bun run test` (`bun test --dom --isolate`)                      | **Bun native `bun:test`**, NOT vitest/jest. DOM env via `--dom` flag, hermetic per file via `--isolate` |
-| test:watch   | `bun run test:watch` (`bun test --dom --watch`)                  | local TDD                                                                                               |
+- Keep formatting, linting, type checking, builds, tests, and coverage reproducible locally and in CI.
+- Prefer the versions pinned in `.mise.toml`.
+- Do not commit secrets, generated credentials, local environment files, or machine-specific paths.
+- Add tests for behavior changes and keep coverage thresholds explicit in the project configuration.
+  Make the smallest complete, well-tested change that solves the requested problem without disturbing unrelated work.
 
-Test runner: `bun test` (Bun's built-in test runner). Do not introduce vitest, jest, or `@swc/jest`.
+This repository may contain TypeScript, Rust, Python, or any combination of them. Detect the active stack from the files present; do not assume every check applies.
 
-## Structure
+## Read before acting
 
+Before editing:
+
+1. Read this file and `.github/CONTRIBUTING.md`.
+2. Find and read any nested `AGENTS.md` that covers the files you will touch.
+3. Read the nearest README, package manifest, build configuration, and relevant tests.
+4. Inspect the current branch, worktree, remotes, and recent history:
+
+   ```sh
+   git status --short --branch
+   git remote -v
+   git log -5 --oneline
+   ```
+
+5. Identify the repository's package manager, lockfile, runtime versions, test commands, deployment assumptions, and generated files.
+
+If the worktree is dirty, preserve existing changes and avoid overlapping edits until their ownership is clear.
+
+## Priorities
+
+When instructions conflict, use this order:
+
+1. System and user instructions
+2. This repository's instructions and explicit task scope
+3. Nested directory instructions
+4. Existing project conventions
+5. General best practices
+
+Ask for clarification when a missing decision would materially change the implementation. Otherwise make the smallest reasonable assumption and document it.
+
+## Safety boundaries
+
+- Do not discard, reset, overwrite, or rewrite user-owned changes.
+- Do not expose or commit secrets, credentials, tokens, private keys, local environment files, or personal machine paths.
+- Do not modify production resources, repository settings, branch protections, secrets, deployments, or external systems unless explicitly requested.
+- Do not add organization- or product-specific details to this reusable baseline.
+- Do not change dependency managers or lockfiles unnecessarily.
+- Do not bypass hooks, tests, review requirements, or required checks to hide a failure.
+- Do not claim completion while required validation, review, deployment, or user decisions remain pending.
+- Publishing, committing, or opening a pull request requires explicit task scope or user authorization.
+
+## Standard workflow
+
+1. Restate the desired outcome and identify the files or systems in scope.
+2. Inspect before editing; preserve unrelated work.
+3. Plan the smallest coherent change.
+4. Implement with existing project patterns.
+5. Run focused checks while iterating.
+6. Inspect the final diff for accidental changes, secrets, formatting, and generated files.
+7. Run the broadest applicable validation available.
+8. Report what changed, exact checks and results, skipped checks with reasons, risks, and remaining work.
+
+For normal feature work, branch from `staging` and target pull requests at `staging`. Treat `main` as the protected release branch. Follow `.github/CONTRIBUTING.md` for the complete internal and external contribution flow.
+
+## Toolchain and dependencies
+
+- Use the versions pinned in `.mise.toml`; run `mise install` when needed.
+- Use the package manager indicated by the existing lockfile:
+  - `bun.lock` or `bun.lockb` → Bun
+  - `pnpm-lock.yaml` → pnpm
+  - `yarn.lock` → Yarn
+  - `package-lock.json` → npm
+- Use the existing Python environment and dependency manifest. Prefer a project-managed virtual environment.
+- Use Cargo commands and the committed Cargo lockfile for Rust projects.
+- Do not mix package managers or regenerate lockfiles as a side effect.
+- Keep dependency additions narrowly scoped and explain security, licensing, and runtime impact.
+
+## Validation
+
+Use the shared scripts when present. They detect supported tools and skip inapplicable checks:
+
+```sh
+bash .github/scripts/ci.sh format
+bash .github/scripts/ci.sh lint
+bash .github/scripts/ci.sh type_check
+bash .github/scripts/ci.sh build
+bash .github/scripts/ci.sh unit
+bash .github/scripts/ci.sh integration
+bash .github/scripts/ci.sh e2e
+bash .github/scripts/ci.sh smoke
+bash .github/scripts/security.sh
 ```
-app/                    Next.js App Router (layout.tsx, page.tsx, globals.css)
-components/             Custom components (header/, game-credits, theme-provider)
-  ui/                   shadcn/ui primitives — add via `bunx --bun shadcn@latest add <name>`, do not hand-edit
-views/                  Page sections: about, skills, projects, contact
-lib/                    Utilities + integrations (utils.ts with `cn()`, github.ts, smooth-scroll, etc.)
-  games/pong/           Embedded Pong game
-hooks/                  use-mobile, use-scroll-spy, use-toast
-constants/              Static content (content, colors, github, links, navigation)
-types/                  Shared TypeScript types (github, typography)
-tests/                  Bun test setup + colocated *.test.tsx files
-public/                 Static assets
+
+Run focused tests first, then the complete applicable set for release, security, workflow, dependency, and configuration changes.
+
+At minimum:
+
+- TypeScript/JavaScript: Prettier formatting, ESLint linting, type-check, build, unit tests, and relevant browser/integration tests
+- Rust: default rustfmt, Clippy with warnings treated as errors, check, unit/integration tests, and dependency audit
+- Python: Ruff formatting and linting, compile or type checks, pytest, coverage, and dependency audit
+- Mixed projects: validate each active ecosystem and its integration boundaries
+
+If a check cannot run, state the exact reason. A skipped check is not a passing check.
+
+## Tests and coverage
+
+- Add or update tests for behavior changes and regressions.
+- Keep unit, integration, E2E, and smoke coverage in the suite where each applies.
+- Preserve project-specific coverage thresholds; do not lower them to make CI green.
+- Keep test data deterministic and remove secrets from logs and fixtures.
+- Use the narrowest test command while iterating, then run the affected package or workspace suite.
+
+## GitHub workflows and configuration
+
+- Keep workflows concise, independently runnable, and safe to re-run.
+- Use `push` for `main, staging` and `pull_request` for `staging` unless a workflow has a documented event-specific reason.
+- Give workflows clear names and jobs concise names; avoid repeating the workflow name in the job name.
+- Use per-workflow concurrency groups that cancel superseded runs while allowing independent workflows to run in parallel.
+- Use least-privilege permissions and pin action versions consistently with the template.
+- Keep CI, Test, Security, CodeQL, Draft PR, Release PR, and Release concerns separated.
+- Security and CodeQL may skip when repository visibility or GitHub plan support does not permit them. Do not make an unavailable check required.
+- Optional Turborepo Remote Caching uses `TURBO_TOKEN` and `TURBO_TEAM`; do not add Vercel deployment behavior just to enable caching.
+- Update branch protection when adding or renaming required job checks; verify the actual GitHub status context.
+
+## Documentation and generated files
+
+- Update documentation when behavior, setup, configuration, commands, or operational procedures change.
+- Keep `.env.example` limited to variable names and safe placeholders.
+- Do not commit build output, caches, coverage output, dependency directories, generated credentials, or temporary files.
+- Preserve formatting and line-ending conventions from `.editorconfig` and `.gitattributes`.
+
+## Completion report
+
+End every agent task with:
+
+```text
+Summary:
+Files changed:
+Validation:
+Skipped checks:
+Risks or follow-up:
+Branch/PR:
 ```
 
-Home page composition (`app/page.tsx`): `PongHeader` → `AboutSection` → `SkillsSection` → `ProjectsSection` → `ContactSection`.
-
-Test preload order (see `bunfig.toml`): `tests/dom-globals.ts` (registers `document`/`navigator` globally) → `tests/setup.ts` (RTL `cleanup`, `IS_REACT_ACT_ENVIRONMENT`, `requestAnimationFrame` shim, `mock.restore()`). New test files in `tests/` or as `*.test.{ts,tsx}` are picked up automatically — no config changes needed.
-
-## Conventions & Gotchas
-
-- **Bun-only**. `packageManager: bun@1.3.14` is enforced. No `npm` / `yarn` / `pnpm` / `npx` — use `bun` / `bunx --bun <pkg>`. Mismatched toolchains break lockfile resolution.
-- **Mise pins are load-bearing**. `mise.toml` pins node 24.18.0 + bun 1.3.14 and CI uses `jdx/mise-action`. If your local node/bun versions differ, `bun install` will silently re-resolve and your `bun.lock` drifts from CI. Run `mise use` or set up shell activation.
-- **Husky + lint-staged are active**. Pre-commit runs `prettier --write` then `eslint --fix --max-warnings=0` on staged files via `bun lint-staged`. Never bypass with `--no-verify` — fix the issue or update the lint-staged config with explicit user approval. The hook script is `.husky/pre-commit`.
-- **`next.config.mjs`**: Next 16 removed the `eslint` config key (it now warns). Lint/typecheck run as standalone CI gates, not during `next build`. `images.unoptimized: true` is set. Always run `bun run lint` and `bun run type:check` locally before considering work done — never trust a green build alone.
-- **No code comments** unless explicitly requested. Existing `// ...` comments are v0.dev leftovers — leave or remove at author discretion, do not add new ones.
-- **Prettier config** (implicit via defaults + plugin): no semis, single quotes, trailing comma `es5`, 100-col. `prettier-plugin-tailwindcss` reorders class names — don't hand-order them.
-- **ESLint relaxations**: `_`-prefixed unused vars/args are allowed; `any` and unused vars are relaxed in `*.test.{ts,tsx}` and `tests/**`. Don't lint-clean test files by hand — adjust the test or the rule with explicit approval.
-- **Client components** need `'use client'` at the very top of the file. Anything with hooks, state, refs, or browser APIs (e.g. `views/about-section.tsx`, all of `components/header/`, `lib/games/pong/`) must declare it. Server components are the default — only opt into client when needed.
-- **Imports**: use the `@/...` path alias, never relative paths beyond the same directory. Use `cn()` from `@/lib/utils` (clsx + tailwind-merge) for any conditional class composition — never string-template Tailwind classes.
-- **shadcn/ui**: components in `components/ui/` are owned by the shadcn CLI. Add new ones with `bunx --bun shadcn@latest add <name>`. Do not edit their internals — modify via the CLI or accept upstream changes. The `components.json` config is the source of truth.
-- **External data / fallbacks**: `lib/github.ts` fetches with `revalidate: 3600` and falls back to constants from `constants/github.ts` on failure. Never hardcode fallback data inside components — extend the constants.
-- **Tailwind dark mode** is via `next-themes` (see `components/theme-provider.tsx`). Color tokens live in `app/globals.css` (CSS-first `@theme` block, v4) and `constants/colors.ts`. There is **no `tailwind.config.js`** in v4 — theme/animation are declared in `globals.css`. Don't sprinkle raw hex values.
-- **Env**: `.env.local` is gitignored. Pull from Vercel: `vercel link && vercel env pull .env.local`. Push back: `vercel env push .env.local`. Never commit tokens. CI doesn't need them.
-- **Lockfile**: `bun.lock` is committed. Always `bun install --frozen-lockfile` in CI-shaped runs so the lockfile isn't silently rewritten. If you add a dep, run `bun install` (no flag) once locally, commit `bun.lock` + `package.json`, then return to `--frozen-lockfile`.
-- **v0.dev auto-sync**: this repo is regenerated from v0 chats on Vercel. Hand-edits to v0-generated sections can be overwritten on the next sync. Prefer editing in v0.dev for generated content; edit locally only for code that's clearly outside v0's scope (tests, hooks, config, custom logic).
-- **Before considering work done**: `bun run format:check && bun run lint && bun run type:check && bun run test`. CI runs the same gates in order. Don't commit unless explicitly asked — and never `--amend` or force-push.
+Use exact command names and outcomes. Mention external changes separately from local changes, and distinguish completed work from recommendations.
