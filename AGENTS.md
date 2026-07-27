@@ -7,11 +7,10 @@ They complement `CONTRIBUTING.md`. More specific instructions in nested `AGENTS.
 ## Mission
 
 - Keep formatting, linting, type checking, builds, tests, and coverage reproducible locally and in CI.
-- Prefer the repository's configured toolchain; `toolchain: auto` uses native
-  tools unless an existing `.mise.toml` is present.
+- Prefer the versions pinned in `.mise.toml`.
 - Do not commit secrets, generated credentials, local environment files, or machine-specific paths.
 - Add tests for behavior changes and keep coverage thresholds explicit in the project configuration.
-- Make the smallest complete, well-tested change that solves the requested problem without disturbing unrelated work.
+  Make the smallest complete, well-tested change that solves the requested problem without disturbing unrelated work.
 
 This repository may contain TypeScript, Rust, Python, or any combination of them. Detect the active stack from the files present; do not assume every check applies.
 
@@ -63,19 +62,16 @@ Ask for clarification when a missing decision would materially change the implem
 2. Inspect before editing; preserve unrelated work.
 3. Plan the smallest coherent change.
 4. Implement with existing project patterns.
-5. Run `npx code-foundry init` for a new checkout, or `npx code-foundry doctor` to diagnose setup drift.
-6. Run focused checks while iterating.
-7. Inspect the final diff for accidental changes, secrets, formatting, and generated files.
-8. Run the broadest applicable validation available.
-9. Report what changed, exact checks and results, skipped checks with reasons, risks, and remaining work.
+5. Run focused checks while iterating.
+6. Inspect the final diff for accidental changes, secrets, formatting, and generated files.
+7. Run the broadest applicable validation available.
+8. Report what changed, exact checks and results, skipped checks with reasons, risks, and remaining work.
 
 For normal feature work, branch from `staging` and target pull requests at `staging`. Treat `main` as the protected release branch. Follow `.github/CONTRIBUTING.md` for the complete internal and external contribution flow.
 
 ## Toolchain and dependencies
 
-- Follow `toolchain: auto` in `.github/code-foundry.yml`; use native tools by
-  default and reuse mise only when the repository already has `.mise.toml`.
-- If `toolchain: mise` is selected, run `mise install` before validation.
+- Use the versions pinned in `.mise.toml`; run `mise install` when needed.
 - Use the package manager indicated by the existing lockfile:
   - `bun.lock` or `bun.lockb` → Bun
   - `pnpm-lock.yaml` → pnpm
@@ -91,23 +87,22 @@ For normal feature work, branch from `staging` and target pull requests at `stag
 Use the shared scripts when present. They detect supported tools and skip inapplicable checks:
 
 ```sh
-node src/runtime.mjs ci format
-node src/runtime.mjs ci lint
-node src/runtime.mjs ci type_check
-node src/runtime.mjs ci build
-node src/runtime.mjs ci unit
-node src/runtime.mjs ci integration
-node src/runtime.mjs ci e2e
-node src/runtime.mjs ci smoke
-Security and dependency audits run through the GitHub Security workflow.
+bash .github/scripts/ci.sh format
+bash .github/scripts/ci.sh lint
+bash .github/scripts/ci.sh type_check
+bash .github/scripts/ci.sh build
+bash .github/scripts/ci.sh unit
+bash .github/scripts/ci.sh integration
+bash .github/scripts/ci.sh e2e
+bash .github/scripts/ci.sh smoke
+bash .github/scripts/security.sh
 ```
 
 Run focused tests first, then the complete applicable set for release, security, workflow, dependency, and configuration changes.
 
 At minimum:
 
-- TypeScript/JavaScript: Prettier formatting, ESLint linting, type-check, build, and Bun's native test runner for unit/integration tests; use the project's native browser runner for E2E tests
-- Do not add Vitest. Preserve specialized native runners such as Matchstick for The Graph and Hardhat for smart contracts.
+- TypeScript/JavaScript: Prettier formatting, ESLint linting, type-check, build, unit tests, and relevant browser/integration tests
 - Rust: default rustfmt, Clippy with warnings treated as errors, check, unit/integration tests, and dependency audit
 - Python: Ruff formatting and linting, compile or type checks, pytest, coverage, and dependency audit
 - Mixed projects: validate each active ecosystem and its integration boundaries
@@ -128,7 +123,6 @@ If a check cannot run, state the exact reason. A skipped check is not a passing 
 - Use `push` for `main, staging` and `pull_request` for `staging` unless a workflow has a documented event-specific reason.
 - Give workflows clear names and jobs concise names; avoid repeating the workflow name in the job name.
 - Use per-workflow concurrency groups that cancel superseded runs while allowing independent workflows to run in parallel.
-- Keep setup language-aware and cache dependency downloads by lockfile; do not cache secrets, `node_modules`, virtual environments, or broad build output without a measured reason.
 - Use least-privilege permissions and pin action versions consistently with the template.
 - Keep CI, Test, Security, CodeQL, Draft PR, Release PR, and Release concerns separated.
 - Security and CodeQL may skip when repository visibility or GitHub plan support does not permit them. Do not make an unavailable check required.

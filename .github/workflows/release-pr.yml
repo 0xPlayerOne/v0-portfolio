@@ -14,38 +14,58 @@ permissions:
   packages: read
   security-events: write
 
+env:
+  GH_TOKEN: ${{ github.token }}
+
 jobs:
-  release-pr:
-    if: >-
-      github.event_name == 'push' ||
-      github.event_name == 'workflow_dispatch' ||
-      startsWith(github.head_ref, 'release-please--branches--main')
-    name: Release PR
-    uses: 0xPlayerOne/code-foundry/.github/workflows/release-pr.yml@v0.31.13
-    with:
-      runner: ubuntu-slim
-    secrets: inherit
+  create-release-pr:
+    name: Create
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
-  ci:
-    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release-please--branches--main')
-    name: CI
-    uses: 0xPlayerOne/code-foundry/.github/workflows/ci.yml@v0.31.13
-    with:
-      runtime-repository: 0xPlayerOne/code-foundry
-      runtime-ref: v0.31.13
-      runner: ubuntu-latest
-    secrets: inherit
+      - name: Check
+        id: check-pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh pr list --base main --head staging --state open --json number 2>/dev/null | jq 'length')
+          echo "existing=$EXISTING" >> "$GITHUB_OUTPUT"
 
-  test:
-    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release-please--branches--main')
-    name: Test
-    uses: 0xPlayerOne/code-foundry/.github/workflows/test.yml@v0.31.13
-    with:
-      runtime-repository: 0xPlayerOne/code-foundry
-      runtime-ref: ${{ github.sha }}
-      runner: ubuntu-latest
-      unit-runner: ubuntu-slim
-    secrets: inherit
+      - name: Create
+        if: steps.check-pr.outputs.existing == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          BODY_FILE="$RUNNER_TEMP/release-pr.md"
+          COMMITS=$(git log --no-merges --pretty=format:'- %s (%h)' origin/main..HEAD)
+          if [ -z "$COMMITS" ]; then
+            COMMITS='- No commits found since main.'
+          fi
 
-Changes since last main merge:
-  - See commit history for full list"
+          cat > "$BODY_FILE" <<EOF
+          ## Release summary
+
+          Automated release PR from \`staging\` into \`main\` created on $DATE.
+
+          ### Changes since main
+
+          $COMMITS
+
+          ### Validation
+
+          - CI and security checks must pass before merge.
+          - Review migrations, configuration changes, and rollback notes.
+          EOF
+
+          gh pr create \
+            --base main \
+            --head staging \
+            --title "Release: staging -> main ($DATE)" \
+            --body-file "$BODY_FILE"
