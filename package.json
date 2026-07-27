@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --dom --isolate",
+    "test:coverage": "bun test --coverage --dom --isolate --max-concurrency=1",
     "test:watch": "bun test --dom --watch",
     "type:check": "tsc --noEmit"
   },
@@ -89,5 +90,8 @@
     "prettier": "^3.9.5",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "sharp": "0.35.3"
   }
 }
