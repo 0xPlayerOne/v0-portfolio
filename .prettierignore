@@ -1,5 +1,6 @@
 .next
 coverage
 node_modules
+.code-foundry
 public
 pnpm-lock.yaml
