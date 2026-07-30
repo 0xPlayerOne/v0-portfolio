@@ -17,7 +17,8 @@
     "typecheck": "tsc --noEmit",
     "test": "bun test --dom --isolate",
     "test:coverage": "bun test --coverage --dom --isolate --max-concurrency=1",
-    "test:watch": "bun test --dom --watch"
+    "test:watch": "bun test --dom --watch",
+    "type:check": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",
