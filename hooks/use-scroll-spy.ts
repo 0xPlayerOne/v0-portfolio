@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 
 interface UseScrollSpyProps {
   sectionIds: readonly string[]
@@ -9,11 +9,14 @@ interface UseScrollSpyProps {
 
 export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(null)
+  const activeSectionRef = useRef<string | null>(null)
 
   // Memoize section IDs array to prevent unnecessary recalculations
   const sectionIdsArray = useMemo(() => [...sectionIds], [sectionIds])
 
-  // Optimized scroll handler with throttling
+  // Optimized scroll handler with throttling — uses ref to avoid
+  // re-creating the handler when activeSection changes, which would
+  // otherwise re-register the scroll event listener on every section transition.
   const throttledScrollHandler = useCallback(() => {
     let currentSection: string | null = null
     const scrollY = window.scrollY
@@ -35,10 +38,11 @@ export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
     }
 
     // Only update state if the active section has changed
-    if (currentSection !== activeSection) {
+    if (currentSection !== activeSectionRef.current) {
+      activeSectionRef.current = currentSection
       setActiveSection(currentSection)
     }
-  }, [sectionIdsArray, offset, activeSection])
+  }, [sectionIdsArray, offset])
 
   // Throttle scroll handler for better performance
   const handleScroll = useCallback(() => {
