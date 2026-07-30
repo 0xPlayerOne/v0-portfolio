@@ -2,7 +2,7 @@
 
 _Automatically synced with your [v0.dev](https://v0.dev) deployments_
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/nifty-andy/v0-portfolio)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/)
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/UNx27p7EMON)
 
 ## Overview
@@ -14,7 +14,7 @@ Any changes you make to your deployed app will be automatically pushed to this r
 
 Your project is live at:
 
-**[https://vercel.com/nifty-andy/v0-portfolio](https://vercel.com/nifty-andy/v0-portfolio)**
+**Deploy this project through your own Vercel account.**
 
 ## Build your app
 
@@ -48,4 +48,4 @@ vercel env push .env.local
 # or set them per-environment (Production / Preview) in the Vercel dashboard
 ```
 
-> Never commit `.env.local` — it is gitignored. For team projects use `vercel --scope niftyleague`.
+> Never commit `.env.local` — it is gitignored. Use the Vercel scope associated with your deployment.

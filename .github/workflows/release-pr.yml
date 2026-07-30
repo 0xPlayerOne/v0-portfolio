@@ -1,41 +1,68 @@
-name: Release PR
+name: Code Foundry
 
 on:
   push:
     branches: [staging]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pull-requests: write
+  packages: read
+  security-events: write
 
 jobs:
-  create-release-pr:
-    name: Create Release PR into main
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
+  release-pr:
+    if: >-
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.head_ref, 'release-please--branches--main')
+    name: Release PR
+    uses: 0xPlayerOne/code-foundry/.github/workflows/release-pr.yml@v0.31.13
+    with:
+      runner: ubuntu-slim
+    secrets: inherit
 
-      - name: Check if staging-to-main PR already exists
-        id: check-pr
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          EXISTING=$(gh pr list --base main --head staging --state all --json number 2>/dev/null | jq 'length')
-          echo "existing=$EXISTING" >> "$GITHUB_OUTPUT"
+  ci:
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release-please--branches--main')
+    name: CI
+    uses: 0xPlayerOne/code-foundry/.github/workflows/ci.yml@v0.31.13
+    with:
+      runtime-repository: 0xPlayerOne/code-foundry
+      runtime-ref: v0.31.13
+      runner: ubuntu-latest
+    secrets: inherit
 
-      - name: Create release PR
-        if: steps.check-pr.outputs.existing == '0'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          DATE=$(date +%Y-%m-%d)
-          gh pr create \
-            --base main \
-            --head staging \
-            --title "Release: staging -> main ($DATE)" \
-            --body "Weekly release. Auto-generated on push to staging.
+  test:
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release-please--branches--main')
+    name: Test
+    uses: 0xPlayerOne/code-foundry/.github/workflows/test.yml@v0.31.13
+    with:
+      runtime-repository: 0xPlayerOne/code-foundry
+      runtime-ref: ${{ github.sha }}
+      runner: ubuntu-latest
+      unit-runner: ubuntu-slim
+    secrets: inherit
 
-Changes since last main merge:
-  - See commit history for full list"
+  security:
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release-please--branches--main')
+    name: Security
+    uses: 0xPlayerOne/code-foundry/.github/workflows/security.yml@v0.31.13
+    with:
+      runtime-repository: 0xPlayerOne/code-foundry
+      runtime-ref: ${{ github.sha }}
+      runner: ubuntu-slim
+    secrets: inherit
+
+  codeql:
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release-please--branches--main')
+    name: CodeQL
+    uses: 0xPlayerOne/code-foundry/.github/workflows/codeql.yml@v0.31.13
+    with:
+      runtime-repository: 0xPlayerOne/code-foundry
+      runtime-ref: ${{ github.sha }}
+      runner: ubuntu-latest
+    secrets: inherit

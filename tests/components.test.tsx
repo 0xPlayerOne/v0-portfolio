@@ -9,7 +9,7 @@ import type { PinnedRepo } from '@/types/github'
 const project: PinnedRepo = {
   title: 'Test Project',
   description: 'A reliable test project',
-  tech: ['vitest', 'typescript'],
+  tech: ['bun', 'typescript'],
   url: 'https://github.com/example/test-project',
   homepage: 'https://example.com',
   stars: 12,

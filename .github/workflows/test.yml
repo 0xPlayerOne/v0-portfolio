@@ -5,22 +5,18 @@ on:
     branches: [main, staging]
   pull_request:
     branches: [staging]
-  schedule:
-    - cron: '31 6 * * 1'
   workflow_dispatch:
 
 permissions:
-  actions: read
   contents: read
-  packages: read
-  security-events: write
 
 jobs:
-  codeql:
-    name: CodeQL
-    uses: 0xPlayerOne/code-foundry/.github/workflows/codeql.yml@v0.31.13
+  test:
+    name: Test
+    uses: 0xPlayerOne/code-foundry/.github/workflows/test.yml@v0.31.13
     with:
       runtime-repository: 0xPlayerOne/code-foundry
       runtime-ref: v0.31.13
       runner: ubuntu-latest
+      unit-runner: ubuntu-slim
     secrets: inherit
