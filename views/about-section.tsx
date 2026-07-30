@@ -39,12 +39,10 @@ const ICON_MAP = {
 
 // Memoized tab button component
 const TabButton = memo(function TabButton({
-  id: _id,
   label,
   isActive,
   onClick,
 }: {
-  id: string
   label: string
   isActive: boolean
   onClick: () => void
@@ -344,7 +342,6 @@ export const AboutSection = memo(function AboutSection() {
           {tabs.map((tab) => (
             <TabButton
               key={tab.id}
-              id={tab.id}
               label={tab.label}
               isActive={activeTab === tab.id}
               onClick={tab.onClick}
