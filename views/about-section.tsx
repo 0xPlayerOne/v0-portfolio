@@ -67,10 +67,8 @@ const TabButton = memo(function TabButton({
 
 // Memoized value card component
 const ValueCard = memo(function ValueCard({
-  keyId,
   value,
 }: {
-  keyId: string
   value: (typeof ABOUT_CONTENT.values)[keyof typeof ABOUT_CONTENT.values]
 }) {
   const IconComponent = ICON_MAP[value.icon as keyof typeof ICON_MAP]
@@ -111,7 +109,6 @@ const ValueCard = memo(function ValueCard({
 
   return (
     <Card
-      key={keyId}
       className="group border-0 transition-all duration-300 hover:scale-105"
       style={cardStyle}
       onMouseEnter={handleMouseEnter}
@@ -368,7 +365,7 @@ export const AboutSection = memo(function AboutSection() {
             {/* Overview Cards - Hidden on small screens */}
             <div className={cn('hidden gap-6 sm:gap-8 md:grid md:grid-cols-3')}>
               {valuesEntries.map(([key, value]) => (
-                <ValueCard key={key} keyId={key} value={value} />
+                <ValueCard key={key} value={value} />
               ))}
             </div>
 
