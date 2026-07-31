@@ -17,8 +17,12 @@ const GITHUB_FETCH_OPTIONS: RequestInit & { next: { revalidate: number } } = {
 
 export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
   try {
-    const pinnedRepos = await fetchSpecificRepos(PINNED_REPO_CONFIGS, true)
-    const popularRepos = await fetchPopularRepositories()
+    // Fetch pinned and popular repos concurrently — they are independent,
+    // so serializing them added a full network round-trip of latency.
+    const [pinnedRepos, popularRepos] = await Promise.all([
+      fetchSpecificRepos(PINNED_REPO_CONFIGS, true),
+      fetchPopularRepositories(),
+    ])
 
     // Filter out pinned repos from popular repos to avoid duplicates
     const pinnedUrls = pinnedRepos.map((repo) => repo.url)
@@ -31,6 +35,9 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
       MAX_PROJECTS
     )
 
+    // Resolve fallback languages once instead of re-spreading per repo
+    const fallbackProjects = [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS]
+
     // Fetch languages for each repo
     const reposWithLanguages = await Promise.all(
       selectedRepos.map(async (repo) => {
@@ -41,7 +48,6 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
 
         // If languages fetch failed and this is a fallback project, use fallback languages
         if (languages.length === 0) {
-          const fallbackProjects = [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS]
           const fallbackProject = fallbackProjects.find((p) => p.url === repo.url)
           if (fallbackProject) {
             languages = fallbackProject.languages
@@ -66,39 +72,43 @@ async function fetchSpecificRepos(
   repoConfigs: PinnedRepoConfig[],
   isPinned: boolean
 ): Promise<Omit<PinnedRepo, 'languages'>[]> {
-  const repos: Omit<PinnedRepo, 'languages'>[] = []
+  // Fetch all configured repos concurrently; each request keeps its own
+  // try/catch so a single failure (e.g. rate limit) never drops the batch.
+  const results = await Promise.all(
+    repoConfigs.map(async (config): Promise<Omit<PinnedRepo, 'languages'> | null> => {
+      try {
+        const response = await fetch(
+          `https://api.github.com/repos/${config.owner}/${config.repo}`,
+          GITHUB_FETCH_OPTIONS
+        )
 
-  for (const config of repoConfigs) {
-    try {
-      const response = await fetch(
-        `https://api.github.com/repos/${config.owner}/${config.repo}`,
-        GITHUB_FETCH_OPTIONS
-      )
+        if (response.status === 403) {
+          console.warn(`Rate limited for ${config.owner}/${config.repo}`)
+          return null
+        }
 
-      if (response.status === 403) {
-        console.warn(`Rate limited for ${config.owner}/${config.repo}`)
-        continue
+        if (response.ok) {
+          const repo: GitHubRepo = await response.json()
+          return {
+            title: config.displayName || formatRepoName(repo.name),
+            description: repo.description || 'No description available',
+            tech: repo.topics.slice(0, 4),
+            url: repo.html_url,
+            homepage: repo.homepage || undefined,
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            isPinned,
+          }
+        }
+      } catch (error) {
+        console.error(`Error fetching repo ${config.owner}/${config.repo}:`, error)
       }
 
-      if (response.ok) {
-        const repo: GitHubRepo = await response.json()
-        repos.push({
-          title: config.displayName || formatRepoName(repo.name),
-          description: repo.description || 'No description available',
-          tech: repo.topics.slice(0, 4),
-          url: repo.html_url,
-          homepage: repo.homepage || undefined,
-          stars: repo.stargazers_count,
-          forks: repo.forks_count,
-          isPinned,
-        })
-      }
-    } catch (error) {
-      console.error(`Error fetching repo ${config.owner}/${config.repo}:`, error)
-    }
-  }
+      return null
+    })
+  )
 
-  return repos
+  return results.filter((repo): repo is Omit<PinnedRepo, 'languages'> => repo !== null)
 }
 
 async function fetchPopularRepositories(): Promise<Omit<PinnedRepo, 'languages'>[]> {
