@@ -50,4 +50,38 @@ describe('fetchPinnedRepos', () => {
     expect(repos.length).toBeGreaterThan(0)
     expect(repos.every((r) => Array.isArray(r.languages))).toBe(true)
   })
+
+  it('initiates pinned and popular repo fetches concurrently', async () => {
+    const requested: string[] = []
+    let release!: () => void
+    const gate = new Promise<void>((resolve) => (release = resolve))
+
+    globalThis.fetch = mock(async (url: string) => {
+      const u = String(url)
+      requested.push(u)
+      if (u.includes('/languages')) return makeResponse({})
+      // Hold every request behind a gate so the test can observe which
+      // requests were initiated before any of them resolved.
+      await gate
+      if (u.includes('users/0xPlayerOne/repos')) {
+        return makeResponse([
+          repoJson('other-repo', 'An open project', 'https://github.com/0xPlayerOne/other-repo'),
+        ])
+      }
+      return makeResponse(
+        repoJson('nifty-fe', 'The monorepo', 'https://github.com/NiftyLeague/nifty-fe-monorepo')
+      )
+    }) as any
+
+    const pending = fetchPinnedRepos()
+    // Let the initial fetches start; nothing has resolved yet.
+    await Promise.resolve()
+
+    expect(requested.filter((u) => u.includes('/repos/NiftyLeague/'))).toHaveLength(2)
+    expect(requested.some((u) => u.includes('users/0xPlayerOne/repos'))).toBe(true)
+
+    release()
+    const repos = await pending
+    expect(repos.length).toBeGreaterThan(0)
+  })
 })

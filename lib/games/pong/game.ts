@@ -177,10 +177,10 @@ function checkPixelCollisions(game: GameState): Particle[] {
   const { ball, pixels } = game
   const newParticles: Particle[] = []
 
-  // Only check non-hit pixels for collision
-  const activePixels = pixels.filter((pixel) => !pixel.hit)
-
-  for (const pixel of activePixels) {
+  // Only check non-hit pixels for collision — iterate in place to avoid
+  // allocating a filtered array on every frame of the animation loop.
+  for (const pixel of pixels) {
+    if (pixel.hit) continue
     if (
       ball.x + ball.radius > pixel.x &&
       ball.x - ball.radius < pixel.x + pixel.size &&
@@ -226,18 +226,30 @@ function createParticles(pixel: Pixel, particles: Particle[]): void {
   }
 }
 
-// Update existing particles and add new ones
+// Advance a particle by one frame, returning true while it is still alive
+function advanceParticle(p: Particle): boolean {
+  p.x += p.dx
+  p.y += p.dy
+  p.life++
+  p.alpha = 1 - p.life / PARTICLE_LIFE
+  p.dx *= PARTICLE_DECAY
+  p.dy *= PARTICLE_DECAY
+  return p.life < PARTICLE_LIFE
+}
+
+// Update existing particles and add new ones — writes into a single survivor
+// array instead of spreading + filtering (which allocated two arrays per frame).
 function updateParticles(game: GameState, newParticles: Particle[]): void {
-  // Update existing particles
-  game.particles = [...game.particles, ...newParticles].filter((p) => {
-    p.x += p.dx
-    p.y += p.dy
-    p.life++
-    p.alpha = 1 - p.life / PARTICLE_LIFE
-    p.dx *= PARTICLE_DECAY
-    p.dy *= PARTICLE_DECAY
-    return p.life < PARTICLE_LIFE
-  })
+  const survivors: Particle[] = []
+
+  for (const p of game.particles) {
+    if (advanceParticle(p)) survivors.push(p)
+  }
+  for (const p of newParticles) {
+    if (advanceParticle(p)) survivors.push(p)
+  }
+
+  game.particles = survivors
 }
 
 // Optimized text generation with memoization for character maps

@@ -15,6 +15,20 @@ import { CONTACT_LINKS, CONTACT_CONTENT } from '@/constants/content'
 import { X, Mail } from 'lucide-react'
 import { Github, Linkedin } from '@/lib/brand-icons'
 
+// Hoisted platform lookups — CONTACT_LINKS is static, so the icon/URL
+// mappings are built once at module scope instead of per item per render.
+const CONTACT_ICONS = {
+  twitter: <X size={24} style={{ color: SITE_BTN_COLOR }} />,
+  github: <Github size={24} style={{ color: SITE_BTN_COLOR }} />,
+  linkedin: <Linkedin size={24} style={{ color: SITE_BTN_COLOR }} />,
+} as const
+
+const CONTACT_URLS = {
+  twitter: (handle: string) => `https://twitter.com/${handle.replace('@', '')}`,
+  github: (handle: string) => `https://github.com/${handle.replace('@', '')}`,
+  linkedin: (handle: string) => `https://linkedin.com/in/${handle.replace('@', '')}`,
+} as const
+
 export function ContactSection() {
   return (
     <Section id="contact">
@@ -27,31 +41,7 @@ export function ContactSection() {
         </Typography>
         <div className={cn('mb-8 grid grid-cols-1 gap-6 sm:mb-12 sm:grid-cols-3 sm:gap-8')}>
           {CONTACT_LINKS.map((contact, index) => {
-            const getIcon = (platform: string) => {
-              switch (platform.toLowerCase()) {
-                case 'twitter':
-                  return <X size={24} style={{ color: SITE_BTN_COLOR }} />
-                case 'github':
-                  return <Github size={24} style={{ color: SITE_BTN_COLOR }} />
-                case 'linkedin':
-                  return <Linkedin size={24} style={{ color: SITE_BTN_COLOR }} />
-                default:
-                  return null
-              }
-            }
-
-            const getUrl = (platform: string, handle: string) => {
-              switch (platform.toLowerCase()) {
-                case 'twitter':
-                  return `https://twitter.com/${handle.replace('@', '')}`
-                case 'github':
-                  return `https://github.com/${handle.replace('@', '')}`
-                case 'linkedin':
-                  return `https://linkedin.com/in/${handle.replace('@', '')}`
-                default:
-                  return '#'
-              }
-            }
+            const platform = contact.platform.toLowerCase() as keyof typeof CONTACT_ICONS
 
             return (
               <Card
@@ -70,7 +60,7 @@ export function ContactSection() {
               >
                 <CardContent className="p-4 sm:p-6">
                   <a
-                    href={getUrl(contact.platform, contact.handle)}
+                    href={CONTACT_URLS[platform]?.(contact.handle) ?? '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block text-center"
@@ -80,7 +70,7 @@ export function ContactSection() {
                         className="rounded-lg p-3 transition-transform duration-300 group-hover:scale-110"
                         style={{ backgroundColor: `${SITE_BTN_COLOR}20` }}
                       >
-                        {getIcon(contact.platform)}
+                        {CONTACT_ICONS[platform] ?? null}
                       </div>
                     </div>
                     <Typography variant="h3" align="center" color="secondary" gutterBottom>

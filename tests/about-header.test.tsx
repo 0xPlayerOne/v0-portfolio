@@ -121,4 +121,24 @@ describe('PongHeader', () => {
 
     await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(2))
   })
+
+  it('registers the scroll listener once across sticky state flips', async () => {
+    const addEventListener = spyOn(window, 'addEventListener')
+
+    const { unmount } = render(<PongHeader />)
+    expect(addEventListener.mock.calls.filter(([event]) => event === 'scroll')).toHaveLength(1)
+
+    // Flip sticky on, then off — the stable callback must not re-register
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 801 })
+    fireEvent.scroll(window)
+    await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(2))
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 })
+    fireEvent.scroll(window)
+    await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(1))
+
+    expect(addEventListener.mock.calls.filter(([event]) => event === 'scroll')).toHaveLength(1)
+
+    unmount()
+  })
 })

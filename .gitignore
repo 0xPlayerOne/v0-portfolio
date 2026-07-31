@@ -16,7 +16,6 @@ node_modules/
 .pnp.js
 .turbo/
 *.tsbuildinfo
-next-env.d.ts
 
 # Python
 .venv/

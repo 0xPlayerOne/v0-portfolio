@@ -7,7 +7,6 @@ export const PADDLE_SPEED = 0.25
 
 // Text rendering
 export const LETTER_SPACING = 1
-export const WORD_SPACING = 3
 export const LARGE_PIXEL_SIZE = 8
 export const SMALL_PIXEL_SIZE = 4
 export const TEXT_WIDTH_FACTOR = 0.8
