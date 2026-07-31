@@ -34,34 +34,40 @@ export function render(ctx: CanvasRenderingContext2D, game: GameState): void {
   ctx.strokeText(scoreText, 20, 20)
 }
 
-// Optimized pixel rendering with batching by hit state
+// Optimized pixel rendering with batching by hit state — two in-place passes
+// keep the batched fillStyle/shadowBlur setup without allocating filtered
+// arrays on every frame of the animation loop.
 function renderPixels(
   ctx: CanvasRenderingContext2D,
   pixels: Pixel[],
   colors: GameState['colors']
 ): void {
   // First render non-hit pixels
-  const nonHitPixels = pixels.filter((p) => !p.hit)
-  const hitPixels = pixels.filter((p) => p.hit)
+  let nonHitBatchStarted = false
+  for (const pixel of pixels) {
+    if (pixel.hit) continue
 
-  if (nonHitPixels.length > 0) {
-    ctx.shadowColor = colors.pixel
-    ctx.shadowBlur = nonHitPixels[0].size * 0.5
-    ctx.fillStyle = colors.pixel
-
-    for (const pixel of nonHitPixels) {
-      ctx.fillRect(pixel.x, pixel.y, pixel.size, pixel.size)
+    if (!nonHitBatchStarted) {
+      nonHitBatchStarted = true
+      ctx.shadowColor = colors.pixel
+      ctx.shadowBlur = pixel.size * 0.5
+      ctx.fillStyle = colors.pixel
     }
+    ctx.fillRect(pixel.x, pixel.y, pixel.size, pixel.size)
   }
 
-  if (hitPixels.length > 0) {
-    ctx.shadowColor = colors.hitPixel
-    ctx.shadowBlur = hitPixels[0].size * 0.5
-    ctx.fillStyle = colors.hitPixel
+  // Then render hit pixels
+  let hitBatchStarted = false
+  for (const pixel of pixels) {
+    if (!pixel.hit) continue
 
-    for (const pixel of hitPixels) {
-      ctx.fillRect(pixel.x, pixel.y, pixel.size, pixel.size)
+    if (!hitBatchStarted) {
+      hitBatchStarted = true
+      ctx.shadowColor = colors.hitPixel
+      ctx.shadowBlur = pixel.size * 0.5
+      ctx.fillStyle = colors.hitPixel
     }
+    ctx.fillRect(pixel.x, pixel.y, pixel.size, pixel.size)
   }
 }
 
