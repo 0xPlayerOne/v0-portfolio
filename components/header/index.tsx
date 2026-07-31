@@ -16,7 +16,11 @@ export function PongHeader() {
     offset: NAVBAR_HEIGHT + 50,
   })
 
-  // Helper function to check sticky state
+  // Helper function to check sticky state.
+  // Uses the functional setState form so the callback has no dependencies —
+  // React bails out when the state is unchanged, and the scroll listener is
+  // registered exactly once instead of being torn down/re-added on every
+  // sticky flip (same pattern as useScrollSpy).
   const checkStickyState = useCallback(() => {
     const scrollPosition = window.scrollY
     // The navbar should stick when we scroll past the header minus the navbar height
@@ -25,10 +29,8 @@ export function PongHeader() {
     const shouldBeSticky = scrollPosition > headerHeight
 
     // Only update state if the sticky state has changed
-    if (shouldBeSticky !== isSticky) {
-      setIsSticky(shouldBeSticky)
-    }
-  }, [isSticky])
+    setIsSticky((prev) => (prev === shouldBeSticky ? prev : shouldBeSticky))
+  }, [])
 
   // Optimized scroll handler with throttling and useCallback
   const handleScroll = useCallback(() => {
