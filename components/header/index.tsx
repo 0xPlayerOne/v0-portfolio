@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { RetroCanvas } from './retro-canvas'
 import { RetroNavbar } from './retro-navbar'
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
@@ -33,13 +33,23 @@ export function PongHeader() {
   }, [])
 
   // Optimized scroll handler with throttling and useCallback
+  const rafIdRef = useRef<number>(0)
   const handleScroll = useCallback(() => {
     if (!window.requestAnimationFrame) {
       checkStickyState()
       return
     }
 
-    window.requestAnimationFrame(checkStickyState)
+    // Coalesce scroll events: cancel any pending frame so at most one
+    // callback runs per animation frame instead of queueing one callback
+    // per scroll event.
+    if (rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current)
+    }
+    rafIdRef.current = window.requestAnimationFrame(() => {
+      rafIdRef.current = 0
+      checkStickyState()
+    })
   }, [checkStickyState])
 
   useEffect(() => {
@@ -49,6 +59,9 @@ export function PongHeader() {
     handleScroll()
 
     return () => {
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current)
+      }
       window.removeEventListener('scroll', handleScroll)
     }
   }, [handleScroll])
