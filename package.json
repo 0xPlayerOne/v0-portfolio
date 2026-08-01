@@ -86,13 +86,13 @@
     "happy-dom": "^20.11.1",
     "jsdom": "^30.0.1",
     "lint-staged": "^17.3.0",
-    "postcss": "^8.5.20",
+    "postcss": "^8.5.25",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "6.0.3"
   },
   "overrides": {
-    "postcss": "8.5.20",
+    "postcss": "8.5.25",
     "sharp": "0.35.3"
   }
 }
