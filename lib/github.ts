@@ -89,16 +89,7 @@ async function fetchSpecificRepos(
 
         if (response.ok) {
           const repo: GitHubRepo = await response.json()
-          return {
-            title: config.displayName || formatRepoName(repo.name),
-            description: repo.description || 'No description available',
-            tech: repo.topics.slice(0, 4),
-            url: repo.html_url,
-            homepage: repo.homepage || undefined,
-            stars: repo.stargazers_count,
-            forks: repo.forks_count,
-            isPinned,
-          }
+          return toPinnedRepo(repo, isPinned, config.displayName)
         }
       } catch (error) {
         console.error(`Error fetching repo ${config.owner}/${config.repo}:`, error)
@@ -143,16 +134,7 @@ async function fetchPopularRepositories(): Promise<Omit<PinnedRepo, 'languages'>
         return scoreB - scoreA
       })
 
-    return popularRepos.map((repo) => ({
-      title: formatRepoName(repo.name),
-      description: repo.description || 'No description available',
-      tech: repo.topics.slice(0, 4),
-      url: repo.html_url,
-      homepage: repo.homepage || undefined,
-      stars: repo.stargazers_count,
-      forks: repo.forks_count,
-      isPinned: false,
-    }))
+    return popularRepos.map((repo) => toPinnedRepo(repo, false))
   } catch (error) {
     console.error('Error fetching popular repos:', error)
     return FALLBACK_POPULAR_REPOS
@@ -193,6 +175,23 @@ async function fetchRepoLanguages(
   } catch (error) {
     console.error(`Error fetching languages for ${owner}/${repoName}:`, error)
     return []
+  }
+}
+
+function toPinnedRepo(
+  repo: GitHubRepo,
+  isPinned: boolean,
+  displayName?: string
+): Omit<PinnedRepo, 'languages'> {
+  return {
+    title: displayName || formatRepoName(repo.name),
+    description: repo.description || 'No description available',
+    tech: repo.topics.slice(0, 4),
+    url: repo.html_url,
+    homepage: repo.homepage || undefined,
+    stars: repo.stargazers_count,
+    forks: repo.forks_count,
+    isPinned,
   }
 }
 
