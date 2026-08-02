@@ -9,6 +9,7 @@ updates:
     open-pull-requests-limit: 99
     groups:
       github-actions:
+        applies-to: version-updates
         patterns: ['*']
   - package-ecosystem: npm
     directory: /
@@ -19,6 +20,7 @@ updates:
     open-pull-requests-limit: 99
     groups:
       npm-dependencies:
+        applies-to: version-updates
         patterns: ['*']
     ignore:
       - dependency-name: 'typescript'
@@ -34,6 +36,7 @@ updates:
     open-pull-requests-limit: 99
     groups:
       cargo-dependencies:
+        applies-to: version-updates
         patterns: ['*']
   - package-ecosystem: pip
     directory: /
@@ -44,4 +47,5 @@ updates:
     open-pull-requests-limit: 99
     groups:
       python-dependencies:
+        applies-to: version-updates
         patterns: ['*']
