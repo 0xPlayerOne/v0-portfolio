@@ -1,9 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 import { GameCreditsCard } from '@/components/game-credits'
 import { ContactSection } from '@/views/contact-section'
 import { SkillsSection } from '@/views/skills-section'
+import { Section } from '@/components/ui/section'
 import type { PinnedRepo } from '@/types/github'
 
 const project: PinnedRepo = {
@@ -67,5 +68,21 @@ describe('portfolio sections', () => {
 
     fireEvent.click(screen.getByRole('button'))
     await waitFor(() => expect(fetchPinnedRepos).toHaveBeenCalledTimes(2))
+  })
+
+  it('updates section height after a resize without leaking the timer', async () => {
+    render(
+      <Section id="resizable">
+        <span>content</span>
+      </Section>
+    )
+
+    await waitFor(() => expect(document.querySelector('#resizable')).not.toBeNull())
+    await act(async () => {
+      window.dispatchEvent(new Event('resize'))
+      await new Promise((resolve) => setTimeout(resolve, 120))
+    })
+
+    expect(document.querySelector<HTMLElement>('#resizable')?.style.minHeight).toMatch(/px$/)
   })
 })

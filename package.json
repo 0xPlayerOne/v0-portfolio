@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --dom --isolate",
+    "test:unit": "bun run test:coverage",
     "test:coverage": "bun test --coverage --dom --isolate --max-concurrency=1",
     "test:watch": "bun test --dom --watch",
     "type:check": "tsc --noEmit"
