@@ -18,7 +18,11 @@ permissions:
 jobs:
   draft-pr:
     name: Draft PR
+<<<<<<< HEAD
     uses: 0xPlayerOne/code-foundry/.github/workflows/draft-pr.yml@v0.37.1
+=======
+    uses: 0xPlayerOne/code-foundry/.github/workflows/draft-pr.yml@v0.36.2
+>>>>>>> 93a714d (chore(code-foundry): sync staging to v0.36.2 (#125))
     with:
       runner: ubuntu-slim
       base: staging

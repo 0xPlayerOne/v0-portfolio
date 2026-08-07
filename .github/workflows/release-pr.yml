@@ -13,7 +13,11 @@ jobs:
   release-pr:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     name: Release PR
+<<<<<<< HEAD
     uses: 0xPlayerOne/code-foundry/.github/workflows/release-pr.yml@v0.37.1
+=======
+    uses: 0xPlayerOne/code-foundry/.github/workflows/release-pr.yml@v0.36.2
+>>>>>>> 93a714d (chore(code-foundry): sync staging to v0.36.2 (#125))
     with:
       runner: ubuntu-slim
     secrets:
