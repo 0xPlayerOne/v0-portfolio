@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback } from 'react'
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
@@ -30,6 +31,19 @@ const CONTACT_URLS = {
 } as const
 
 export function ContactSection() {
+  // Memoize hover handlers to prevent recreation on every render
+  const handleCardMouseEnter = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
+    },
+    []
+  )
+  const handleCardMouseLeave = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
+    },
+    []
+  )
   return (
     <Section id="contact">
       <Typography variant="h2" align="center" color="primary" gutterBottom>
@@ -51,12 +65,8 @@ export function ContactSection() {
                   backgroundColor: SITE_CARD_COLOR,
                   boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
-                }}
+                onMouseEnter={handleCardMouseEnter}
+                onMouseLeave={handleCardMouseLeave}
               >
                 <CardContent className="p-4 sm:p-6">
                   <a

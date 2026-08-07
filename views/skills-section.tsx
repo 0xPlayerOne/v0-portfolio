@@ -12,6 +12,7 @@ import {
 import { cn } from '@/lib/utils'
 import { SKILLS_DATA } from '@/constants/content'
 import { Code2, Gamepad2, Users, Briefcase, Palette, Blocks } from 'lucide-react'
+import { useCallback } from 'react'
 
 const SKILL_ICONS = {
   'Web & Full-Stack': Code2,
@@ -23,6 +24,19 @@ const SKILL_ICONS = {
 } as const
 
 export function SkillsSection() {
+  // Memoize hover handlers to prevent recreation on every render
+  const handleCardMouseEnter = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
+    },
+    []
+  )
+  const handleCardMouseLeave = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
+    },
+    []
+  )
   return (
     <Section id="skills">
       <Typography variant="h2" align="center" color="primary" gutterBottom>
@@ -45,12 +59,8 @@ export function SkillsSection() {
                   backgroundColor: SITE_CARD_COLOR,
                   boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
-                }}
+                onMouseEnter={handleCardMouseEnter}
+                onMouseLeave={handleCardMouseLeave}
               >
                 <CardContent className="p-4 sm:p-6">
                   <div className="mb-4 flex items-center gap-3">

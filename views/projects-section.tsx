@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ExternalLink, Star, GitFork, RefreshCw, Pin } from 'lucide-react'
 import { Github } from '@/lib/brand-icons'
 
@@ -49,6 +49,20 @@ export function ProjectsSection() {
   useEffect(() => {
     loadProjects()
   }, [])
+
+  // Memoize hover handlers to prevent recreation on every render
+  const handleCardMouseEnter = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
+    },
+    []
+  )
+  const handleCardMouseLeave = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
+    },
+    []
+  )
 
   return (
     <Section id="projects">
@@ -122,12 +136,8 @@ export function ProjectsSection() {
                   backgroundColor: SITE_CARD_COLOR,
                   boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
-                }}
+                onMouseEnter={handleCardMouseEnter}
+                onMouseLeave={handleCardMouseLeave}
               >
                 {project.isPinned && (
                   <div className="absolute top-3 left-3 z-10">
