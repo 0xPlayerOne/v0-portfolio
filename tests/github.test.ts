@@ -101,4 +101,131 @@ describe('GitHub project loading', () => {
     expect(console.warn).toHaveBeenCalled()
     expect(console.error).toHaveBeenCalled()
   })
+
+  it('returns empty popular repos when the GitHub API rate-limits (403)', async () => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
+      const url = String(input)
+
+      if (url.includes('/users/0xPlayerOne/repos')) {
+        return jsonResponse([], 403)
+      }
+      if (url.endsWith('/languages')) {
+        return jsonResponse({ TypeScript: 100 }, 200)
+      }
+      return jsonResponse(
+        githubRepo('nifty-fe-monorepo', {
+          html_url: 'https://github.com/NiftyLeague/nifty-fe-monorepo',
+        }),
+        200
+      )
+    })
+    globalThis.fetch = fetchMock as any
+
+    const projects = await fetchPinnedRepos()
+
+    // Popular repos return [] on 403, so only pinned repos are included
+    expect(projects.length).toBe(2)
+    expect(projects.every((p) => p.isPinned)).toBe(true)
+  })
+
+  it('falls back on non-OK non-403 popular-repos responses', async () => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
+      const url = String(input)
+
+      if (url.includes('/users/0xPlayerOne/repos')) {
+        return jsonResponse({ message: 'Server error' }, 500)
+      }
+      if (url.endsWith('/languages')) {
+        return jsonResponse({ TypeScript: 100 }, 200)
+      }
+      return jsonResponse(
+        githubRepo('nifty-fe-monorepo', {
+          html_url: 'https://github.com/NiftyLeague/nifty-fe-monorepo',
+        }),
+        200
+      )
+    })
+    globalThis.fetch = fetchMock as any
+
+    const projects = await fetchPinnedRepos()
+
+    // Throwing on non-OK non-403 triggers the catch -> fallback popular repos
+    expect(projects.length).toBeGreaterThan(0)
+    expect(projects.some((p) => p.title === 'NowInStock Bot')).toBe(true)
+    expect(console.error).toHaveBeenCalled()
+  })
+
+  it('sorts popular repos by combined star and fork score descending', async () => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
+      const url = String(input)
+
+      if (url.includes('/users/0xPlayerOne/repos')) {
+        return jsonResponse(
+          [
+            githubRepo('alpha-tool', {
+              description: 'Alpha project',
+              stargazers_count: 10,
+              forks_count: 5,
+            }),
+            githubRepo('beta-tool', {
+              description: 'Beta project',
+              stargazers_count: 20,
+              forks_count: 3,
+            }),
+            githubRepo('gamma-tool', {
+              description: 'Gamma project',
+              stargazers_count: 5,
+              forks_count: 1,
+            }),
+          ],
+          200
+        )
+      }
+      if (url.endsWith('/languages')) {
+        return jsonResponse({ TypeScript: 100 }, 200)
+      }
+      return jsonResponse({}, 403)
+    })
+    globalThis.fetch = fetchMock as any
+
+    const projects = await fetchPinnedRepos()
+
+    // All three pass the filter (no "fork" in name, all have descriptions)
+    // Sort by score (stars + forks): beta(23) > alpha(15) > gamma(6)
+    expect(projects.length).toBe(3)
+    expect(projects[0].title).toBe('Beta Tool')
+    expect(projects[1].title).toBe('Alpha Tool')
+    expect(projects[2].title).toBe('Gamma Tool')
+  })
+
+  it('returns empty languages when rate-limited (403) and uses fallback when available', async () => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
+      const url = String(input)
+
+      if (url.includes('/users/0xPlayerOne/repos')) {
+        return jsonResponse(
+          [
+            githubRepo('unknown-project', {
+              description: 'A project without fallback',
+              html_url: 'https://github.com/SomeOrg/unknown-project',
+            }),
+          ],
+          200
+        )
+      }
+      if (url.endsWith('/languages')) {
+        return jsonResponse({}, 403)
+      }
+      return jsonResponse({}, 403)
+    })
+    globalThis.fetch = fetchMock as any
+
+    const projects = await fetchPinnedRepos()
+
+    // The popular repo has no fallback, so languages stay empty after 403
+    expect(projects.length).toBe(1)
+    expect(projects[0].languages).toHaveLength(0)
+    expect(projects[0].title).toBe('Unknown Project')
+    expect(console.warn).toHaveBeenCalled()
+  })
 })
