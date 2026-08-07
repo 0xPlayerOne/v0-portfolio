@@ -18,9 +18,7 @@ const GITHUB_FETCH_OPTIONS: RequestInit & { next: { revalidate: number } } = {
 // Hoisted to module scope — these are static and previously re-created on
 // every fetchPinnedRepos() call.
 const FALLBACK_PROJECTS = [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS]
-const FALLBACK_PROJECT_MAP = new Map(
-  FALLBACK_PROJECTS.map((project) => [project.url, project])
-)
+const FALLBACK_PROJECT_MAP = new Map(FALLBACK_PROJECTS.map((project) => [project.url, project]))
 
 export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
   try {
