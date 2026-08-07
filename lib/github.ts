@@ -15,6 +15,11 @@ const GITHUB_FETCH_OPTIONS: RequestInit & { next: { revalidate: number } } = {
   next: { revalidate: 3600 },
 }
 
+// Hoisted to module scope — these are static and previously re-created on
+// every fetchPinnedRepos() call.
+const FALLBACK_PROJECTS = [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS]
+const FALLBACK_PROJECT_MAP = new Map(FALLBACK_PROJECTS.map((project) => [project.url, project]))
+
 export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
   try {
     // Fetch pinned and popular repos concurrently — they are independent,
@@ -25,8 +30,8 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
     ])
 
     // Filter out pinned repos from popular repos to avoid duplicates
-    const pinnedUrls = pinnedRepos.map((repo) => repo.url)
-    const filteredPopularRepos = popularRepos.filter((repo) => !pinnedUrls.includes(repo.url))
+    const pinnedUrls = new Set(pinnedRepos.map((repo) => repo.url))
+    const filteredPopularRepos = popularRepos.filter((repo) => !pinnedUrls.has(repo.url))
 
     // Combine pinned repos (first) with popular repos to reach MAX_PROJECTS
     const neededPopular = Math.max(0, MAX_PROJECTS - pinnedRepos.length)
@@ -36,7 +41,7 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
     )
 
     // Resolve fallback languages once instead of re-spreading per repo
-    const fallbackProjects = [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS]
+    // (FALLBACK_PROJECTS is now hoisted to module scope)
 
     // Fetch languages for each repo
     const reposWithLanguages = await Promise.all(
@@ -48,7 +53,7 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
 
         // If languages fetch failed and this is a fallback project, use fallback languages
         if (languages.length === 0) {
-          const fallbackProject = fallbackProjects.find((p) => p.url === repo.url)
+          const fallbackProject = FALLBACK_PROJECT_MAP.get(repo.url)
           if (fallbackProject) {
             languages = fallbackProject.languages
           }
