@@ -48,8 +48,8 @@ const GameCreditsCard = () => {
         </div>
 
         <div className="mb-6">
-          {GAME_CREDITS.map((credit, index) => (
-            <div key={index} className="my-2 flex items-center justify-between">
+          {GAME_CREDITS.map((credit) => (
+            <div key={credit.title} className="my-2 flex items-center justify-between">
               <a
                 href={credit.link}
                 target="_blank"
