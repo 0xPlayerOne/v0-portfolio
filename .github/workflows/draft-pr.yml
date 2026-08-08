@@ -19,10 +19,14 @@ jobs:
   draft-pr:
     name: Draft PR
 <<<<<<< HEAD
+<<<<<<< HEAD
     uses: 0xPlayerOne/code-foundry/.github/workflows/draft-pr.yml@v0.37.1
 =======
     uses: 0xPlayerOne/code-foundry/.github/workflows/draft-pr.yml@v0.36.2
 >>>>>>> 93a714d (chore(code-foundry): sync staging to v0.36.2 (#125))
+=======
+    uses: 0xPlayerOne/code-foundry/.github/workflows/draft-pr.yml@v0.37.1
+>>>>>>> 4301b8b (chore: align staging with main (2026-08-08) (#136))
     with:
       runner: ubuntu-slim
       base: staging

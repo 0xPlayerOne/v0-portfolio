@@ -38,10 +38,14 @@ jobs:
           persist-credentials: false
           repository: 0xPlayerOne/code-foundry
 <<<<<<< HEAD
+<<<<<<< HEAD
           ref: v0.37.1
 =======
           ref: v0.36.2
 >>>>>>> 93a714d (chore(code-foundry): sync staging to v0.36.2 (#125))
+=======
+          ref: v0.37.1
+>>>>>>> 4301b8b (chore: align staging with main (2026-08-08) (#136))
           path: .github/.code-foundry
           sparse-checkout: |
             src/lib
@@ -69,11 +73,15 @@ jobs:
       packages: read
       security-events: write
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4301b8b (chore: align staging with main (2026-08-08) (#136))
     uses: 0xPlayerOne/code-foundry/.github/workflows/validation.yml@v0.37.1
     with:
       mode: ${{ needs.mode.outputs.mode }}
       runtime-repository: 0xPlayerOne/code-foundry
       runtime-ref: v0.37.1
+<<<<<<< HEAD
 =======
     uses: 0xPlayerOne/code-foundry/.github/workflows/validation.yml@v0.36.2
     with:
@@ -81,6 +89,8 @@ jobs:
       runtime-repository: 0xPlayerOne/code-foundry
       runtime-ref: v0.36.2
 >>>>>>> 93a714d (chore(code-foundry): sync staging to v0.36.2 (#125))
+=======
+>>>>>>> 4301b8b (chore: align staging with main (2026-08-08) (#136))
       ci-runner: ubuntu-latest
       test-runner: ubuntu-latest
       unit-runner: ubuntu-slim
