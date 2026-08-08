@@ -48,12 +48,12 @@ export function ContactSection() {
           {CONTACT_CONTENT.description}
         </Typography>
         <div className={cn('mb-8 grid grid-cols-1 gap-6 sm:mb-12 sm:grid-cols-3 sm:gap-8')}>
-          {CONTACT_LINKS.map((contact, index) => {
+          {CONTACT_LINKS.map((contact) => {
             const platform = contact.platform.toLowerCase() as keyof typeof CONTACT_ICONS
 
             return (
               <Card
-                key={index}
+                key={contact.platform}
                 className="group cursor-pointer border-0 transition-all duration-300 hover:scale-105"
                 style={{
                   backgroundColor: SITE_CARD_COLOR,

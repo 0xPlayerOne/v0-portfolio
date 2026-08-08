@@ -38,7 +38,7 @@ export function SkillsSection() {
       </Typography>
       <div className="mx-auto mt-8 max-w-6xl">
         <div className={cn('grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3')}>
-          {SKILLS_DATA.map((skillGroup, index) => {
+          {SKILLS_DATA.map((skillGroup) => {
             const IconComponent = SKILL_ICONS[skillGroup.category as keyof typeof SKILL_ICONS]
             const skills: ReadonlyArray<{ name: string; level: number }> = skillGroup.skills
             const avgLevel = Math.round(
@@ -47,7 +47,7 @@ export function SkillsSection() {
 
             return (
               <Card
-                key={index}
+                key={skillGroup.category}
                 className="group border-0 transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 style={{
                   backgroundColor: SITE_CARD_COLOR,
