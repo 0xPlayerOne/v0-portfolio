@@ -122,9 +122,9 @@ export function ProjectsSection() {
           </div>
         ) : (
           <div className={cn('grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2')}>
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <Card
-                key={index}
+                key={project.url}
                 className="group relative border-0 transition-all duration-300 hover:scale-105"
                 style={{
                   backgroundColor: SITE_CARD_COLOR,

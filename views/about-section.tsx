@@ -371,8 +371,8 @@ export const AboutSection = memo(function AboutSection() {
 
             {/* Stats Cards - Always visible */}
             <div className={cn('grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4')}>
-              {statsItems.map((stat, index) => (
-                <StatCard key={index} stat={stat} />
+              {statsItems.map((stat) => (
+                <StatCard key={stat.label} stat={stat} />
               ))}
             </div>
           </div>
@@ -386,8 +386,8 @@ export const AboutSection = memo(function AboutSection() {
               <div className="absolute top-0 bottom-0 left-8 w-0.5" style={timelineLineStyle} />
 
               <div className="space-y-8">
-                {journeyItems.map((item, index) => (
-                  <JourneyItem key={index} item={item} />
+                {journeyItems.map((item) => (
+                  <JourneyItem key={item.title} item={item} />
                 ))}
               </div>
             </div>
