@@ -5,3 +5,8 @@ GHSA-mh99-v99m-4gvg
 
 # js-yaml 3.x/4.x advisory (CVE-2026-59870): fix only lands in 5.x and is not backported.
 GHSA-5p4m-2wfm-xmqj
+
+# nanoid 3.x advisory (GHSA-2v37-7h3g-55p8): transitive through postcss 8.x
+# required by Tailwind; the fixed nanoid requires postcss 8.5.26+ which pins
+# the ecosystem. Revisit on the next postcss bump.
+GHSA-2v37-7h3g-55p8
