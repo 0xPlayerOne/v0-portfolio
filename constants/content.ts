@@ -60,7 +60,6 @@ export const SKILLS_DATA = [
 export const ABOUT_CONTENT = {
   intro:
     "I'm a passionate developer and entrepreneur with a focus on AI, gaming, blockchain, and innovative digital experiences. My journey combines technical expertise with business acumen, creating products that push the boundaries of what's possible in the digital space.",
-  mission: '',
   stats: [
     { label: 'Years Experience', value: '10+', icon: 'zap' },
     { label: 'Projects Shipped', value: '50+', icon: 'rocket' },

@@ -355,11 +355,6 @@ export const AboutSection = memo(function AboutSection() {
               <Typography variant="body1" align="center" gutterBottom>
                 {ABOUT_CONTENT.intro}
               </Typography>
-              {ABOUT_CONTENT.mission ? (
-                <Typography variant="body1" align="center" gutterBottom>
-                  {ABOUT_CONTENT.mission}
-                </Typography>
-              ) : null}
             </div>
 
             {/* Overview Cards - Hidden on small screens */}
