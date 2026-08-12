@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback } from 'react'
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
