@@ -3,11 +3,7 @@
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  SITE_TEXT_COLOR,
-  SITE_BORDER_COLOR,
-  SITE_BTN_COLOR,
-} from '@/constants/colors'
+import { SITE_TEXT_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/colors'
 import { cn } from '@/lib/utils'
 import { SKILLS_DATA } from '@/constants/content'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
