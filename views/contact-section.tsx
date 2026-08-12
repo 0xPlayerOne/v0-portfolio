@@ -1,10 +1,14 @@
 'use client'
 
+import { useCallback } from 'react'
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { SITE_BTN_COLOR, CANVAS_COLOR } from '@/constants/colors'
+import {
+  SITE_BTN_COLOR,
+  CANVAS_COLOR,
+} from '@/constants/colors'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { cn } from '@/lib/utils'
 import { CONTACT_LINKS, CONTACT_CONTENT } from '@/constants/content'
