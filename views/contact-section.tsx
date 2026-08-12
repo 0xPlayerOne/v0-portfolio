@@ -1,16 +1,14 @@
 'use client'
 
-import { useCallback } from 'react'
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
-  SITE_CARD_COLOR,
-  SITE_BORDER_COLOR,
   SITE_BTN_COLOR,
   CANVAS_COLOR,
 } from '@/constants/colors'
+import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { cn } from '@/lib/utils'
 import { CONTACT_LINKS, CONTACT_CONTENT } from '@/constants/content'
 import { X, Mail } from 'lucide-react'
@@ -31,13 +29,7 @@ const CONTACT_URLS = {
 } as const
 
 export function ContactSection() {
-  // Memoize hover handlers to prevent recreation on every render
-  const handleCardMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
-  }, [])
-  const handleCardMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
-  }, [])
+  const { handleMouseEnter, handleMouseLeave } = useCardHover()
   return (
     <Section id="contact">
       <Typography variant="h2" align="center" color="primary" gutterBottom>
@@ -55,12 +47,9 @@ export function ContactSection() {
               <Card
                 key={contact.platform}
                 className="group cursor-pointer border-0 transition-all duration-300 hover:scale-105"
-                style={{
-                  backgroundColor: SITE_CARD_COLOR,
-                  boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
-                }}
-                onMouseEnter={handleCardMouseEnter}
-                onMouseLeave={handleCardMouseLeave}
+                style={CARD_BASE_STYLE}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 <CardContent className="p-4 sm:p-6">
                   <a

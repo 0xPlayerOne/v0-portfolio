@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 interface UseScrollSpyProps {
   sectionIds: readonly string[]
@@ -11,9 +11,6 @@ export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(null)
   const activeSectionRef = useRef<string | null>(null)
 
-  // Memoize section IDs array to prevent unnecessary recalculations
-  const sectionIdsArray = useMemo(() => [...sectionIds], [sectionIds])
-
   // Optimized scroll handler with throttling — uses ref to avoid
   // re-creating the handler when activeSection changes, which would
   // otherwise re-register the scroll event listener on every section transition.
@@ -23,8 +20,8 @@ export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
 
     // Iterate in reverse order to find the closest section above current scroll position
     // This is more efficient as we can break early once we find a match
-    for (let i = sectionIdsArray.length - 1; i >= 0; i--) {
-      const sectionId = sectionIdsArray[i]
+    for (let i = sectionIds.length - 1; i >= 0; i--) {
+      const sectionId = sectionIds[i]
       const section = document.getElementById(sectionId)
 
       if (section) {
@@ -42,7 +39,7 @@ export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
       activeSectionRef.current = currentSection
       setActiveSection(currentSection)
     }
-  }, [sectionIdsArray, offset])
+  }, [sectionIds, offset])
 
   // Throttle scroll handler for better performance
   const rafIdRef = useRef<number>(0)
