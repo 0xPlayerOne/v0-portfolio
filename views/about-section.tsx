@@ -178,7 +178,10 @@ const JourneyItem = memo(function JourneyItem({
       >
         <CardContent className="p-6">
           <div className="mb-2 flex items-center gap-3">
-            <Badge variant="secondary" style={{ backgroundColor: SITE_BTN_COLOR, color: SITE_CARD_COLOR }}>
+            <Badge
+              variant="secondary"
+              style={{ backgroundColor: SITE_BTN_COLOR, color: SITE_CARD_COLOR }}
+            >
               {item.year}
             </Badge>
             <Typography variant="h3" color="secondary">
@@ -226,7 +229,10 @@ export const AboutSection = memo(function AboutSection() {
 
       {/* Tab Navigation */}
       <div className="mb-4 flex justify-center">
-        <div className="flex gap-2 rounded-lg p-1" style={{ backgroundColor: `${SITE_CARD_COLOR}80` }}>
+        <div
+          className="flex gap-2 rounded-lg p-1"
+          style={{ backgroundColor: `${SITE_CARD_COLOR}80` }}
+        >
           {tabs.map((tab) => (
             <TabButton
               key={tab.id}
@@ -269,7 +275,10 @@ export const AboutSection = memo(function AboutSection() {
           <div className="mx-auto max-w-4xl">
             <div className="relative">
               {/* Timeline line */}
-              <div className="absolute top-0 bottom-0 left-8 w-0.5" style={{ backgroundColor: SITE_BORDER_COLOR }} />
+              <div
+                className="absolute top-0 bottom-0 left-8 w-0.5"
+                style={{ backgroundColor: SITE_BORDER_COLOR }}
+              />
 
               <div className="space-y-8">
                 {journeyItems.map((item) => (
