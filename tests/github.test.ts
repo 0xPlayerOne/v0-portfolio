@@ -228,4 +228,53 @@ describe('GitHub project loading', () => {
     expect(projects[0].title).toBe('Unknown Project')
     expect(console.warn).toHaveBeenCalled()
   })
+
+  it('returns the curated fallback list when every API request throws', async () => {
+    const fetchMock = mock(async () => {
+      throw new Error('network down')
+    })
+    globalThis.fetch = fetchMock as any
+
+    const projects = await fetchPinnedRepos()
+
+    // A thrown error is caught and the curated fallback list is returned
+    expect(projects.length).toBeGreaterThan(0)
+    expect(projects.every((p) => Array.isArray(p.languages))).toBe(true)
+    expect(console.error).toHaveBeenCalled()
+  })
+
+  it('initiates pinned and popular repo fetches concurrently', async () => {
+    const requested: string[] = []
+    let release!: () => void
+    const gate = new Promise<void>((resolve) => (release = resolve))
+
+    const fetchMock = mock(async (input: string | URL | Request) => {
+      const url = String(input)
+      requested.push(url)
+      if (url.includes('/languages')) return jsonResponse({})
+      // Hold every request behind a gate so the test can observe which
+      // requests were initiated before any of them resolved.
+      await gate
+      if (url.includes('/users/0xPlayerOne/repos')) {
+        return jsonResponse([githubRepo('other-repo', { description: 'An open project' })])
+      }
+      return jsonResponse(
+        githubRepo('nifty-fe-monorepo', {
+          html_url: 'https://github.com/NiftyLeague/nifty-fe-monorepo',
+        })
+      )
+    })
+    globalThis.fetch = fetchMock as any
+
+    const pending = fetchPinnedRepos()
+    // Let the initial fetches start; nothing has resolved yet.
+    await Promise.resolve()
+
+    expect(requested.filter((u) => u.includes('/repos/NiftyLeague/'))).toHaveLength(2)
+    expect(requested.some((u) => u.includes('/users/0xPlayerOne/repos'))).toBe(true)
+
+    release()
+    const projects = await pending
+    expect(projects.length).toBeGreaterThan(0)
+  })
 })

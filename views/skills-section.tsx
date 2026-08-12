@@ -5,14 +5,13 @@ import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   SITE_TEXT_COLOR,
-  SITE_CARD_COLOR,
   SITE_BORDER_COLOR,
   SITE_BTN_COLOR,
 } from '@/constants/colors'
 import { cn } from '@/lib/utils'
 import { SKILLS_DATA } from '@/constants/content'
+import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { Code2, Gamepad2, Users, Briefcase, Palette, Blocks } from 'lucide-react'
-import { useCallback } from 'react'
 
 const SKILL_ICONS = {
   'Web & Full-Stack': Code2,
@@ -24,13 +23,7 @@ const SKILL_ICONS = {
 } as const
 
 export function SkillsSection() {
-  // Memoize hover handlers to prevent recreation on every render
-  const handleCardMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
-  }, [])
-  const handleCardMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
-  }, [])
+  const { handleMouseEnter, handleMouseLeave } = useCardHover()
   return (
     <Section id="skills">
       <Typography variant="h2" align="center" color="primary" gutterBottom>
@@ -38,7 +31,7 @@ export function SkillsSection() {
       </Typography>
       <div className="mx-auto mt-8 max-w-6xl">
         <div className={cn('grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3')}>
-          {SKILLS_DATA.map((skillGroup, index) => {
+          {SKILLS_DATA.map((skillGroup) => {
             const IconComponent = SKILL_ICONS[skillGroup.category as keyof typeof SKILL_ICONS]
             const skills: ReadonlyArray<{ name: string; level: number }> = skillGroup.skills
             const avgLevel = Math.round(
@@ -47,14 +40,11 @@ export function SkillsSection() {
 
             return (
               <Card
-                key={index}
+                key={skillGroup.category}
                 className="group border-0 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                style={{
-                  backgroundColor: SITE_CARD_COLOR,
-                  boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
-                }}
-                onMouseEnter={handleCardMouseEnter}
-                onMouseLeave={handleCardMouseLeave}
+                style={CARD_BASE_STYLE}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 <CardContent className="p-4 sm:p-6">
                   <div className="mb-4 flex items-center gap-3">
