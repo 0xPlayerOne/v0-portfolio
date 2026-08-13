@@ -1,7 +1,7 @@
 import { describe, expect, it, mock } from 'bun:test'
 
-import { render } from '@/lib/games/pong/renderer'
-import type { GameState } from '@/lib/games/pong/types'
+import { render } from './renderer'
+import type { GameState } from './types'
 
 function createContext() {
   return {
