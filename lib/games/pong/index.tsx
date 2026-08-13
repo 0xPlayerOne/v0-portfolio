@@ -18,8 +18,8 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const gameRef = useRef<GameState | null>(null)
   const animationIdRef = useRef<number>(0)
+  const mountedRef = useRef(true)
 
-  // Memoize the resize function to avoid recreating it on each render
   const resize = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -55,6 +55,8 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
 
     // Optimized animation loop
     const loop = () => {
+      if (!mountedRef.current) return
+
       if (gameRef.current) {
         gameRef.current = updateGame(gameRef.current)
         render(ctx, gameRef.current)
@@ -65,6 +67,7 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
 
     window.addEventListener('resize', handleResize)
     return () => {
+      mountedRef.current = false
       cancelAnimationFrame(animationIdRef.current)
       clearTimeout(resizeTimeout)
       window.removeEventListener('resize', handleResize)
