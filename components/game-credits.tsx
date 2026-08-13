@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback } from 'react'
 import { Gamepad2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -8,16 +9,24 @@ import { Typography } from '@/components/ui/typography'
 
 import { GAME_CREDITS } from '@/constants/content'
 import { MOBY_GAMES_LINK } from '@/constants/links'
-import { SITE_BTN_COLOR } from '@/constants/colors'
-import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
+import { SITE_CARD_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/colors'
 
 const GameCreditsCard = () => {
-  const { handleMouseEnter, handleMouseLeave } = useCardHover()
+  // Memoize hover handlers to prevent recreation on every render
+  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
+  }, [])
+  const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
+  }, [])
 
   return (
     <Card
       className="group relative w-full max-w-6xl border-0 transition-all duration-300 hover:scale-105 lg:max-w-2xl"
-      style={CARD_BASE_STYLE}
+      style={{
+        backgroundColor: SITE_CARD_COLOR,
+        boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -39,8 +48,8 @@ const GameCreditsCard = () => {
         </div>
 
         <div className="mb-6">
-          {GAME_CREDITS.map((credit) => (
-            <div key={credit.title} className="my-2 flex items-center justify-between">
+          {GAME_CREDITS.map((credit, index) => (
+            <div key={index} className="my-2 flex items-center justify-between">
               <a
                 href={credit.link}
                 target="_blank"
