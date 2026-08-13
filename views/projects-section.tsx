@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ExternalLink, Star, GitFork, RefreshCw, Pin } from 'lucide-react'
 import { Github } from '@/lib/brand-icons'
 
@@ -26,7 +26,7 @@ export function ProjectsSection() {
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  const loadProjects = async () => {
+  const loadProjects = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -39,11 +39,11 @@ export function ProjectsSection() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadProjects()
-  }, [])
+  }, [loadProjects])
 
   const { handleMouseEnter, handleMouseLeave } = useCardHover()
 
