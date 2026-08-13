@@ -20,12 +20,6 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
   const animationIdRef = useRef<number>(0)
   const mountedRef = useRef(true)
 
-  useEffect(() => {
-    return () => {
-      mountedRef.current = false
-    }
-  }, [])
-
   const resize = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
