@@ -178,7 +178,7 @@ async function fetchRepoLanguages(
       .sort((a, b) => b.percentage - a.percentage)
       .slice(0, MAX_LANGUAGES)
   } catch (error) {
-    console.error('Error fetching languages for ${owner}/${repoName}:', error)
+    console.error(`Error fetching languages for ${owner}/${repoName}:`, error)
     return []
   }
 }
