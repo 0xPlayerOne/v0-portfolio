@@ -14,13 +14,8 @@ import { GameCreditsCard } from '@/components/game-credits'
 import type { PinnedRepo } from '@/types/github'
 import { GITHUB_LINK } from '@/constants/links'
 import { LANGUAGES_DISPLAYED, PROJECTS_DISPLAYED } from '@/constants/github'
-import {
-  SITE_CARD_COLOR,
-  SITE_BORDER_COLOR,
-  SITE_BTN_COLOR,
-  CANVAS_COLOR,
-  SITE_TEXT_COLOR,
-} from '@/constants/colors'
+import { SITE_BTN_COLOR, CANVAS_COLOR, SITE_TEXT_COLOR } from '@/constants/colors'
+import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { fetchPinnedRepos } from '@/lib/github'
 import { getLanguageColor } from '@/lib/language-colors'
 import { cn } from '@/lib/utils'
@@ -31,7 +26,7 @@ export function ProjectsSection() {
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  const loadProjects = async () => {
+  const loadProjects = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -44,19 +39,13 @@ export function ProjectsSection() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadProjects()
-  }, [])
+  }, [loadProjects])
 
-  // Memoize hover handlers to prevent recreation on every render
-  const handleCardMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
-  }, [])
-  const handleCardMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.boxShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
-  }, [])
+  const { handleMouseEnter, handleMouseLeave } = useCardHover()
 
   return (
     <Section id="projects">
@@ -100,14 +89,7 @@ export function ProjectsSection() {
         {loading ? (
           <div className={cn('grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2')}>
             {[...Array(PROJECTS_DISPLAYED)].map((_, index) => (
-              <Card
-                key={index}
-                className="animate-pulse border-0"
-                style={{
-                  backgroundColor: SITE_CARD_COLOR,
-                  boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
-                }}
-              >
+              <Card key={index} className="animate-pulse border-0" style={CARD_BASE_STYLE}>
                 <CardContent className="p-6 sm:p-8">
                   <div className="mb-4 h-6 rounded bg-gray-600"></div>
                   <div className="mb-2 h-4 rounded bg-gray-700"></div>
@@ -126,12 +108,9 @@ export function ProjectsSection() {
               <Card
                 key={project.url}
                 className="group relative border-0 transition-all duration-300 hover:scale-105"
-                style={{
-                  backgroundColor: SITE_CARD_COLOR,
-                  boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`,
-                }}
-                onMouseEnter={handleCardMouseEnter}
-                onMouseLeave={handleCardMouseLeave}
+                style={CARD_BASE_STYLE}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 {project.isPinned && (
                   <div className="absolute top-3 left-3 z-10">
