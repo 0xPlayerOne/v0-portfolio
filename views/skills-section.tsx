@@ -76,10 +76,10 @@ export function SkillsSection() {
                   </div>
 
                   <div className="space-y-3">
-                    {skills.map((skill, skillIndex) => {
+                    {skills.map((skill) => {
                       const filledDots = Math.round((skill.level / 100) * 5)
                       return (
-                        <div key={skillIndex} className="group/skill">
+                        <div key={skill.name} className="group/skill">
                           <div className={cn('mb-1 flex items-center justify-between')}>
                             <Typography variant="body2" className="font-medium">
                               {skill.name}

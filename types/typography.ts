@@ -16,5 +16,4 @@ export interface TypographyProps {
   style?: React.CSSProperties
   children: React.ReactNode
   gutterBottom?: boolean
-  noWrap?: boolean
 }
