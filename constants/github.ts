@@ -4,7 +4,6 @@ export const MAX_LANGUAGES = 5
 export const MAX_PROJECTS = 6
 
 export const LANGUAGES_DISPLAYED = 3
-export const PROJECTS_DISPLAYED = MAX_PROJECTS
 
 export const PINNED_REPO_CONFIGS: PinnedRepoConfig[] = [
   {
