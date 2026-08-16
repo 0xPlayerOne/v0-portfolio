@@ -169,8 +169,8 @@ export function ProjectsSection() {
                   {/* Languages display - horizontal layout */}
                   {project.languages.length > 0 && (
                     <div className="mb-4 flex flex-wrap items-center gap-2">
-                      {project.languages.slice(0, LANGUAGES_DISPLAYED).map((lang, langIndex) => (
-                        <div key={langIndex} className="flex items-center gap-1.5 text-sm">
+                      {project.languages.slice(0, LANGUAGES_DISPLAYED).map((lang) => (
+                        <div key={lang.name} className="flex items-center gap-1.5 text-sm">
                           <div
                             className="h-3 w-3 flex-shrink-0 rounded-full"
                             style={{
@@ -195,9 +195,9 @@ export function ProjectsSection() {
 
                   {project.tech.length > 0 && (
                     <div className={cn('mb-6 flex flex-wrap gap-2')}>
-                      {project.tech.slice(0, 4).map((tech, techIndex) => (
+                      {project.tech.slice(0, 4).map((tech) => (
                         <Badge
-                          key={techIndex}
+                          key={tech}
                           variant="secondary"
                           style={{
                             backgroundColor: SITE_BTN_COLOR,
