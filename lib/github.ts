@@ -40,7 +40,7 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
     )
 
     // Resolve fallback languages once instead of re-spreading per repo
-    // (FALLBACK_PROJECTS is now hoisted to module scope)
+    // (FALLBACK_PROJECT_MAP is hoisted to module scope)
 
     // Fetch languages for each repo
     const reposWithLanguages = await Promise.all(
