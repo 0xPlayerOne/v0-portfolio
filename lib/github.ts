@@ -15,9 +15,10 @@ const GITHUB_FETCH_OPTIONS: RequestInit & { next: { revalidate: number } } = {
   next: { revalidate: 3600 },
 }
 
-const FALLBACK_PROJECT_MAP = new Map(
-  [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS].map((project) => [project.url, project])
-)
+// Hoisted to module scope — these are static and previously re-created on
+// every fetchPinnedRepos() call.
+const FALLBACK_PROJECTS = [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS]
+const FALLBACK_PROJECT_MAP = new Map(FALLBACK_PROJECTS.map((project) => [project.url, project]))
 
 export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
   try {
@@ -40,7 +41,7 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
     )
 
     // Resolve fallback languages once instead of re-spreading per repo
-    // (FALLBACK_PROJECT_MAP is hoisted to module scope)
+    // (FALLBACK_PROJECTS is now hoisted to module scope)
 
     // Fetch languages for each repo
     const reposWithLanguages = await Promise.all(
