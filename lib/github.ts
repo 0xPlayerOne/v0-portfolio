@@ -15,16 +15,16 @@ const GITHUB_FETCH_OPTIONS: RequestInit & { next: { revalidate: number } } = {
   next: { revalidate: 3600 },
 }
 
-// Hoisted to module scope — these are static and previously re-created on
-// every fetchPinnedRepos() call.
-const FALLBACK_PROJECTS = [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS]
-const FALLBACK_PROJECT_MAP = new Map(FALLBACK_PROJECTS.map((project) => [project.url, project]))
+// Hoisted to module scope — this map is static and was previously re-created
+// on every fetchPinnedRepos() call.
+const FALLBACK_PROJECT_MAP = new Map(
+  [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS].map((project) => [project.url, project])
+)
 
 export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
-  try {
-    // Fetch pinned and popular repos concurrently — they are independent,
-    // so serializing them added a full network round-trip of latency.
-    const [pinnedRepos, popularRepos] = await Promise.all([
+  // Fetch pinned and popular repos concurrently — they are independent,
+  // so serializing them added a full network round-trip of latency.
+  const [pinnedRepos, popularRepos] = await Promise.all([
       fetchSpecificRepos(PINNED_REPO_CONFIGS, true),
       fetchPopularRepositories(),
     ])
@@ -41,7 +41,7 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
     )
 
     // Resolve fallback languages once instead of re-spreading per repo
-    // (FALLBACK_PROJECTS is now hoisted to module scope)
+    // (FALLBACK_PROJECT_MAP is hoisted to module scope)
 
     // Fetch languages for each repo
     const reposWithLanguages = await Promise.all(
@@ -67,10 +67,6 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
     )
 
     return reposWithLanguages
-  } catch (error) {
-    console.error('Error fetching GitHub repos:', error)
-    return FALLBACK_PINNED_REPOS
-  }
 }
 
 async function fetchSpecificRepos(
