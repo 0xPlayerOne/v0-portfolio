@@ -15,62 +15,58 @@ const GITHUB_FETCH_OPTIONS: RequestInit & { next: { revalidate: number } } = {
   next: { revalidate: 3600 },
 }
 
-// Hoisted to module scope — these are static and previously re-created on
-// every fetchPinnedRepos() call.
-const FALLBACK_PROJECTS = [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS]
-const FALLBACK_PROJECT_MAP = new Map(FALLBACK_PROJECTS.map((project) => [project.url, project]))
+// Hoisted to module scope — this map is static and was previously re-created
+// on every fetchPinnedRepos() call.
+const FALLBACK_PROJECT_MAP = new Map(
+  [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS].map((project) => [project.url, project])
+)
 
 export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
-  try {
-    // Fetch pinned and popular repos concurrently — they are independent,
-    // so serializing them added a full network round-trip of latency.
-    const [pinnedRepos, popularRepos] = await Promise.all([
-      fetchSpecificRepos(PINNED_REPO_CONFIGS, true),
-      fetchPopularRepositories(),
-    ])
+  // Fetch pinned and popular repos concurrently — they are independent,
+  // so serializing them added a full network round-trip of latency.
+  const [pinnedRepos, popularRepos] = await Promise.all([
+    fetchSpecificRepos(PINNED_REPO_CONFIGS, true),
+    fetchPopularRepositories(),
+  ])
 
-    // Filter out pinned repos from popular repos to avoid duplicates
-    const pinnedUrls = new Set(pinnedRepos.map((repo) => repo.url))
-    const filteredPopularRepos = popularRepos.filter((repo) => !pinnedUrls.has(repo.url))
+  // Filter out pinned repos from popular repos to avoid duplicates
+  const pinnedUrls = new Set(pinnedRepos.map((repo) => repo.url))
+  const filteredPopularRepos = popularRepos.filter((repo) => !pinnedUrls.has(repo.url))
 
-    // Combine pinned repos (first) with popular repos to reach MAX_PROJECTS
-    const neededPopular = Math.max(0, MAX_PROJECTS - pinnedRepos.length)
-    const selectedRepos = [...pinnedRepos, ...filteredPopularRepos.slice(0, neededPopular)].slice(
-      0,
-      MAX_PROJECTS
-    )
+  // Combine pinned repos (first) with popular repos to reach MAX_PROJECTS
+  const neededPopular = Math.max(0, MAX_PROJECTS - pinnedRepos.length)
+  const selectedRepos = [...pinnedRepos, ...filteredPopularRepos.slice(0, neededPopular)].slice(
+    0,
+    MAX_PROJECTS
+  )
 
-    // Resolve fallback languages once instead of re-spreading per repo
-    // (FALLBACK_PROJECTS is now hoisted to module scope)
+  // Resolve fallback languages once instead of re-spreading per repo
+  // (FALLBACK_PROJECT_MAP is hoisted to module scope)
 
-    // Fetch languages for each repo
-    const reposWithLanguages = await Promise.all(
-      selectedRepos.map(async (repo) => {
-        const urlParts = repo.url.split('/')
-        const owner = urlParts[urlParts.length - 2]
-        const repoName = urlParts[urlParts.length - 1]
-        let languages = await fetchRepoLanguages(owner, repoName)
+  // Fetch languages for each repo
+  const reposWithLanguages = await Promise.all(
+    selectedRepos.map(async (repo) => {
+      const urlParts = repo.url.split('/')
+      const owner = urlParts[urlParts.length - 2]
+      const repoName = urlParts[urlParts.length - 1]
+      let languages = await fetchRepoLanguages(owner, repoName)
 
-        // If languages fetch failed and this is a fallback project, use fallback languages
-        if (languages.length === 0) {
-          const fallbackProject = FALLBACK_PROJECT_MAP.get(repo.url)
-          if (fallbackProject) {
-            languages = fallbackProject.languages
-          }
+      // If languages fetch failed and this is a fallback project, use fallback languages
+      if (languages.length === 0) {
+        const fallbackProject = FALLBACK_PROJECT_MAP.get(repo.url)
+        if (fallbackProject) {
+          languages = fallbackProject.languages
         }
+      }
 
-        return {
-          ...repo,
-          languages,
-        }
-      })
-    )
+      return {
+        ...repo,
+        languages,
+      }
+    })
+  )
 
-    return reposWithLanguages
-  } catch (error) {
-    console.error('Error fetching GitHub repos:', error)
-    return FALLBACK_PINNED_REPOS
-  }
+  return reposWithLanguages
 }
 
 async function fetchSpecificRepos(
