@@ -37,8 +37,8 @@ describe('app/page (Home)', () => {
     const main = container.querySelector('main')
     expect(main).not.toBeNull()
 
-    const sectionIds = Array.from(main?.querySelectorAll('section[id]') ?? []).map(
-      (section) => section.getAttribute('id')
+    const sectionIds = Array.from(main?.querySelectorAll('section[id]') ?? []).map((section) =>
+      section.getAttribute('id')
     )
     // The scroll-spy navigation depends on these exact ids and order.
     expect(sectionIds).toEqual(['about', 'skills', 'projects', 'contact'])
