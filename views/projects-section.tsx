@@ -13,7 +13,7 @@ import { GameCreditsCard } from '@/components/game-credits'
 
 import type { PinnedRepo } from '@/types/github'
 import { GITHUB_LINK } from '@/constants/links'
-import { LANGUAGES_DISPLAYED, PROJECTS_DISPLAYED } from '@/constants/github'
+import { LANGUAGES_DISPLAYED, MAX_PROJECTS } from '@/constants/github'
 import { SITE_BTN_COLOR, CANVAS_COLOR, SITE_TEXT_COLOR } from '@/constants/colors'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { fetchPinnedRepos } from '@/lib/github'
@@ -88,7 +88,7 @@ export function ProjectsSection() {
       <div className="mx-auto max-w-6xl">
         {loading ? (
           <div className={cn('grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2')}>
-            {[...Array(PROJECTS_DISPLAYED)].map((_, index) => (
+            {[...Array(MAX_PROJECTS)].map((_, index) => (
               <Card key={index} className="animate-pulse border-0" style={CARD_BASE_STYLE}>
                 <CardContent className="p-6 sm:p-8">
                   <div className="mb-4 h-6 rounded bg-gray-600"></div>
@@ -169,8 +169,8 @@ export function ProjectsSection() {
                   {/* Languages display - horizontal layout */}
                   {project.languages.length > 0 && (
                     <div className="mb-4 flex flex-wrap items-center gap-2">
-                      {project.languages.slice(0, LANGUAGES_DISPLAYED).map((lang, langIndex) => (
-                        <div key={langIndex} className="flex items-center gap-1.5 text-sm">
+                      {project.languages.slice(0, LANGUAGES_DISPLAYED).map((lang) => (
+                        <div key={lang.name} className="flex items-center gap-1.5 text-sm">
                           <div
                             className="h-3 w-3 flex-shrink-0 rounded-full"
                             style={{
@@ -195,9 +195,9 @@ export function ProjectsSection() {
 
                   {project.tech.length > 0 && (
                     <div className={cn('mb-6 flex flex-wrap gap-2')}>
-                      {project.tech.slice(0, 4).map((tech, techIndex) => (
+                      {project.tech.slice(0, 4).map((tech) => (
                         <Badge
-                          key={techIndex}
+                          key={tech}
                           variant="secondary"
                           style={{
                             backgroundColor: SITE_BTN_COLOR,

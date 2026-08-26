@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { beforeEach, describe, expect, it, mock } from 'bun:test'
+import { beforeEach, describe, expect, it, jest, mock } from 'bun:test'
 import { PongGame } from './index'
 
 // Minimal 2D context stub so the component's render loop executes (happy-dom
@@ -84,5 +84,46 @@ describe('PongGame', () => {
       />
     )
     expect(container.querySelector('canvas')?.className).toContain('extra')
+  })
+
+  it('debounces resize events and reinitializes the game after the timeout', () => {
+    jest.useFakeTimers()
+    const { container } = render(
+      <PongGame
+        navbarHeight={40}
+        colors={{
+          background: '#000',
+          pixel: '#0f0',
+          hitPixel: '#0a0',
+          ball: '#fff',
+          paddle: '#fff',
+        }}
+        headerText={['HI', 'THERE']}
+      />
+    )
+    const canvas = container.querySelector('canvas')
+    expect(canvas).not.toBeNull()
+    const initialWidth = canvas?.width
+    const initialHeight = canvas?.height
+
+    // Simulate a window resize by changing viewport dimensions
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: (initialWidth || 800) + 100,
+      writable: true,
+    })
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: (initialHeight || 600) + 100,
+      writable: true,
+    })
+
+    window.dispatchEvent(new Event('resize'))
+    // The debounced handler should schedule a resize after 100ms
+    jest.advanceTimersByTime(100)
+
+    expect(canvas?.width).not.toEqual(initialWidth)
+    expect(canvas?.height).not.toEqual(initialHeight)
+    jest.useRealTimers()
   })
 })
