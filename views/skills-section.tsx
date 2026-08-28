@@ -4,7 +4,6 @@ import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
 import { SITE_TEXT_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/colors'
-import { cn } from '@/lib/utils'
 import { SKILLS_DATA } from '@/constants/content'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { Code2, Gamepad2, Users, Briefcase, Palette, Blocks } from 'lucide-react'
@@ -26,7 +25,7 @@ export function SkillsSection() {
         Skills & Expertise
       </Typography>
       <div className="mx-auto mt-8 max-w-6xl">
-        <div className={cn('grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3')}>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
           {SKILLS_DATA.map((skillGroup) => {
             const IconComponent = SKILL_ICONS[skillGroup.category as keyof typeof SKILL_ICONS]
             const skills: ReadonlyArray<{ name: string; level: number }> = skillGroup.skills
@@ -66,7 +65,7 @@ export function SkillsSection() {
                       const filledDots = Math.round((skill.level / 100) * 5)
                       return (
                         <div key={skill.name} className="group/skill">
-                          <div className={cn('mb-1 flex items-center justify-between')}>
+                          <div className="mb-1 flex items-center justify-between">
                             <Typography variant="body2" className="font-medium">
                               {skill.name}
                             </Typography>

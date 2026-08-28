@@ -87,7 +87,7 @@ export function ProjectsSection() {
 
       <div className="mx-auto max-w-6xl">
         {loading ? (
-          <div className={cn('grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2')}>
+          <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
             {[...Array(MAX_PROJECTS)].map((_, index) => (
               <Card key={index} className="animate-pulse border-0" style={CARD_BASE_STYLE}>
                 <CardContent className="p-6 sm:p-8">
@@ -103,7 +103,7 @@ export function ProjectsSection() {
             ))}
           </div>
         ) : (
-          <div className={cn('grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2')}>
+          <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
             {projects.map((project) => (
               <Card
                 key={project.url}
@@ -194,7 +194,7 @@ export function ProjectsSection() {
                   )}
 
                   {project.tech.length > 0 && (
-                    <div className={cn('mb-6 flex flex-wrap gap-2')}>
+                    <div className="mb-6 flex flex-wrap gap-2">
                       {project.tech.slice(0, 4).map((tech) => (
                         <Badge
                           key={tech}
