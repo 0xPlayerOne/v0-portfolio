@@ -5,7 +5,36 @@ import {
   SITE_TEXT_COLOR,
   SITE_SUBTEXT_COLOR,
 } from '@/constants/colors'
-import type { TypographyProps } from '@/types/typography'
+import type { TypographyColor, TypographyProps, TypographyVariant } from '@/types/typography'
+
+// Hoisted to module scope — both maps are static and were previously
+// re-created on every Typography render (dozens per page).
+const COLOR_MAP: Record<TypographyColor, string> = {
+  primary: SITE_HEADER_COLOR,
+  secondary: SITE_SUBHEADER_COLOR,
+  textPrimary: SITE_TEXT_COLOR,
+  textSecondary: SITE_SUBTEXT_COLOR,
+  inherit: 'inherit',
+}
+
+const VARIANT_MAP: Record<TypographyVariant, { element: string; classes: string }> = {
+  h1: {
+    element: 'h1',
+    classes: 'text-4xl sm:text-5xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
+  },
+  h2: {
+    element: 'h2',
+    classes: 'text-3xl sm:text-4xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
+  },
+  h3: { element: 'h3', classes: 'text-lg sm:text-xl font-semibold' },
+  h4: { element: 'h4', classes: 'text-base sm:text-lg font-semibold' },
+  h5: { element: 'h5', classes: 'text-sm sm:text-base font-semibold' },
+  h6: { element: 'h6', classes: 'text-xs sm:text-sm font-semibold' },
+  body1: { element: 'p', classes: 'text-base sm:text-lg' },
+  body2: { element: 'p', classes: 'text-sm sm:text-base' },
+  caption: { element: 'span', classes: 'text-xs sm:text-sm' },
+  overline: { element: 'span', classes: 'text-xs uppercase tracking-wide' },
+}
 
 export function Typography({
   variant = 'body1',
@@ -21,37 +50,10 @@ export function Typography({
     align === 'center' ? 'text-center' : align === 'right' ? 'text-right' : 'text-left'
   const gutterClass = gutterBottom ? 'mb-4' : ''
 
-  const colorMap = {
-    primary: SITE_HEADER_COLOR,
-    secondary: SITE_SUBHEADER_COLOR,
-    textPrimary: SITE_TEXT_COLOR,
-    textSecondary: SITE_SUBTEXT_COLOR,
-    inherit: 'inherit',
-  }
-
-  const variantMap = {
-    h1: {
-      element: 'h1',
-      classes: 'text-4xl sm:text-5xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
-    },
-    h2: {
-      element: 'h2',
-      classes: 'text-3xl sm:text-4xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
-    },
-    h3: { element: 'h3', classes: 'text-lg sm:text-xl font-semibold' },
-    h4: { element: 'h4', classes: 'text-base sm:text-lg font-semibold' },
-    h5: { element: 'h5', classes: 'text-sm sm:text-base font-semibold' },
-    h6: { element: 'h6', classes: 'text-xs sm:text-sm font-semibold' },
-    body1: { element: 'p', classes: 'text-base sm:text-lg' },
-    body2: { element: 'p', classes: 'text-sm sm:text-base' },
-    caption: { element: 'span', classes: 'text-xs sm:text-sm' },
-    overline: { element: 'span', classes: 'text-xs uppercase tracking-wide' },
-  }
-
-  const resolved = variantMap[variant] ?? variantMap.body1
+  const resolved = VARIANT_MAP[variant] ?? VARIANT_MAP.body1
   const { element: Element, classes } = resolved
   const Component = component || Element
-  const style = { color: colorMap[color] || SITE_TEXT_COLOR }
+  const style = { color: COLOR_MAP[color] || SITE_TEXT_COLOR }
 
   return (
     <Component className={cn(classes, alignClass, gutterClass, className)} style={style} {...props}>

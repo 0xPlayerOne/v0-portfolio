@@ -4,7 +4,6 @@ import type React from 'react'
 import { useEffect, useState, useCallback, memo, useMemo } from 'react'
 import { NAVBAR_HEIGHT } from '@/constants/navigation'
 import { SITE_BG_COLOR, SITE_TEXT_COLOR, SITE_BORDER_COLOR } from '@/constants/colors'
-import { cn } from '@/lib/utils'
 
 interface SectionProps {
   id: string
@@ -59,7 +58,7 @@ export const Section = memo(function Section({ id, children }: SectionProps) {
   return (
     <section
       id={id}
-      className={cn('flex items-center justify-center border-0 py-8 sm:py-12 md:py-16')}
+      className="flex items-center justify-center border-0 py-8 sm:py-12 md:py-16"
       style={sectionStyle}
     >
       <div className="container mx-auto w-full px-4">{children}</div>
