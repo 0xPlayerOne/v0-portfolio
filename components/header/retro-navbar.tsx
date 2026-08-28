@@ -4,7 +4,6 @@ import { useState, useCallback, memo, useMemo } from 'react'
 import { NAV_BG_COLOR, NAV_BORDER_COLOR, NAV_TEXT_COLOR, NAV_HOVER_COLOR } from '@/constants/colors'
 import { smoothScrollToSection } from '@/lib/smooth-scroll'
 import { NAVIGATION_SECTIONS } from '@/constants/navigation'
-import { cn } from '@/lib/utils'
 
 interface RetroNavbarProps {
   height: number
@@ -41,10 +40,7 @@ const NavItem = memo(function NavItem({
     <li className="flex-shrink-0">
       <button
         onClick={handleClick}
-        className={cn(
-          'block px-1 whitespace-nowrap transition-colors sm:px-2',
-          'font-pixel py-2.5 leading-none'
-        )}
+        className="block whitespace-nowrap transition-colors font-pixel"
         style={{
           color: isHovered ? NAV_HOVER_COLOR : NAV_TEXT_COLOR,
           borderColor: isActive ? NAV_BORDER_COLOR : 'transparent',
@@ -91,7 +87,7 @@ export const RetroNavbar = memo(function RetroNavbar({
   return (
     <nav className="flex items-center border-0" style={navStyle}>
       <div className="container mx-auto w-full px-2 sm:px-4">
-        <ul className="flex justify-evenly space-x-2 font-['Press_Start_2P'] text-xs sm:justify-center sm:space-x-4 sm:text-sm md:space-x-6 md:text-base lg:space-x-8 lg:text-lg">
+        <ul className="flex justify-evenly space-x-2 text-xs sm:justify-center sm:space-x-4 sm:text-sm md:space-x-6 md:text-base lg:space-x-8 lg:text-lg">
           {NAVIGATION_SECTIONS.map((item) => (
             <NavItem
               key={item.id}

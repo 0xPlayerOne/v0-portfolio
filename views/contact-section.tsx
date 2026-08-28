@@ -6,7 +6,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { SITE_BTN_COLOR, CANVAS_COLOR } from '@/constants/colors'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
-import { cn } from '@/lib/utils'
 import { CONTACT_LINKS, CONTACT_CONTENT } from '@/constants/content'
 import { X, Mail } from 'lucide-react'
 import { Github, Linkedin } from '@/lib/brand-icons'
@@ -36,7 +35,7 @@ export function ContactSection() {
         <Typography variant="body1" align="center" gutterBottom>
           {CONTACT_CONTENT.description}
         </Typography>
-        <div className={cn('mb-8 grid grid-cols-1 gap-6 sm:mb-12 sm:grid-cols-3 sm:gap-8')}>
+        <div className="mb-8 grid grid-cols-1 gap-6 sm:mb-12 sm:grid-cols-3 sm:gap-8">
           {CONTACT_LINKS.map((contact) => {
             const platform = contact.platform.toLowerCase() as keyof typeof CONTACT_ICONS
 
