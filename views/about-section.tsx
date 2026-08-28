@@ -255,14 +255,14 @@ export const AboutSection = memo(function AboutSection() {
             </div>
 
             {/* Overview Cards - Hidden on small screens */}
-            <div className={cn('hidden gap-6 sm:gap-8 md:grid md:grid-cols-3')}>
+            <div className="hidden gap-6 sm:gap-8 md:grid md:grid-cols-3">
               {valuesEntries.map(([key, value]) => (
                 <ValueCard key={key} value={value} />
               ))}
             </div>
 
             {/* Stats Cards - Always visible */}
-            <div className={cn('grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4')}>
+            <div className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4">
               {statsItems.map((stat) => (
                 <StatCard key={stat.label} stat={stat} />
               ))}
