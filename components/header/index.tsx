@@ -1,18 +1,18 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { RetroCanvas } from './retro-canvas'
 import { RetroNavbar } from './retro-navbar'
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
 import { NAVBAR_HEIGHT, NAVIGATION_SECTIONS } from '@/constants/navigation'
 
+const SECTION_IDS = NAVIGATION_SECTIONS.map((section) => section.id)
+
 export function PongHeader() {
   const [isSticky, setIsSticky] = useState(false)
 
-  // Memoize section IDs to prevent unnecessary recalculations
-  const sectionIds = useMemo(() => NAVIGATION_SECTIONS.map((section) => section.id), [])
   const activeSection = useScrollSpy({
-    sectionIds,
+    sectionIds: SECTION_IDS,
     offset: NAVBAR_HEIGHT + 50,
   })
 
@@ -66,9 +66,6 @@ export function PongHeader() {
     }
   }, [handleScroll])
 
-  // Memoize the active section string to prevent unnecessary re-renders
-  const activeSectionString = useMemo(() => activeSection || '', [activeSection])
-
   return (
     <>
       <header className="flex h-dvh w-full flex-col">
@@ -80,7 +77,7 @@ export function PongHeader() {
           <RetroNavbar
             height={NAVBAR_HEIGHT}
             isSticky={false}
-            activeSection={activeSectionString}
+            activeSection={activeSection || ''}
           />
         </div>
       </header>
@@ -88,7 +85,7 @@ export function PongHeader() {
       {/* When sticky, show a fixed navbar at the top */}
       {isSticky && (
         <div className="fixed top-0 right-0 left-0 z-50">
-          <RetroNavbar height={NAVBAR_HEIGHT} isSticky={true} activeSection={activeSectionString} />
+          <RetroNavbar height={NAVBAR_HEIGHT} isSticky={true} activeSection={activeSection || ''} />
         </div>
       )}
     </>

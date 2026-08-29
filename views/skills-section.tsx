@@ -17,6 +17,13 @@ const SKILL_ICONS = {
   Product: Palette,
 } as const
 
+// Precompute avgLevel once at module scope — SKILLS_DATA is static, so
+// this avoids running reduce() for every group on every render.
+const SKILLS_WITH_AVG = SKILLS_DATA.map((group) => ({
+  ...group,
+  avgLevel: Math.round(group.skills.reduce((sum, s) => sum + s.level, 0) / group.skills.length),
+}))
+
 export function SkillsSection() {
   const { handleMouseEnter, handleMouseLeave } = useCardHover()
   return (
@@ -26,12 +33,9 @@ export function SkillsSection() {
       </Typography>
       <div className="mx-auto mt-8 max-w-6xl">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
-          {SKILLS_DATA.map((skillGroup) => {
+          {SKILLS_WITH_AVG.map((skillGroup) => {
             const IconComponent = SKILL_ICONS[skillGroup.category as keyof typeof SKILL_ICONS]
             const skills: ReadonlyArray<{ name: string; level: number }> = skillGroup.skills
-            const avgLevel = Math.round(
-              skills.reduce((sum, skill) => sum + skill.level, 0) / skills.length
-            )
 
             return (
               <Card
@@ -111,7 +115,7 @@ export function SkillsSection() {
                         style={{ backgroundColor: `${SITE_BTN_COLOR}20` }}
                       >
                         <Typography variant="caption" color="textSecondary">
-                          LVL {avgLevel}
+                          LVL {skillGroup.avgLevel}
                         </Typography>
                       </span>
                     </div>

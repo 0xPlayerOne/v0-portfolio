@@ -43,6 +43,8 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
     const ctx = canvas.getContext('2d', { alpha: false }) // Optimize by disabling alpha
     if (!ctx) return
 
+    mountedRef.current = true
+
     // Initial resize
     resize()
 

@@ -8,7 +8,7 @@ import { SITE_CARD_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/
 import { cn } from '@/lib/utils'
 import { ABOUT_CONTENT } from '@/constants/content'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
-import { useState, useMemo, memo, useCallback } from 'react'
+import { useState, memo, useCallback } from 'react'
 import {
   Zap,
   Rocket,
@@ -195,31 +195,25 @@ const JourneyItem = memo(function JourneyItem({
   )
 })
 
+// Hoisted static derivations — ABOUT_CONTENT is a const, so these
+// never change and do not need to be recomputed or memoized per render.
+const VALUES_ENTRIES = Object.entries(ABOUT_CONTENT.values)
+
+const JOURNEY_ITEMS = ABOUT_CONTENT.journey
+
+const STATS_ITEMS = ABOUT_CONTENT.stats
+
 // Main component with optimizations
 export const AboutSection = memo(function AboutSection() {
   const [activeTab, setActiveTab] = useState<'overview' | 'journey'>('overview')
 
-  // Memoize tab click handlers
   const handleOverviewClick = useCallback(() => setActiveTab('overview'), [])
   const handleJourneyClick = useCallback(() => setActiveTab('journey'), [])
 
-  // Memoize the tabs array
-  const tabs = useMemo(
-    () => [
-      { id: 'overview', label: 'Overview', onClick: handleOverviewClick },
-      { id: 'journey', label: 'Journey', onClick: handleJourneyClick },
-    ],
-    [handleOverviewClick, handleJourneyClick]
-  )
-
-  // Memoize the values entries to prevent recreation on each render
-  const valuesEntries = useMemo(() => Object.entries(ABOUT_CONTENT.values), [])
-
-  // Memoize the journey items to prevent recreation on each render
-  const journeyItems = useMemo(() => ABOUT_CONTENT.journey, [])
-
-  // Memoize the stats items to prevent recreation on each render
-  const statsItems = useMemo(() => ABOUT_CONTENT.stats, [])
+  const tabs = [
+    { id: 'overview' as const, label: 'Overview', onClick: handleOverviewClick },
+    { id: 'journey' as const, label: 'Journey', onClick: handleJourneyClick },
+  ]
 
   return (
     <Section id="about">
@@ -256,14 +250,14 @@ export const AboutSection = memo(function AboutSection() {
 
             {/* Overview Cards - Hidden on small screens */}
             <div className="hidden gap-6 sm:gap-8 md:grid md:grid-cols-3">
-              {valuesEntries.map(([key, value]) => (
+              {VALUES_ENTRIES.map(([key, value]) => (
                 <ValueCard key={key} value={value} />
               ))}
             </div>
 
             {/* Stats Cards - Always visible */}
             <div className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4">
-              {statsItems.map((stat) => (
+              {STATS_ITEMS.map((stat) => (
                 <StatCard key={stat.label} stat={stat} />
               ))}
             </div>
@@ -281,7 +275,7 @@ export const AboutSection = memo(function AboutSection() {
               />
 
               <div className="space-y-8">
-                {journeyItems.map((item) => (
+                {JOURNEY_ITEMS.map((item) => (
                   <JourneyItem key={item.title} item={item} />
                 ))}
               </div>
