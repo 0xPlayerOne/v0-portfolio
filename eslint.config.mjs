@@ -41,7 +41,14 @@ const config = [
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
   {
-    ignores: ['.next/**', 'coverage/**', 'next-env.d.ts', 'public/**'],
+    ignores: [
+      '.next/**',
+      '.open-next/**',
+      '.wrangler/**',
+      'coverage/**',
+      'next-env.d.ts',
+      'public/**',
+    ],
   },
 ]
 
