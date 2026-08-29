@@ -17,17 +17,17 @@ This project is deployed to the `v0-portfolio` Cloudflare Worker.
 The repository includes the OpenNext adapter and Wrangler configuration used by
 Cloudflare Workers Builds. Configure the Worker’s build settings as follows:
 
-| Setting                       | Value                       |
-| ----------------------------- | --------------------------- |
-| Production branch             | `main`                      |
-| Root directory                | `.`                         |
-| Build command                 | `bun run cloudflare:build`  |
-| Deploy command                | `bun run cloudflare:deploy` |
-| Non-production deploy command | `bun run cloudflare:upload` |
+| Setting                       | Value                          |
+| ----------------------------- | ------------------------------ |
+| Production branch             | `main`                         |
+| Root directory                | `.`                            |
+| Build command                 | `bun run build`                |
+| Deploy command                | `npx wrangler versions upload` |
+| Non-production deploy command | `npx wrangler versions upload` |
 
 The repository’s `bun.lock` and `packageManager` field keep the build on Bun.
-For a local Workers-runtime preview, run `bun run preview`; for a production
-deployment from an authenticated environment, run `bun run deploy`.
+For an explicit local Workers-runtime preview, run `bun run preview`; for a
+production deployment from an authenticated environment, run `bun run deploy`.
 
 ## Build your app
 
