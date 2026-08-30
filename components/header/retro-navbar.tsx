@@ -91,7 +91,7 @@ export const RetroNavbar = memo(function RetroNavbar({
   return (
     <nav className="flex items-center border-0" style={navStyle}>
       <div className="container mx-auto w-full px-2 sm:px-4">
-        <ul className="flex justify-evenly space-x-2 font-['Press_Start_2P'] text-xs sm:justify-center sm:space-x-4 sm:text-sm md:space-x-6 md:text-base lg:space-x-8 lg:text-lg">
+        <ul className="flex justify-evenly space-x-2 font-pixel text-xs sm:justify-center sm:space-x-4 sm:text-sm md:space-x-6 md:text-base lg:space-x-8 lg:text-lg">
           {NAVIGATION_SECTIONS.map((item) => (
             <NavItem
               key={item.id}
