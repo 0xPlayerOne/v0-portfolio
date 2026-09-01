@@ -11,14 +11,16 @@ interface SectionProps {
   children: React.ReactNode
 }
 
+export function getInitialSectionHeight(): string {
+  if (typeof window !== 'undefined') {
+    return `${Math.max(600, window.innerHeight - NAVBAR_HEIGHT)}px`
+  }
+  return 'auto'
+}
+
 // Memoize the Section component to prevent unnecessary re-renders
 export const Section = memo(function Section({ id, children }: SectionProps) {
-  const [sectionHeight, setSectionHeight] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return `${Math.max(600, window.innerHeight - NAVBAR_HEIGHT)}px`
-    }
-    return 'auto'
-  })
+  const [sectionHeight, setSectionHeight] = useState(getInitialSectionHeight)
 
   // Optimize the height update function with useCallback
   const updateHeight = useCallback(() => {
