@@ -16,18 +16,22 @@ const project: PinnedRepo = {
   isPinned: true,
 }
 
-const fetchPinnedRepos = mock<() => Promise<PinnedRepo[]>>()
-
-mock.module('@/lib/github', () => ({ fetchPinnedRepos }))
+const fetchProjects = mock(
+  async () =>
+    new Response(JSON.stringify([project]), {
+      headers: { 'Content-Type': 'application/json' },
+    })
+)
 
 describe('app/page (Home)', () => {
   beforeEach(() => {
-    fetchPinnedRepos.mockClear()
-    fetchPinnedRepos.mockResolvedValue([project])
+    fetchProjects.mockClear()
+    globalThis.fetch = fetchProjects as unknown as typeof fetch
   })
 
-  it('renders the retro pong header canvas', () => {
+  it('renders the retro pong header canvas', async () => {
     render(<Home />)
+    await waitFor(() => expect(fetchProjects).toHaveBeenCalled())
     expect(screen.getByLabelText('Retro pong header with pixel art')).toBeDefined()
   })
 
@@ -42,11 +46,14 @@ describe('app/page (Home)', () => {
     )
     // The scroll-spy navigation depends on these exact ids and order.
     expect(sectionIds).toEqual(['about', 'skills', 'projects', 'contact'])
+    await waitFor(() => expect(fetchProjects).toHaveBeenCalled())
   })
 
-  it('composes the projects feed from fetchPinnedRepos through the section tree', async () => {
+  it('composes the projects feed from the same-origin projects API', async () => {
     render(<Home />)
-    await waitFor(() => expect(fetchPinnedRepos).toHaveBeenCalled())
+    await waitFor(() =>
+      expect(fetchProjects).toHaveBeenCalledWith('/api/projects', expect.anything())
+    )
     expect(await screen.findByText('Sentinel Test Repo')).toBeDefined()
   })
 })

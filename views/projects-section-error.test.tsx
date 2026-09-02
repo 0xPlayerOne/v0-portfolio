@@ -1,16 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import { describe, expect, it, mock, spyOn } from 'bun:test'
+import { describe, expect, it, spyOn } from 'bun:test'
 
-const fetchPinnedRepos = mock(() => Promise.reject(new Error('network down')))
-
-mock.module('@/lib/github', () => ({ fetchPinnedRepos }))
-
-// Must import AFTER mock.module hoisting (bun hoists mock.module calls)
 import { ProjectsSection } from '@/views/projects-section'
 
 describe('ProjectsSection – error handling', () => {
-  it('shows fallback error UI when fetchPinnedRepos throws', async () => {
+  it('shows fallback error UI when the projects API is unavailable', async () => {
     const errSpy = spyOn(console, 'error').mockImplementation(() => undefined)
+    const fetchSpy = spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network down'))
 
     render(<ProjectsSection />)
 
@@ -21,8 +17,9 @@ describe('ProjectsSection – error handling', () => {
       expect(screen.getByText(/Failed to load projects/)).not.toBeNull()
     })
     expect(errSpy).toHaveBeenCalled()
-    expect(fetchPinnedRepos).toHaveBeenCalled()
+    expect(fetchSpy).toHaveBeenCalledWith('/api/projects', expect.anything())
 
     errSpy.mockRestore()
+    fetchSpy.mockRestore()
   })
 })
