@@ -18,7 +18,6 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const gameRef = useRef<GameState | null>(null)
   const animationIdRef = useRef<number>(0)
-  const mountedRef = useRef(true)
 
   const resize = useCallback(() => {
     const canvas = canvasRef.current
@@ -53,9 +52,11 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
       resizeTimeout = setTimeout(resize, 100)
     }
 
-    // Optimized animation loop
+    // Animation loop — uses effect-local `cancelled` flag so re-mounts
+    // and dependency changes always see a fresh, correctly scoped value.
+    let cancelled = false
     const loop = () => {
-      if (!mountedRef.current) return
+      if (cancelled) return
 
       if (gameRef.current) {
         gameRef.current = updateGame(gameRef.current)
@@ -67,7 +68,7 @@ export function PongGame({ navbarHeight, colors, headerText, className }: PongGa
 
     window.addEventListener('resize', handleResize)
     return () => {
-      mountedRef.current = false
+      cancelled = true
       cancelAnimationFrame(animationIdRef.current)
       clearTimeout(resizeTimeout)
       window.removeEventListener('resize', handleResize)

@@ -5,13 +5,13 @@ import type { SVGProps } from 'react'
 
 type BrandIconProps = SVGProps<SVGSVGElement> & { size?: number }
 
-export function Github(props: BrandIconProps) {
+export function Github({ size = 24, ...props }: BrandIconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="currentColor"
-      width={props.size ?? 24}
-      height={props.size ?? 24}
+      width={size}
+      height={size}
       aria-hidden="true"
       {...props}
     >
@@ -20,13 +20,13 @@ export function Github(props: BrandIconProps) {
   )
 }
 
-export function Linkedin(props: BrandIconProps) {
+export function Linkedin({ size = 24, ...props }: BrandIconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="currentColor"
-      width={props.size ?? 24}
-      height={props.size ?? 24}
+      width={size}
+      height={size}
       aria-hidden="true"
       {...props}
     >

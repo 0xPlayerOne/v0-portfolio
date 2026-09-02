@@ -7,6 +7,13 @@ import {
 } from '@/constants/colors'
 import type { TypographyProps } from '@/types/typography'
 
+const ALIGN_CLASSES = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+  justify: 'text-justify',
+} as const
+
 export function Typography({
   variant = 'body1',
   align = 'left',
@@ -15,10 +22,10 @@ export function Typography({
   children,
   gutterBottom = false,
   component,
+  style,
   ...props
 }: TypographyProps) {
-  const alignClass =
-    align === 'center' ? 'text-center' : align === 'right' ? 'text-right' : 'text-left'
+  const alignClass = ALIGN_CLASSES[align as keyof typeof ALIGN_CLASSES] ?? ALIGN_CLASSES.left
   const gutterClass = gutterBottom ? 'mb-4' : ''
 
   const colorMap = {
@@ -51,10 +58,15 @@ export function Typography({
   const resolved = variantMap[variant] ?? variantMap.body1
   const { element: Element, classes } = resolved
   const Component = component || Element
-  const style = { color: colorMap[color] || SITE_TEXT_COLOR }
+  const colorStyle = { color: colorMap[color] || SITE_TEXT_COLOR }
+  const mergedStyle = style ? { ...colorStyle, ...style } : colorStyle
 
   return (
-    <Component className={cn(classes, alignClass, gutterClass, className)} style={style} {...props}>
+    <Component
+      className={cn(classes, alignClass, gutterClass, className)}
+      style={mergedStyle}
+      {...props}
+    >
       {children}
     </Component>
   )
