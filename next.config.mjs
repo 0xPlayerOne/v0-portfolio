@@ -7,6 +7,13 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Source maps disabled in production bundle by default — keep for now
+  // but avoid sending the X-Powered-By fingerprint.
+  poweredByHeader: false,
+  compress: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
 }
 
 export default nextConfig

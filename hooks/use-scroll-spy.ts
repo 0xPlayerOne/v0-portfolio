@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useRafThrottle } from '@/hooks/use-raf-throttle'
 
 interface UseScrollSpyProps {
   sectionIds: readonly string[]
@@ -41,25 +42,7 @@ export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
     }
   }, [sectionIds, offset])
 
-  // Throttle scroll handler for better performance
-  const rafIdRef = useRef<number>(0)
-  const handleScroll = useCallback(() => {
-    // Use requestAnimationFrame for better performance
-    if (!window.requestAnimationFrame) {
-      return throttledScrollHandler()
-    }
-
-    // Coalesce scroll events: cancel any pending frame so at most one
-    // callback runs per animation frame instead of queueing one callback
-    // per scroll event (trackpad/rapid scroll can fire several per frame).
-    if (rafIdRef.current) {
-      cancelAnimationFrame(rafIdRef.current)
-    }
-    rafIdRef.current = window.requestAnimationFrame(() => {
-      rafIdRef.current = 0
-      throttledScrollHandler()
-    })
-  }, [throttledScrollHandler])
+  const handleScroll = useRafThrottle(throttledScrollHandler)
 
   useEffect(() => {
     // Use passive event listener for better performance
@@ -69,9 +52,6 @@ export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
     handleScroll()
 
     return () => {
-      if (rafIdRef.current) {
-        cancelAnimationFrame(rafIdRef.current)
-      }
       window.removeEventListener('scroll', handleScroll)
     }
   }, [handleScroll])
