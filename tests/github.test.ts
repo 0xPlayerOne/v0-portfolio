@@ -102,6 +102,29 @@ describe('GitHub project loading', () => {
     expect(console.error).toHaveBeenCalled()
   })
 
+  it('drops unsafe homepage URLs from GitHub metadata', async () => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
+      const url = String(input)
+
+      if (url.endsWith('/repos/NiftyLeague/nifty-fe-monorepo')) {
+        return jsonResponse(
+          githubRepo('unsafe-homepage', {
+            homepage: 'javascript:alert(document.domain)',
+            html_url: 'https://github.com/NiftyLeague/nifty-fe-monorepo',
+          })
+        )
+      }
+      if (url.endsWith('/languages')) return jsonResponse({ TypeScript: 100 })
+      return jsonResponse({}, 403)
+    })
+    globalThis.fetch = fetchMock as any
+
+    const projects = await fetchPinnedRepos()
+
+    expect(projects).toHaveLength(1)
+    expect(projects[0].homepage).toBeUndefined()
+  })
+
   it('returns empty popular repos when the GitHub API rate-limits (403)', async () => {
     const fetchMock = mock(async (input: string | URL | Request) => {
       const url = String(input)

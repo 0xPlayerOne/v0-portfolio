@@ -19,14 +19,17 @@ const project: PinnedRepo = {
   isPinned: true,
 }
 
-const fetchPinnedRepos = mock<() => Promise<PinnedRepo[]>>()
-
-mock.module('@/lib/github', () => ({ fetchPinnedRepos }))
+const fetchProjects = mock(
+  async () =>
+    new Response(JSON.stringify([project]), {
+      headers: { 'Content-Type': 'application/json' },
+    })
+)
 
 describe('portfolio sections', () => {
   beforeEach(() => {
-    fetchPinnedRepos.mockClear()
-    fetchPinnedRepos.mockResolvedValue([project])
+    fetchProjects.mockClear()
+    globalThis.fetch = fetchProjects as unknown as typeof fetch
   })
 
   it('renders skill groups, contact links, and game credits', async () => {
@@ -67,7 +70,7 @@ describe('portfolio sections', () => {
     expect(screen.getByText('TypeScript')).not.toBeNull()
 
     fireEvent.click(screen.getByRole('button'))
-    await waitFor(() => expect(fetchPinnedRepos).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(fetchProjects).toHaveBeenCalledTimes(2))
   })
 
   it('updates section height after a resize without leaking the timer', async () => {

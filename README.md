@@ -29,6 +29,13 @@ The repository’s `bun.lock` and `packageManager` field keep the build on Bun.
 For an explicit local Workers-runtime preview, run `bun run preview`; for a
 production deployment from an authenticated environment, run `bun run deploy`.
 
+The projects section is served through the same-origin `/api/projects` route.
+The route caches GitHub data for one hour and can serve stale data while it
+refreshes, so visitors do not each fan out to the GitHub API. GitHub-provided
+repository URLs are restricted to HTTPS before they reach the UI. The public
+`/.well-known/security.txt` document points researchers to the repository’s
+security policy and advisory form.
+
 ## Build your app
 
 Continue building your app on:
