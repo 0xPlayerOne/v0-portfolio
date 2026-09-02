@@ -135,7 +135,10 @@ async function fetchPopularRepositories(): Promise<Omit<PinnedRepo, 'languages'>
         return scoreB - scoreA
       })
 
-    return popularRepos.map((repo) => toPinnedRepo(repo, false))
+    return popularRepos.flatMap((repo) => {
+      const project = toPinnedRepo(repo, false)
+      return project ? [project] : []
+    })
   } catch (error) {
     console.error('Error fetching popular repos:', error)
     return FALLBACK_POPULAR_REPOS
@@ -183,16 +186,33 @@ function toPinnedRepo(
   repo: GitHubRepo,
   isPinned: boolean,
   displayName?: string
-): Omit<PinnedRepo, 'languages'> {
+): Omit<PinnedRepo, 'languages'> | null {
+  const url = safeExternalUrl(repo.html_url)
+  if (!url) {
+    console.warn(`Ignoring repository with unsafe URL: ${repo.name}`)
+    return null
+  }
+
   return {
     title: displayName || formatRepoName(repo.name),
     description: repo.description || 'No description available',
     tech: repo.topics.slice(0, 4),
-    url: repo.html_url,
-    homepage: repo.homepage || undefined,
+    url,
+    homepage: safeExternalUrl(repo.homepage),
     stars: repo.stargazers_count,
     forks: repo.forks_count,
     isPinned,
+  }
+}
+
+function safeExternalUrl(value: string | null | undefined): string | undefined {
+  if (!value) return undefined
+
+  try {
+    const url = new URL(value)
+    return url.protocol === 'https:' ? url.toString() : undefined
+  } catch {
+    return undefined
   }
 }
 

@@ -16,7 +16,6 @@ import { GITHUB_LINK } from '@/constants/links'
 import { LANGUAGES_DISPLAYED, MAX_PROJECTS } from '@/constants/github'
 import { SITE_BTN_COLOR, CANVAS_COLOR, SITE_TEXT_COLOR } from '@/constants/colors'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
-import { fetchPinnedRepos } from '@/lib/github'
 import { getLanguageColor } from '@/lib/language-colors'
 import { cn } from '@/lib/utils'
 
@@ -30,7 +29,14 @@ export function ProjectsSection() {
     try {
       setLoading(true)
       setError(null)
-      const repos = await fetchPinnedRepos()
+      const response = await fetch('/api/projects', {
+        headers: { Accept: 'application/json' },
+      })
+      if (!response.ok) {
+        throw new Error(`Projects API error: ${response.status}`)
+      }
+
+      const repos = (await response.json()) as PinnedRepo[]
       setProjects(repos)
       setLastUpdated(new Date())
     } catch (err) {
