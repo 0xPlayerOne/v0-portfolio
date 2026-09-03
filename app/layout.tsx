@@ -2,7 +2,7 @@ import type React from 'react'
 import { Inter, Press_Start_2P } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
 const pressStart2P = Press_Start_2P({
   weight: '400',
   subsets: ['latin'],
