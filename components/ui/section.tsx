@@ -11,9 +11,11 @@ interface SectionProps {
   children: React.ReactNode
 }
 
+const MIN_SECTION_HEIGHT = 600
+
 export function getInitialSectionHeight(): string {
   if (typeof window !== 'undefined') {
-    return `${Math.max(600, window.innerHeight - NAVBAR_HEIGHT)}px`
+    return `${Math.max(MIN_SECTION_HEIGHT, window.innerHeight - NAVBAR_HEIGHT)}px`
   }
   return 'auto'
 }
@@ -25,7 +27,7 @@ export const Section = memo(function Section({ id, children }: SectionProps) {
   // Optimize the height update function with useCallback
   const updateHeight = useCallback(() => {
     // Use min-height instead of fixed height for better mobile experience
-    const minHeight = Math.max(600, window.innerHeight - NAVBAR_HEIGHT)
+    const minHeight = Math.max(MIN_SECTION_HEIGHT, window.innerHeight - NAVBAR_HEIGHT)
     setSectionHeight(`${minHeight}px`)
   }, [])
 
