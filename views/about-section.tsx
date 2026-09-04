@@ -8,7 +8,7 @@ import { SITE_CARD_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/
 import { cn } from '@/lib/utils'
 import { ABOUT_CONTENT } from '@/constants/content'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
-import { useState, useMemo, memo, useCallback } from 'react'
+import { useState, memo } from 'react'
 import {
   Zap,
   Rocket,
@@ -195,31 +195,12 @@ const JourneyItem = memo(function JourneyItem({
   )
 })
 
+// Static content references — ABOUT_CONTENT is a frozen import, no need for useMemo.
+// Tabs are static; inline handlers keep the component at a single hook (useState).
+
 // Main component with optimizations
 export const AboutSection = memo(function AboutSection() {
   const [activeTab, setActiveTab] = useState<'overview' | 'journey'>('overview')
-
-  // Memoize tab click handlers
-  const handleOverviewClick = useCallback(() => setActiveTab('overview'), [])
-  const handleJourneyClick = useCallback(() => setActiveTab('journey'), [])
-
-  // Memoize the tabs array
-  const tabs = useMemo(
-    () => [
-      { id: 'overview', label: 'Overview', onClick: handleOverviewClick },
-      { id: 'journey', label: 'Journey', onClick: handleJourneyClick },
-    ],
-    [handleOverviewClick, handleJourneyClick]
-  )
-
-  // Memoize the values entries to prevent recreation on each render
-  const valuesEntries = useMemo(() => Object.entries(ABOUT_CONTENT.values), [])
-
-  // Memoize the journey items to prevent recreation on each render
-  const journeyItems = useMemo(() => ABOUT_CONTENT.journey, [])
-
-  // Memoize the stats items to prevent recreation on each render
-  const statsItems = useMemo(() => ABOUT_CONTENT.stats, [])
 
   return (
     <Section id="about">
@@ -233,14 +214,16 @@ export const AboutSection = memo(function AboutSection() {
           className="flex gap-2 rounded-lg p-1"
           style={{ backgroundColor: `${SITE_CARD_COLOR}80` }}
         >
-          {tabs.map((tab) => (
-            <TabButton
-              key={tab.id}
-              label={tab.label}
-              isActive={activeTab === tab.id}
-              onClick={tab.onClick}
-            />
-          ))}
+          <TabButton
+            label="Overview"
+            isActive={activeTab === 'overview'}
+            onClick={() => setActiveTab('overview')}
+          />
+          <TabButton
+            label="Journey"
+            isActive={activeTab === 'journey'}
+            onClick={() => setActiveTab('journey')}
+          />
         </div>
       </div>
 
@@ -256,14 +239,14 @@ export const AboutSection = memo(function AboutSection() {
 
             {/* Overview Cards - Hidden on small screens */}
             <div className={cn('hidden gap-6 sm:gap-8 md:grid md:grid-cols-3')}>
-              {valuesEntries.map(([key, value]) => (
+              {Object.entries(ABOUT_CONTENT.values).map(([key, value]) => (
                 <ValueCard key={key} value={value} />
               ))}
             </div>
 
             {/* Stats Cards - Always visible */}
             <div className={cn('grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4')}>
-              {statsItems.map((stat) => (
+              {ABOUT_CONTENT.stats.map((stat) => (
                 <StatCard key={stat.label} stat={stat} />
               ))}
             </div>
@@ -281,7 +264,7 @@ export const AboutSection = memo(function AboutSection() {
               />
 
               <div className="space-y-8">
-                {journeyItems.map((item) => (
+                {ABOUT_CONTENT.journey.map((item) => (
                   <JourneyItem key={item.title} item={item} />
                 ))}
               </div>
