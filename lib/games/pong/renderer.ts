@@ -69,14 +69,18 @@ function renderPixels(
     }
     ctx.fillRect(pixel.x, pixel.y, pixel.size, pixel.size)
   }
+
+  // Reset shadow so particles/ball don't inherit pixel glow
+  ctx.shadowBlur = 0
 }
 
-// Optimized particle rendering
+// Optimized particle rendering — particles are small debris with no glow
 function renderParticles(
   ctx: CanvasRenderingContext2D,
   particles: Particle[],
   color: string
 ): void {
+  ctx.shadowBlur = 0
   ctx.fillStyle = color
 
   for (const particle of particles) {
