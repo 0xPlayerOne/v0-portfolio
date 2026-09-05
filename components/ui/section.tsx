@@ -3,17 +3,18 @@
 import type React from 'react'
 import { useEffect, useState, useCallback, memo, useMemo } from 'react'
 import { NAVBAR_HEIGHT } from '@/constants/navigation'
-import { SITE_BG_COLOR, SITE_TEXT_COLOR, SITE_BORDER_COLOR } from '@/constants/colors'
-import { cn } from '@/lib/utils'
+import { SITE_BG_COLOR, SITE_TEXT_COLOR, SECTION_SHADOW } from '@/constants/colors'
 
 interface SectionProps {
   id: string
   children: React.ReactNode
 }
 
+const MIN_SECTION_HEIGHT = 600
+
 export function getInitialSectionHeight(): string {
   if (typeof window !== 'undefined') {
-    return `${Math.max(600, window.innerHeight - NAVBAR_HEIGHT)}px`
+    return `${Math.max(MIN_SECTION_HEIGHT, window.innerHeight - NAVBAR_HEIGHT)}px`
   }
   return 'auto'
 }
@@ -25,7 +26,7 @@ export const Section = memo(function Section({ id, children }: SectionProps) {
   // Optimize the height update function with useCallback
   const updateHeight = useCallback(() => {
     // Use min-height instead of fixed height for better mobile experience
-    const minHeight = Math.max(600, window.innerHeight - NAVBAR_HEIGHT)
+    const minHeight = Math.max(MIN_SECTION_HEIGHT, window.innerHeight - NAVBAR_HEIGHT)
     setSectionHeight(`${minHeight}px`)
   }, [])
 
@@ -53,7 +54,7 @@ export const Section = memo(function Section({ id, children }: SectionProps) {
       minHeight: sectionHeight,
       backgroundColor: SITE_BG_COLOR,
       color: SITE_TEXT_COLOR,
-      boxShadow: `0 0 0 1px ${SITE_BORDER_COLOR}20, 0 0 5px ${SITE_BORDER_COLOR}30`,
+      boxShadow: SECTION_SHADOW,
     }),
     [sectionHeight]
   )
@@ -61,7 +62,7 @@ export const Section = memo(function Section({ id, children }: SectionProps) {
   return (
     <section
       id={id}
-      className={cn('flex items-center justify-center border-0 py-8 sm:py-12 md:py-16')}
+      className="flex items-center justify-center border-0 py-8 sm:py-12 md:py-16"
       style={sectionStyle}
     >
       <div className="container mx-auto w-full px-4">{children}</div>

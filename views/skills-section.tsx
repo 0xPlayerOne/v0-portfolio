@@ -3,8 +3,15 @@
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
-import { SITE_TEXT_COLOR, SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/colors'
-import { cn } from '@/lib/utils'
+import {
+  SITE_TEXT_COLOR,
+  SITE_TEXT_COLOR_20,
+  SITE_TEXT_COLOR_30,
+  SITE_BORDER_COLOR_40,
+  SITE_BTN_COLOR,
+  SITE_BTN_COLOR_20,
+  SKILL_BAR_SHADOW,
+} from '@/constants/colors'
 import { SKILLS_DATA } from '@/constants/content'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { Code2, Gamepad2, Users, Briefcase, Palette, Blocks } from 'lucide-react'
@@ -26,7 +33,7 @@ export function SkillsSection() {
         Skills & Expertise
       </Typography>
       <div className="mx-auto mt-8 max-w-6xl">
-        <div className={cn('grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3')}>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
           {SKILLS_DATA.map((skillGroup) => {
             const IconComponent = SKILL_ICONS[skillGroup.category as keyof typeof SKILL_ICONS]
             const skills: ReadonlyArray<{ name: string; level: number }> = skillGroup.skills
@@ -47,7 +54,7 @@ export function SkillsSection() {
                     {IconComponent && (
                       <div
                         className="rounded-lg p-2 transition-colors duration-300 group-hover:scale-110"
-                        style={{ backgroundColor: `${SITE_BTN_COLOR}20` }}
+                        style={{ backgroundColor: SITE_BTN_COLOR_20 }}
                       >
                         <IconComponent
                           size={24}
@@ -66,7 +73,7 @@ export function SkillsSection() {
                       const filledDots = Math.round((skill.level / 100) * 5)
                       return (
                         <div key={skill.name} className="group/skill">
-                          <div className={cn('mb-1 flex items-center justify-between')}>
+                          <div className="mb-1 flex items-center justify-between">
                             <Typography variant="body2" className="font-medium">
                               {skill.name}
                             </Typography>
@@ -77,7 +84,7 @@ export function SkillsSection() {
                                   className="h-2 w-2 rounded-full transition-all duration-300"
                                   style={{
                                     backgroundColor:
-                                      i < filledDots ? SITE_BTN_COLOR : `${SITE_TEXT_COLOR}30`,
+                                      i < filledDots ? SITE_BTN_COLOR : SITE_TEXT_COLOR_30,
                                   }}
                                 />
                               ))}
@@ -85,14 +92,14 @@ export function SkillsSection() {
                           </div>
                           <div
                             className="h-1 rounded-full transition-all duration-500 group-hover/skill:h-2"
-                            style={{ backgroundColor: `${SITE_TEXT_COLOR}20` }}
+                            style={{ backgroundColor: SITE_TEXT_COLOR_20 }}
                           >
                             <div
                               className="h-full rounded-full transition-all duration-700 ease-out"
                               style={{
                                 backgroundColor: SITE_BTN_COLOR,
                                 width: `${skill.level}%`,
-                                boxShadow: `0 0 8px ${SITE_BTN_COLOR}60`,
+                                boxShadow: SKILL_BAR_SHADOW,
                               }}
                             />
                           </div>
@@ -101,15 +108,12 @@ export function SkillsSection() {
                     })}
                   </div>
 
-                  <div
-                    className="mt-4 border-t pt-4"
-                    style={{ borderColor: `${SITE_BORDER_COLOR}40` }}
-                  >
+                  <div className="mt-4 border-t pt-4" style={{ borderColor: SITE_BORDER_COLOR_40 }}>
                     <div className="flex items-center justify-between text-xs">
                       <span style={{ color: SITE_TEXT_COLOR }}>{skills.length} core skills</span>
                       <span
                         className="rounded px-2 py-1 font-mono"
-                        style={{ backgroundColor: `${SITE_BTN_COLOR}20` }}
+                        style={{ backgroundColor: SITE_BTN_COLOR_20 }}
                       >
                         <Typography variant="caption" color="textSecondary">
                           LVL {avgLevel}

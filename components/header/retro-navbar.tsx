@@ -1,7 +1,14 @@
 'use client'
 
 import { useState, useCallback, memo, useMemo } from 'react'
-import { NAV_BG_COLOR, NAV_BORDER_COLOR, NAV_TEXT_COLOR, NAV_HOVER_COLOR } from '@/constants/colors'
+import {
+  NAV_BG_COLOR,
+  NAV_BG_COLOR_F8,
+  NAV_BORDER_COLOR,
+  NAVBAR_SHADOW,
+  NAV_TEXT_COLOR,
+  NAV_HOVER_COLOR,
+} from '@/constants/colors'
 import { smoothScrollToSection } from '@/lib/smooth-scroll'
 import { NAVIGATION_SECTIONS } from '@/constants/navigation'
 import { cn } from '@/lib/utils'
@@ -78,8 +85,8 @@ export const RetroNavbar = memo(function RetroNavbar({
   const navStyle = useMemo(
     () => ({
       height: `${height}px`,
-      backgroundColor: isSticky ? `${NAV_BG_COLOR}f8` : NAV_BG_COLOR,
-      boxShadow: `0 0 0 1px ${NAV_BORDER_COLOR}, 0 0 10px ${NAV_BORDER_COLOR}60`,
+      backgroundColor: isSticky ? NAV_BG_COLOR_F8 : NAV_BG_COLOR,
+      boxShadow: NAVBAR_SHADOW,
       backdropFilter: isSticky ? 'blur(4px)' : 'none',
       WebkitBackdropFilter: isSticky ? 'blur(4px)' : 'none',
       display: 'flex',

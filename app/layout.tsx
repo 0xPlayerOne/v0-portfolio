@@ -1,8 +1,9 @@
 import type React from 'react'
+import type { Metadata } from 'next'
 import { Inter, Press_Start_2P } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
 const pressStart2P = Press_Start_2P({
   weight: '400',
   subsets: ['latin'],
@@ -10,7 +11,7 @@ const pressStart2P = Press_Start_2P({
   display: 'swap',
 })
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'AndrewMF',
   description: 'Portfolio website for Andrew Mahoney-Fernandes',
   icons: {

@@ -14,7 +14,14 @@ import { GameCreditsCard } from '@/components/game-credits'
 import type { PinnedRepo } from '@/types/github'
 import { GITHUB_LINK } from '@/constants/links'
 import { LANGUAGES_DISPLAYED, MAX_PROJECTS } from '@/constants/github'
-import { SITE_BTN_COLOR, CANVAS_COLOR, SITE_TEXT_COLOR } from '@/constants/colors'
+import {
+  SITE_BTN_COLOR,
+  SITE_BTN_COLOR_20,
+  PINNED_BADGE_BORDER,
+  CANVAS_COLOR,
+  SITE_TEXT_COLOR,
+  OUTLINE_BTN_STYLE,
+} from '@/constants/colors'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { getLanguageColor } from '@/lib/language-colors'
 import { cn } from '@/lib/utils'
@@ -25,30 +32,35 @@ export function ProjectsSection() {
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  const loadProjects = useCallback(async () => {
+  const loadProjects = useCallback(async (signal?: AbortSignal) => {
     try {
       setLoading(true)
       setError(null)
       const response = await fetch('/api/projects', {
         headers: { Accept: 'application/json' },
+        signal,
       })
       if (!response.ok) {
         throw new Error(`Projects API error: ${response.status}`)
       }
 
       const repos = (await response.json()) as PinnedRepo[]
+      if (signal?.aborted) return
       setProjects(repos)
       setLastUpdated(new Date())
     } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') return
       setError('Failed to load projects')
       console.error('Error loading projects:', err)
     } finally {
-      setLoading(false)
+      if (!signal?.aborted) setLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    loadProjects()
+    const controller = new AbortController()
+    loadProjects(controller.signal)
+    return () => controller.abort()
   }, [loadProjects])
 
   const { handleMouseEnter, handleMouseLeave } = useCardHover()
@@ -62,14 +74,10 @@ export function ProjectsSection() {
         <Button
           variant="outline"
           size="sm"
-          onClick={loadProjects}
+          onClick={() => loadProjects()}
           disabled={loading}
           className="border-0 hover:scale-105"
-          style={{
-            backgroundColor: `${SITE_BTN_COLOR}20`,
-            color: SITE_BTN_COLOR,
-            borderColor: SITE_BTN_COLOR,
-          }}
+          style={OUTLINE_BTN_STYLE}
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
         </Button>
@@ -93,7 +101,7 @@ export function ProjectsSection() {
 
       <div className="mx-auto max-w-6xl">
         {loading ? (
-          <div className={cn('grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2')}>
+          <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
             {[...Array(MAX_PROJECTS)].map((_, index) => (
               <Card key={index} className="animate-pulse border-0" style={CARD_BASE_STYLE}>
                 <CardContent className="p-6 sm:p-8">
@@ -109,7 +117,7 @@ export function ProjectsSection() {
             ))}
           </div>
         ) : (
-          <div className={cn('grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2')}>
+          <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
             {projects.map((project) => (
               <Card
                 key={project.url}
@@ -123,9 +131,9 @@ export function ProjectsSection() {
                     <div
                       className="flex items-center gap-1 rounded-full px-2 py-1 text-xs"
                       style={{
-                        backgroundColor: `${SITE_BTN_COLOR}20`,
+                        backgroundColor: SITE_BTN_COLOR_20,
                         color: SITE_BTN_COLOR,
-                        border: `1px solid ${SITE_BTN_COLOR}40`,
+                        border: PINNED_BADGE_BORDER,
                       }}
                     >
                       <Pin size={12} />
@@ -200,7 +208,7 @@ export function ProjectsSection() {
                   )}
 
                   {project.tech.length > 0 && (
-                    <div className={cn('mb-6 flex flex-wrap gap-2')}>
+                    <div className="mb-6 flex flex-wrap gap-2">
                       {project.tech.slice(0, 4).map((tech) => (
                         <Badge
                           key={tech}
@@ -222,11 +230,7 @@ export function ProjectsSection() {
                       size="sm"
                       asChild
                       className="flex-1 border-0 transition-transform duration-300 hover:scale-105"
-                      style={{
-                        backgroundColor: `${SITE_BTN_COLOR}20`,
-                        color: SITE_BTN_COLOR,
-                        borderColor: SITE_BTN_COLOR,
-                      }}
+                      style={OUTLINE_BTN_STYLE}
                     >
                       <a href={project.url} target="_blank" rel="noopener noreferrer">
                         <Github size={16} className="mr-2" />
@@ -263,11 +267,7 @@ export function ProjectsSection() {
           variant="outline"
           asChild
           className="border-0 transition-transform duration-300 hover:scale-105"
-          style={{
-            backgroundColor: `${SITE_BTN_COLOR}20`,
-            color: SITE_BTN_COLOR,
-            borderColor: SITE_BTN_COLOR,
-          }}
+          style={OUTLINE_BTN_STYLE}
         >
           <a href={GITHUB_LINK} target="_blank" rel="noopener noreferrer">
             <Github size={16} className="mr-2" />
