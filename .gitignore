@@ -38,8 +38,6 @@ coverage/
 htmlcov/
 .coverage*
 .next/
-.open-next/
-.wrangler/
 artifacts/
 cache/
 !.github/actions/cache/
@@ -71,10 +69,10 @@ pnpm-debug.log*
 .kluster/
 .direnv/
 .envrc
-.dev.vars
-cloudflare-env.d.ts
+.vercel/
 mise.local.toml
 .mise.local.toml
 mise.local.lock
 .mise.local.lock
 *.code-workspace
+.open-next/
