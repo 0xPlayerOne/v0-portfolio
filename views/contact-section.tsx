@@ -4,9 +4,8 @@ import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { SITE_BTN_COLOR, CANVAS_COLOR } from '@/constants/colors'
+import { SITE_BTN_COLOR, SITE_BTN_COLOR_20, CANVAS_COLOR } from '@/constants/colors'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
-import { cn } from '@/lib/utils'
 import { CONTACT_LINKS, CONTACT_CONTENT } from '@/constants/content'
 import { X, Mail } from 'lucide-react'
 import { Github, Linkedin } from '@/lib/brand-icons'
@@ -25,6 +24,18 @@ const CONTACT_URLS = {
   linkedin: (handle: string) => `https://linkedin.com/in/${handle.replace('@', '')}`,
 } as const
 
+function handleContactClick() {
+  // Anti-spam email encoding — hoisted to avoid recreating on every render
+  const user = 'contact'
+  const domain = 'andrewmf.com'
+  const email = `${user}@${domain}`
+  const subject = encodeURIComponent('Hello from your website!')
+  const body = encodeURIComponent(
+    'Hi Andrew,\n\nI found your website and would like to connect.\n\nBest regards,'
+  )
+  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`
+}
+
 export function ContactSection() {
   const { handleMouseEnter, handleMouseLeave } = useCardHover()
   return (
@@ -36,7 +47,7 @@ export function ContactSection() {
         <Typography variant="body1" align="center" gutterBottom>
           {CONTACT_CONTENT.description}
         </Typography>
-        <div className={cn('mb-8 grid grid-cols-1 gap-6 sm:mb-12 sm:grid-cols-3 sm:gap-8')}>
+        <div className="mb-8 grid grid-cols-1 gap-6 sm:mb-12 sm:grid-cols-3 sm:gap-8">
           {CONTACT_LINKS.map((contact) => {
             const platform = contact.platform.toLowerCase() as keyof typeof CONTACT_ICONS
 
@@ -58,7 +69,7 @@ export function ContactSection() {
                     <div className="mb-3 flex justify-center">
                       <div
                         className="rounded-lg p-3 transition-transform duration-300 group-hover:scale-110"
-                        style={{ backgroundColor: `${SITE_BTN_COLOR}20` }}
+                        style={{ backgroundColor: SITE_BTN_COLOR_20 }}
                       >
                         {CONTACT_ICONS[platform] ?? null}
                       </div>
@@ -79,17 +90,7 @@ export function ContactSection() {
           size="lg"
           className="group text-base transition-transform duration-300 hover:scale-105 sm:text-lg"
           style={{ backgroundColor: SITE_BTN_COLOR, color: CANVAS_COLOR }}
-          onClick={() => {
-            // Anti-spam email encoding
-            const user = 'contact'
-            const domain = 'andrewmf.com'
-            const email = user + '@' + domain
-            const subject = encodeURIComponent('Hello from your website!')
-            const body = encodeURIComponent(
-              'Hi Andrew,\n\nI found your website and would like to connect.\n\nBest regards,'
-            )
-            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`
-          }}
+          onClick={handleContactClick}
         >
           <Mail
             size={20}

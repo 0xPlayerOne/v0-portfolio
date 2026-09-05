@@ -8,10 +8,10 @@ import { Typography } from '@/components/ui/typography'
 
 import { GAME_CREDITS } from '@/constants/content'
 import { MOBY_GAMES_LINK } from '@/constants/links'
-import { SITE_BTN_COLOR } from '@/constants/colors'
+import { SITE_BTN_COLOR, SITE_BTN_COLOR_20, OUTLINE_BTN_STYLE } from '@/constants/colors'
 import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 
-const GameCreditsCard = () => {
+export function GameCreditsCard() {
   const { handleMouseEnter, handleMouseLeave } = useCardHover()
 
   return (
@@ -25,7 +25,7 @@ const GameCreditsCard = () => {
         <div className="mb-4 flex items-center gap-3">
           <div
             className="rounded-lg p-2 transition-colors duration-300 group-hover:scale-110"
-            style={{ backgroundColor: `${SITE_BTN_COLOR}20` }}
+            style={{ backgroundColor: SITE_BTN_COLOR_20 }}
           >
             <Gamepad2
               size={24}
@@ -54,7 +54,7 @@ const GameCreditsCard = () => {
               </a>
               <span
                 className="ml-2 flex-shrink-0 rounded px-2 py-1 font-mono"
-                style={{ backgroundColor: `${SITE_BTN_COLOR}20` }}
+                style={{ backgroundColor: SITE_BTN_COLOR_20 }}
               >
                 <Typography variant="caption" color="textSecondary">
                   {credit.year}
@@ -68,11 +68,7 @@ const GameCreditsCard = () => {
           size="sm"
           asChild
           className="w-full border-0 transition-transform duration-300 hover:scale-105"
-          style={{
-            backgroundColor: `${SITE_BTN_COLOR}20`,
-            color: SITE_BTN_COLOR,
-            borderColor: SITE_BTN_COLOR,
-          }}
+          style={OUTLINE_BTN_STYLE}
         >
           <a href={MOBY_GAMES_LINK} target="_blank" rel="noopener noreferrer">
             <Gamepad2 size={16} className="mr-2" />
@@ -83,5 +79,3 @@ const GameCreditsCard = () => {
     </Card>
   )
 }
-
-export { GameCreditsCard }
