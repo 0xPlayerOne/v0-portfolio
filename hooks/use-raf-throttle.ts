@@ -13,7 +13,7 @@ import { useCallback, useEffect, useRef } from 'react'
  */
 export function useRafThrottle(callback: () => void): () => void {
   const callbackRef = useRef(callback)
-  const rafIdRef = useRef<number>(0)
+  const rafIdRef = useRef<number | null>(null)
 
   // Keep ref in sync without re-creating the scheduler.
   useEffect(() => {
@@ -25,11 +25,11 @@ export function useRafThrottle(callback: () => void): () => void {
       callbackRef.current()
       return
     }
-    if (rafIdRef.current) {
+    if (rafIdRef.current !== null) {
       cancelAnimationFrame(rafIdRef.current)
     }
     rafIdRef.current = window.requestAnimationFrame(() => {
-      rafIdRef.current = 0
+      rafIdRef.current = null
       callbackRef.current()
     })
   }, [])
@@ -37,7 +37,7 @@ export function useRafThrottle(callback: () => void): () => void {
   // Cleanup any pending frame on unmount.
   useEffect(() => {
     return () => {
-      if (rafIdRef.current) {
+      if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current)
       }
     }

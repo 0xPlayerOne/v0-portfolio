@@ -41,7 +41,6 @@ export const SITE_TEXT_COLOR_30 = `${SITE_TEXT_COLOR}30` as const
 export const SITE_BORDER_COLOR_20 = `${SITE_BORDER_COLOR}20` as const
 export const SITE_BORDER_COLOR_30 = `${SITE_BORDER_COLOR}30` as const
 export const SITE_BORDER_COLOR_40 = `${SITE_BORDER_COLOR}40` as const
-export const SITE_BORDER_COLOR_60 = `${SITE_BORDER_COLOR}60` as const
 export const SITE_CARD_COLOR_80 = `${SITE_CARD_COLOR}80` as const
 export const NAV_BG_COLOR_F8 = `${NAV_BG_COLOR}f8` as const
 export const NAV_BORDER_COLOR_60 = `${NAV_BORDER_COLOR}60` as const
@@ -64,8 +63,4 @@ export const OUTLINE_BTN_STYLE = {
   backgroundColor: SITE_BTN_COLOR_20,
   color: SITE_BTN_COLOR,
   borderColor: SITE_BTN_COLOR,
-} as const
-
-export const ICON_BG_STYLE = {
-  backgroundColor: SITE_BTN_COLOR_20,
 } as const

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, memo, useMemo } from 'react'
+import { useCallback, memo, useMemo } from 'react'
 import {
   NAV_BG_COLOR,
   NAV_BG_COLOR_F8,
@@ -19,30 +19,30 @@ interface RetroNavbarProps {
   activeSection?: string
 }
 
-// Memoized NavItem component to prevent unnecessary re-renders
+// Memoized NavItem — hover is handled via direct DOM mutation (no React
+// state) so hovering any of the 4 items never re-renders the navbar or its
+// siblings. This replaces the previous `hoveredItem` useState which tore down
+// and recreated handlers on every enter/leave.
 const NavItem = memo(function NavItem({
   item,
   isActive,
   height,
-  onHover,
-  hoveredItem,
 }: {
   item: (typeof NAVIGATION_SECTIONS)[number]
   isActive: boolean
   height: number
-  onHover: (id: string | null) => void
-  hoveredItem: string | null
 }) {
-  // Memoize the scroll handler to prevent recreation on each render
   const handleClick = useCallback(() => {
     smoothScrollToSection(item.id, height)
   }, [item.id, height])
 
-  // Memoize the mouse enter/leave handlers
-  const handleMouseEnter = useCallback(() => onHover(item.id), [onHover, item.id])
-  const handleMouseLeave = useCallback(() => onHover(null), [onHover])
+  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.color = NAV_HOVER_COLOR
+  }, [])
 
-  const isHovered = hoveredItem === item.id
+  const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.color = NAV_TEXT_COLOR
+  }, [])
 
   return (
     <li className="flex-shrink-0">
@@ -53,7 +53,7 @@ const NavItem = memo(function NavItem({
           'font-pixel py-2.5 leading-none'
         )}
         style={{
-          color: isHovered ? NAV_HOVER_COLOR : NAV_TEXT_COLOR,
+          color: NAV_TEXT_COLOR,
           borderColor: isActive ? NAV_BORDER_COLOR : 'transparent',
           borderBottomWidth: '1px',
           borderBottomStyle: 'solid',
@@ -79,9 +79,6 @@ export const RetroNavbar = memo(function RetroNavbar({
   isSticky = false,
   activeSection = '',
 }: RetroNavbarProps) {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-
-  // Memoize the nav style to prevent recreation on each render
   const navStyle = useMemo(
     () => ({
       height: `${height}px`,
@@ -105,8 +102,6 @@ export const RetroNavbar = memo(function RetroNavbar({
               item={item}
               isActive={activeSection === item.id}
               height={height}
-              onHover={setHoveredItem}
-              hoveredItem={hoveredItem}
             />
           ))}
         </ul>
