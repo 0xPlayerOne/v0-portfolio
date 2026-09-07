@@ -102,7 +102,7 @@ describe('useScrollSpy', () => {
     setScrollY(600)
     stubRaf()
 
-    const { result, rerender } = renderHook(() =>
+    const { result } = renderHook(() =>
       useScrollSpy({ sectionIds: ['about', 'projects', 'contact'] })
     )
 
