@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
-  "packageManager": "bun@1.4.0",
-  "engines": {
-    "node": "24.x"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "opennextjs-cloudflare build",
@@ -19,9 +15,9 @@
     "deploy": "bun run cloudflare:build && bun run cloudflare:deploy",
     "upload": "bun run cloudflare:build && bun run cloudflare:upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "lint": "eslint . --max-warnings=0",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "lint": "oxlint",
+    "fmt": "oxfmt .",
+    "format:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --dom --isolate",
     "test:unit": "bun run test:coverage",
@@ -41,8 +37,6 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.1.0",
-    "@eslint/eslintrc": "^3.3.6",
     "@happy-dom/global-registrator": "^20.12.0",
     "@opennextjs/cloudflare": "1.20.6",
     "@tailwindcss/postcss": "^4.3.3",
@@ -51,14 +45,11 @@
     "@types/node": "^26.4.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
-    "eslint": "^10.9.1",
-    "eslint-config-next": "16.3.4",
-    "espree": "^11.2.0",
     "happy-dom": "^20.12.0",
     "lint-staged": "^17.4.1",
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0",
     "postcss": "8.5.26",
-    "prettier": "^3.9.6",
-    "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "6.0.3",
     "wrangler": "4.128.0"
   },
@@ -66,5 +57,9 @@
     "js-yaml": "4.3.1",
     "postcss": "8.5.26",
     "sharp": "0.35.3"
-  }
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "bun@1.4.0"
 }
