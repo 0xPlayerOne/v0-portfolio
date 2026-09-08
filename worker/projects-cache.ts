@@ -51,13 +51,20 @@ export function createProjectsHandler(load: ProjectLoader, now = Date.now) {
     headers.delete(STORED_AT)
     headers.delete(FRESH_FOR)
     headers.delete(STALE_FOR)
-    headers.set('Cache-Control', `public, max-age=0, s-maxage=${freshFor}, stale-while-revalidate=${staleFor}`)
+    headers.set(
+      'Cache-Control',
+      `public, max-age=0, s-maxage=${freshFor}, stale-while-revalidate=${staleFor}`
+    )
     headers.set('Age', String(age))
     headers.set('X-Projects-Cache', state)
     return new Response(stored.body, { status: stored.status, headers })
   }
 
-  return async function handleProjects(request: Request, cache: ProjectCache, context: BackgroundContext) {
+  return async function handleProjects(
+    request: Request,
+    cache: ProjectCache,
+    context: BackgroundContext
+  ) {
     // Do not let arbitrary query strings create unbounded cache entries or
     // separate request cookies/headers influence this public, non-personal feed.
     const key = new Request(new URL('/api/projects', request.url), { method: 'GET' })
@@ -76,10 +83,12 @@ export function createProjectsHandler(load: ProjectLoader, now = Date.now) {
         return publicResponse(cached, 'HIT')
       }
       if (storedAt > 0 && freshFor > 0 && age >= 0 && age < freshFor + staleFor) {
-        context.waitUntil(refresh(key, cache).catch((error) => {
-          // A transient failure must not erase the last good cached response.
-          console.warn('Project revalidation failed', error)
-        }))
+        context.waitUntil(
+          refresh(key, cache).catch((error) => {
+            // A transient failure must not erase the last good cached response.
+            console.warn('Project revalidation failed', error)
+          })
+        )
         return publicResponse(cached, 'STALE')
       }
     }

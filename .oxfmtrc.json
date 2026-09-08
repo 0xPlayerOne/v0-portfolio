@@ -15,6 +15,10 @@
     ".code-foundry",
     "public",
     "pnpm-lock.yaml",
-    "bun.lock"
+    "bun.lock",
+    "dist/**",
+    ".astro/**",
+    ".worker-build/**",
+    "artifacts/**"
   ]
 }

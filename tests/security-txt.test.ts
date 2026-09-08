@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 
-import { GET } from '@/app/.well-known/security.txt/route'
+import { GET } from '@/lib/security-text'
 
 describe('security.txt', () => {
   it('publishes a valid security contact document', async () => {

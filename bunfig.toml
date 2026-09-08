@@ -3,7 +3,15 @@ linker = "hoisted"
 
 [test]
 preload = ["./tests/dom-globals.ts", "./tests/setup.ts"]
-exclude = ["dist/**", "node_modules/**", "coverage/**"]
+exclude = [
+  "e2e/**",
+  ".worker-build/**",
+  ".astro/**",
+  "artifacts/**",
+  "dist/**",
+  "node_modules/**",
+  "coverage/**",
+]
 mockClear = true
 coverageSkipTestFiles = true
 coverageReporter = ["text", "lcov"]

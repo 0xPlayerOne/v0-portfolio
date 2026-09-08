@@ -5,10 +5,12 @@ import { checkMaximum } from './performance-budget.mjs'
 
 async function filesUnder(directory) {
   const entries = await readdir(directory, { withFileTypes: true })
-  const groups = await Promise.all(entries.map(async (entry) => {
-    const path = join(directory, entry.name)
-    return entry.isDirectory() ? filesUnder(path) : [{ path, size: (await stat(path)).size }]
-  }))
+  const groups = await Promise.all(
+    entries.map(async (entry) => {
+      const path = join(directory, entry.name)
+      return entry.isDirectory() ? filesUnder(path) : [{ path, size: (await stat(path)).size }]
+    })
+  )
   return groups.flat()
 }
 const assets = await filesUnder('dist')
@@ -20,6 +22,7 @@ const measurements = {
   javascriptBytes: sum(assets.filter((file) => file.path.endsWith('.js'))),
   workerBytes: sum(worker.filter((file) => /\.(?:js|mjs)$/.test(file.path))),
 }
-for (const [key, value] of Object.entries(measurements)) console.log(checkMaximum(key, value, budgets.artifacts[key]))
+for (const [key, value] of Object.entries(measurements))
+  console.log(checkMaximum(key, value, budgets.artifacts[key]))
 await mkdir('artifacts/performance', { recursive: true })
 await writeFile('artifacts/performance/build.json', JSON.stringify(measurements, null, 2) + '\n')

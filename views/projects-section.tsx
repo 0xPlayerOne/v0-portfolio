@@ -72,6 +72,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
         <Button
           variant="outline"
           size="sm"
+          aria-label="Refresh projects"
           onClick={() => loadProjects()}
           disabled={loading}
           className="border-0 hover:scale-105"

@@ -1,10 +1,10 @@
 {
   "$schema": "./docs/performance-budgets.schema.json",
   "artifacts": {
-    "openNextBytes": 26214400,
-    "openNextAssetsBytes": 1258291,
-    "openNextJavaScriptBytes": 734003,
-    "serverHandlerBytes": 3407872
+    "outputBytes": 26214400,
+    "assetBytes": 1258291,
+    "javascriptBytes": 734003,
+    "workerBytes": 3407872
   },
   "lab": {
     "performanceScore": 0.75,

@@ -53,7 +53,7 @@
   background: #22cc22;
 }
 
-/* Pixel font styling — variable injected by next/font in layout.tsx */
+/* Pixel font styling — variable supplied by the Astro layout */
 .font-pixel {
   font-family: var(--font-press-start-2p), 'Press Start 2P', cursive;
   letter-spacing: 0.05em;
@@ -126,4 +126,13 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* The document is static; fonts and skill-card hover do not need hydration. */
+.portfolio-document body {
+  font-family: 'Inter Variable', Arial, Helvetica, sans-serif;
+}
+#skills .group:hover,
+#skills .group:focus-within {
+  box-shadow: var(--skill-hover-shadow) !important;
 }

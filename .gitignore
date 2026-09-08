@@ -81,3 +81,11 @@ mise.local.lock
 
 # Repository-specific rules
 .open-next/
+
+# Astro / local Workers / browser and performance reports
+.astro/
+dist/
+.worker-build/
+artifacts/
+playwright-report/
+test-results/

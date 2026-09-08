@@ -4,5 +4,15 @@
     "correctness": "error",
     "suspicious": "warn"
   },
-  "ignorePatterns": ["node_modules/**", ".next/**", ".open-next/**", "coverage/**", "public/**"]
+  "ignorePatterns": [
+    "node_modules/**",
+    ".next/**",
+    ".open-next/**",
+    "coverage/**",
+    "public/**",
+    "dist/**",
+    ".astro/**",
+    ".worker-build/**",
+    "artifacts/**"
+  ]
 }

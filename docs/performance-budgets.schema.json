@@ -9,17 +9,12 @@
     "artifacts": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "openNextBytes",
-        "openNextAssetsBytes",
-        "openNextJavaScriptBytes",
-        "serverHandlerBytes"
-      ],
+      "required": ["outputBytes", "assetBytes", "javascriptBytes", "workerBytes"],
       "properties": {
-        "openNextBytes": { "type": "integer", "minimum": 1 },
-        "openNextAssetsBytes": { "type": "integer", "minimum": 1 },
-        "openNextJavaScriptBytes": { "type": "integer", "minimum": 1 },
-        "serverHandlerBytes": { "type": "integer", "minimum": 1 }
+        "outputBytes": { "type": "integer", "minimum": 1 },
+        "assetBytes": { "type": "integer", "minimum": 1 },
+        "javascriptBytes": { "type": "integer", "minimum": 1 },
+        "workerBytes": { "type": "integer", "minimum": 1 }
       }
     },
     "lab": {

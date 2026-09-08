@@ -1,8 +1,12 @@
 import { GET } from '../lib/projects-response'
 import { createProjectsHandler } from './projects-cache'
 
-interface Env { ASSETS: { fetch(request: Request): Promise<Response> } }
-interface Context { waitUntil(promise: Promise<unknown>): void }
+interface Env {
+  ASSETS: { fetch(request: Request): Promise<Response> }
+}
+interface Context {
+  waitUntil(promise: Promise<unknown>): void
+}
 const projects = createProjectsHandler(GET)
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',

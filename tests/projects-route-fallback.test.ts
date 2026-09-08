@@ -10,7 +10,7 @@ mock.module('@/lib/github', () => ({
 
 describe('projects API route fallback', () => {
   it('returns fallback projects with a short retry cache after a top-level failure', async () => {
-    const { GET } = await import('@/app/api/projects/route')
+    const { GET } = await import('@/lib/projects-response')
     const response = await GET()
 
     expect(response.status).toBe(200)

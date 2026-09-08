@@ -1,4 +1,11 @@
-import { startServer, runsFrom, measure, summarize, saveSummary, enforce } from './performance-harness.mjs'
+import {
+  startServer,
+  runsFrom,
+  measure,
+  summarize,
+  saveSummary,
+  enforce,
+} from './performance-harness.mjs'
 
 const directory = 'artifacts/performance/audit'
 const count = runsFrom(process.env.PERFORMANCE_RUNS || 3)
