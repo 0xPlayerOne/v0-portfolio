@@ -55,7 +55,7 @@ function externalUrl(value) {
 try {
   let beforeUrl, afterUrl
   const metadata = {
-    node: process.version,
+    node: capture('node', ['--version']),
     bun: capture('bun', ['--version']),
     mode: 'cloudflare-local',
     base: null,
