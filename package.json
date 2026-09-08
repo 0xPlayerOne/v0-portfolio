@@ -5,7 +5,7 @@
   "license": "AGPL-3.0-or-later",
   "scripts": {
     "dev": "next dev",
-    "build": "opennextjs-cloudflare build",
+    "build": "opennextjs-cloudflare build && bun run performance:artifacts",
     "start": "next start",
     "cloudflare:build": "opennextjs-cloudflare build",
     "cloudflare:deploy": "opennextjs-cloudflare deploy",
@@ -21,9 +21,12 @@
     "typecheck": "tsc --noEmit",
     "test": "bun test --dom --isolate",
     "test:unit": "bun run test:coverage",
+    "test:integration": "bun run build && bun run performance:audit",
     "test:coverage": "bun test --coverage --dom --isolate --max-concurrency=1",
     "test:watch": "bun test --dom --watch",
-    "type:check": "tsc --noEmit"
+    "type:check": "tsc --noEmit",
+    "performance:artifacts": "bun scripts/check-performance-artifacts.mjs",
+    "performance:audit": "bun scripts/audit-performance.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "1.3.3",
