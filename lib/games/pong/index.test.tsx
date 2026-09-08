@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { beforeEach, describe, expect, it, jest, mock } from 'bun:test'
+import { beforeEach, describe, expect, it, jest, mock, spyOn } from 'bun:test'
 import { PongGame } from './index'
 
 // Minimal 2D context stub so the component's render loop executes (happy-dom
@@ -125,5 +125,49 @@ describe('PongGame', () => {
     expect(canvas?.width).not.toEqual(initialWidth)
     expect(canvas?.height).not.toEqual(initialHeight)
     jest.useRealTimers()
+  })
+
+  it('pauses animation while the canvas is off-screen and resumes when visible', () => {
+    let intersectionCallback: IntersectionObserverCallback | undefined
+    const observe = mock(() => {})
+    const disconnect = mock(() => {})
+    class TestIntersectionObserver {
+      constructor(callback: IntersectionObserverCallback) {
+        intersectionCallback = callback
+      }
+      observe = observe
+      disconnect = disconnect
+    }
+    Object.defineProperty(globalThis, 'IntersectionObserver', {
+      configurable: true,
+      value: TestIntersectionObserver,
+    })
+    const cancel = spyOn(window, 'cancelAnimationFrame')
+
+    const { container, unmount } = render(
+      <PongGame
+        navbarHeight={40}
+        colors={{
+          background: '#000',
+          pixel: '#0f0',
+          hitPixel: '#0a0',
+          ball: '#fff',
+          paddle: '#fff',
+        }}
+        headerText={['HI', 'THERE']}
+      />
+    )
+
+    const canvas = container.querySelector('canvas')
+    expect(observe).toHaveBeenCalledWith(canvas)
+    intersectionCallback?.([{ isIntersecting: false } as IntersectionObserverEntry], {} as never)
+    expect(cancel).toHaveBeenCalled()
+
+    const callsBeforeResume = stubCtx.fillRect.mock.calls.length
+    intersectionCallback?.([{ isIntersecting: true } as IntersectionObserverEntry], {} as never)
+    expect(stubCtx.fillRect.mock.calls.length).toBeGreaterThan(callsBeforeResume)
+
+    unmount()
+    expect(disconnect).toHaveBeenCalled()
   })
 })

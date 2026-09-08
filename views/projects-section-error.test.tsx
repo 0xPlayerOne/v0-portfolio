@@ -8,10 +8,8 @@ describe('ProjectsSection – error handling', () => {
     const errSpy = spyOn(console, 'error').mockImplementation(() => undefined)
     const fetchSpy = spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network down'))
 
-    render(<ProjectsSection />)
-
-    // loading skeleton first
-    expect(document.querySelector('.animate-pulse')).not.toBeNull()
+    render(<ProjectsSection initialProjects={[]} />)
+    screen.getByRole('button').click()
 
     await waitFor(() => {
       expect(screen.getByText(/Failed to load projects/)).not.toBeNull()

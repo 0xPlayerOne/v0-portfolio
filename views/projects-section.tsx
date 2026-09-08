@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { ExternalLink, Star, GitFork, RefreshCw, Pin } from 'lucide-react'
 import { Github } from '@/lib/brand-icons'
 
@@ -26,9 +26,13 @@ import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
 import { getLanguageColor } from '@/lib/language-colors'
 import { cn } from '@/lib/utils'
 
-export function ProjectsSection() {
-  const [projects, setProjects] = useState<PinnedRepo[]>([])
-  const [loading, setLoading] = useState(true)
+interface ProjectsSectionProps {
+  initialProjects: PinnedRepo[]
+}
+
+export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
+  const [projects, setProjects] = useState<PinnedRepo[]>(initialProjects)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
@@ -56,12 +60,6 @@ export function ProjectsSection() {
       if (!signal?.aborted) setLoading(false)
     }
   }, [])
-
-  useEffect(() => {
-    const controller = new AbortController()
-    loadProjects(controller.signal)
-    return () => controller.abort()
-  }, [loadProjects])
 
   const { handleMouseEnter, handleMouseLeave } = useCardHover()
 

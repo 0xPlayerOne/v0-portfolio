@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, mock } from 'bun:test'
 
 import { GameCreditsCard } from '@/components/game-credits'
@@ -57,23 +57,23 @@ describe('portfolio sections', () => {
 
     await waitFor(() => {
       const section = document.querySelector<HTMLElement>('#skills')
-      expect(Number.parseInt(section?.style.minHeight ?? '0', 10)).toBeGreaterThanOrEqual(600)
+      expect(section?.style.minHeight).toBe('max(600px, calc(100dvh - 100px))')
     })
   })
 
   it('loads and refreshes project data', async () => {
     const { ProjectsSection } = await import('@/views/projects-section')
-    render(<ProjectsSection />)
+    render(<ProjectsSection initialProjects={[project]} />)
 
     expect(await screen.findByRole('heading', { name: 'Test Project' })).not.toBeNull()
     expect(screen.getByText('A reliable test project')).not.toBeNull()
     expect(screen.getByText('TypeScript')).not.toBeNull()
 
     fireEvent.click(screen.getByRole('button'))
-    await waitFor(() => expect(fetchProjects).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(fetchProjects).toHaveBeenCalledTimes(1))
   })
 
-  it('updates section height after a resize without leaking the timer', async () => {
+  it('uses CSS viewport sizing without a resize listener', async () => {
     render(
       <Section id="resizable">
         <span>content</span>
@@ -81,11 +81,6 @@ describe('portfolio sections', () => {
     )
 
     await waitFor(() => expect(document.querySelector('#resizable')).not.toBeNull())
-    await act(async () => {
-      window.dispatchEvent(new Event('resize'))
-      await new Promise((resolve) => setTimeout(resolve, 120))
-    })
-
-    expect(document.querySelector<HTMLElement>('#resizable')?.style.minHeight).toMatch(/px$/)
+    expect(document.querySelector<HTMLElement>('#resizable')?.style.minHeight).toContain('100dvh')
   })
 })

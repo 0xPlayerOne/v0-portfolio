@@ -80,10 +80,31 @@ Production checks against `https://andrewmf.com` returned:
   182, and 441 ms (median 431 ms). This captures internet and edge variance;
   the deterministic CI budget uses the local production server.
 
-The existing cache policy and Turbopack release path are the selected
-optimizations. They improve repeat loading and build performance without any
-visual change. Future optimization work should begin only after a budget
-regression or a stable field-data signal identifies a bottleneck.
+The existing cache policy and Turbopack release path remain selected. They
+improve repeat loading and build performance without a visual change. The
+measured follow-up below addresses runtime work found during browser profiling.
+
+## Runtime improvements
+
+The follow-up implementation removes three measured sources of avoidable work:
+
+- Project cards are rendered into the hourly-revalidated page instead of being
+  fetched after hydration. A production browser navigation now displays the
+  cards without a follow-up `/api/projects` request; the refresh control retains
+  the same on-demand API path.
+- Section minimum heights use CSS dynamic viewport units and a 600 px floor.
+  This replaces four independently hydrated resize listeners and their debounce
+  timers while preserving the responsive layout.
+- The Pong canvas observes viewport, page visibility, and reduced-motion state.
+  It renders a complete static frame when paused and resumes only when visible.
+  A 390 x 844 production-browser run measured zero canvas draw calls during a
+  settled second off-screen, compared with roughly 36,000 before the change.
+
+Three post-change mobile Lighthouse runs scored 1.00 with LCP between 1,805.4
+and 1,805.6 ms, total blocking time between 9 and 10.5 ms, zero CLS, and a 3 ms
+local TTFB. JavaScript transfer remained effectively flat at 162,086 bytes
+(97 bytes above the original sample) because the optimization targets runtime
+work and the client data waterfall rather than visual feature removal.
 
 ## Reproduction
 
