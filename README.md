@@ -1,64 +1,63 @@
-# v0 Personal Website
+# AndrewMF portfolio
 
-_Automatically synced with your [v0.dev](https://v0.dev) deployments_
+Personal portfolio at [andrewmf.com](https://andrewmf.com), built with Astro, React islands, Tailwind CSS, and Cloudflare Workers Static Assets.
 
-[![Deployed on Cloudflare Workers](https://img.shields.io/badge/Deployed%20on-Cloudflare%20Workers-F38020?style=for-the-badge&logo=cloudflare)](https://workers.cloudflare.com/)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/UNx27p7EMON)
+## Development
 
-## Overview
+Use the existing toolchain: Node 24 and Bun 1.4.0 (see `.mise.toml`).
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+```sh
+bun install --frozen-lockfile
+bun run dev
+bun run typecheck
+bun run test:coverage
+bun run build
+bun run preview
+```
+
+`astro dev` provides the fast UI development loop. For the real `/api/projects` Worker, static-asset headers, caching, and 404 behavior, use `bun run preview`. It builds and runs Wrangler locally. A refresh request in the Astro-only development server does not reach the Worker; use the Workers preview to exercise it.
+
+## Rendering and data freshness
+
+Astro prerenders the page and initial project cards. There is no client-side project fetch on initial navigation. Pong/navigation hydrates immediately; the About tabs, project refresh, and contact control hydrate as they approach the viewport. Skills render as HTML with CSS-only hover effects. Existing React components, responsive styling, and canvas visibility/reduced-motion logic are preserved.
+
+The initial project snapshot changes on deployment, **not hourly through ISR**. The explicit refresh button uses the same-origin `/api/projects` endpoint, cached for one hour with stale-while-revalidate. A new build refreshes the crawlable snapshot. No scheduled production deployment is introduced by this migration. See [the migration notes](docs/astro-migration.md) before choosing a rebuild schedule.
+
+Inter and Press Start 2P are self-hosted, Latin-subset font assets with swap behavior and preload links. No request to Google Fonts is needed at build or runtime.
 
 ## Deployment
 
-This project is deployed to the `v0-portfolio` Cloudflare Worker.
+The existing repository-owned Cloudflare Preview and Production workflows remain the deployment entry points. The Worker name and account are unchanged. They use `cloudflare:build`; the output changes from OpenNext to `dist/` plus the small `worker/index.ts` project API. Static page and asset requests bypass Worker execution. Hashed `/_astro/*` assets retain one-year immutable caching.
 
-The repository includes the OpenNext adapter and Wrangler configuration used by
-the repository-owned GitHub Actions deployment workflows. Configure these
-repository secrets before making the workflows ready for production:
+Required deployment secrets are unchanged: `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. No runtime secrets or additional bindings are required. The production workflow deploys only when changes reach `main` or an authorized maintainer runs it manually.
 
-- `CLOUDFLARE_API_TOKEN`: a token scoped to deploy the `v0-portfolio` Worker
-- `CLOUDFLARE_ACCOUNT_ID`: `d825b2cc4fce823f4243ca8617d1ef9b`
+```sh
+bun run preview      # Build and run the actual Worker locally
+bun run upload       # Upload a preview version from an authenticated environment
+bun run deploy       # Deploy from an authenticated environment
+```
 
-| Workflow                | Trigger                      | Wrangler operation         |
-| ----------------------- | ---------------------------- | -------------------------- |
-| `Cloudflare Preview`    | Ready or updated PR          | `wrangler versions upload` |
-| `Cloudflare Production` | Push to `main` or manual run | `wrangler deploy`          |
+Do not overwrite the Astro application with the original v0/Next.js sync output. Use the repository as the source of truth for this implementation.
 
-The repository’s `bun.lock` and `packageManager` field keep the build on Bun.
-For an explicit local Workers-runtime preview, run `bun run preview`; for a
-production deployment from an authenticated environment, run `bun run deploy`.
+## Validation and before/after performance
 
-Build artifact and mobile Lighthouse regression budgets are checked as part of
-the build and integration suites. See [the performance baseline](docs/performance-baseline.md)
-for current measurements, budgets, cache behavior, and the reproducible
-Turbopack-versus-webpack comparison.
+```sh
+bun run format:check
+bun run lint
+bun run typecheck
+bun run test:coverage
+bun run build
+bun run test:e2e
+bun run performance:audit
+bun run performance:compare --base a3c43a0abe578513b338ea253c167c9776e89b13 --runs 3
+```
 
-The projects section is served through the same-origin `/api/projects` route.
-The route caches GitHub data for one hour and can serve stale data while it
-refreshes, so visitors do not each fan out to the GitHub API. GitHub-provided
-repository URLs are restricted to HTTPS before they reach the UI. The public
-`/.well-known/security.txt` document points researchers to the repository’s
-security policy and advisory form.
+The comparison command creates disposable worktrees, installs each committed lockfile, builds both versions with identical fixture data, serves both through local Wrangler, alternates three cold-browser mobile Lighthouse samples per version, and writes raw reports and medians under `artifacts/performance/comparison/`. It never resets your working tree. Node, Bun, Git, npm/npx, Chrome, and network access to install dependencies are required. Both refs must be available locally (`git fetch origin` first in a shallow checkout).
 
-## Build your app
+For deployed Cloudflare checks, use the same harness with the existing production URL and the PR preview URL:
 
-Continue building your app on:
+```sh
+bun run performance:compare --base-url https://andrewmf.com --head-url https://YOUR-PREVIEW-URL --runs 3
+```
 
-**[https://v0.dev/chat/projects/UNx27p7EMON](https://v0.dev/chat/projects/UNx27p7EMON)**
-
-## How It Works
-
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. The repository-owned Cloudflare workflows deploy the latest version from
-   this repository
-
-## Environment Variables
-
-There are currently no required runtime secrets. For local Workers-runtime
-development, copy `.dev.vars.example` to `.dev.vars`; the latter is ignored.
-Manage future production variables and secrets in the Cloudflare Worker’s
-Variables and Secrets settings, or with Wrangler’s secret commands.
+The [historical Next.js baseline](docs/performance-baseline.md) is retained unchanged. Fresh comparisons and browser screenshots are evidence for review, not an assumption that Astro is faster. Navigation Lighthouse does not measure representative field INP.

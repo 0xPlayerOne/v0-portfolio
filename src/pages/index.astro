@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { PongHeader } from '../../components/header'
+import { AboutSection } from '../../views/about-section'
+import { SkillsSection } from '../../views/skills-section'
+import { ProjectsSection } from '../../views/projects-section'
+import { ContactSection } from '../../views/contact-section'
+import { fetchPinnedRepos } from '../../lib/github'
+import { FALLBACK_PINNED_REPOS, FALLBACK_POPULAR_REPOS, MAX_PROJECTS } from '../../constants/github'
+
+// This executes at build time, never in the visitor's critical request path.
+const projects = await fetchPinnedRepos()
+const initialProjects = projects.length
+  ? projects
+  : [...FALLBACK_PINNED_REPOS, ...FALLBACK_POPULAR_REPOS].slice(0, MAX_PROJECTS)
+---
+
+<Layout>
+  <div class="min-h-screen">
+    <h1 class="sr-only">Andrew Mahoney-Fernandes</h1>
+    <PongHeader client:load />
+    <main>
+      <AboutSection client:visible={{ rootMargin: '200px' }} />
+      <SkillsSection />
+      <ProjectsSection initialProjects={initialProjects} client:visible={{ rootMargin: '200px' }} />
+      <ContactSection client:visible={{ rootMargin: '200px' }} />
+    </main>
+  </div>
+</Layout>
