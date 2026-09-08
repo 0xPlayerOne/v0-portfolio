@@ -29,6 +29,11 @@ The repository’s `bun.lock` and `packageManager` field keep the build on Bun.
 For an explicit local Workers-runtime preview, run `bun run preview`; for a
 production deployment from an authenticated environment, run `bun run deploy`.
 
+Build artifact and mobile Lighthouse regression budgets are checked as part of
+the build and integration suites. See [the performance baseline](docs/performance-baseline.md)
+for current measurements, budgets, cache behavior, and the reproducible
+Turbopack-versus-webpack comparison.
+
 The projects section is served through the same-origin `/api/projects` route.
 The route caches GitHub data for one hour and can serve stale data while it
 refreshes, so visitors do not each fan out to the GitHub API. GitHub-provided

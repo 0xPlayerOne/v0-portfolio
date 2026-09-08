@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://andrewmf.com/schemas/performance-budgets.schema.json",
+  "title": "Portfolio performance budgets",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifacts", "lab", "field"],
+  "properties": {
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "openNextBytes",
+        "openNextAssetsBytes",
+        "openNextJavaScriptBytes",
+        "serverHandlerBytes"
+      ],
+      "properties": {
+        "openNextBytes": { "type": "integer", "minimum": 1 },
+        "openNextAssetsBytes": { "type": "integer", "minimum": 1 },
+        "openNextJavaScriptBytes": { "type": "integer", "minimum": 1 },
+        "serverHandlerBytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "lab": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "performanceScore",
+        "ttfbMs",
+        "lcpMs",
+        "cls",
+        "tbtMs",
+        "javascriptTransferBytes",
+        "totalTransferBytes"
+      ],
+      "properties": {
+        "performanceScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ttfbMs": { "type": "number", "minimum": 0 },
+        "lcpMs": { "type": "number", "minimum": 0 },
+        "cls": { "type": "number", "minimum": 0 },
+        "tbtMs": { "type": "number", "minimum": 0 },
+        "javascriptTransferBytes": { "type": "integer", "minimum": 0 },
+        "totalTransferBytes": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lcpP75Ms", "clsP75", "inpP75Ms"],
+      "properties": {
+        "lcpP75Ms": { "type": "number", "minimum": 0 },
+        "clsP75": { "type": "number", "minimum": 0 },
+        "inpP75Ms": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "./docs/performance-budgets.schema.json",
+  "artifacts": {
+    "openNextBytes": 26214400,
+    "openNextAssetsBytes": 1258291,
+    "openNextJavaScriptBytes": 734003,
+    "serverHandlerBytes": 3407872
+  },
+  "lab": {
+    "performanceScore": 0.75,
+    "ttfbMs": 600,
+    "lcpMs": 3000,
+    "cls": 0.1,
+    "tbtMs": 750,
+    "javascriptTransferBytes": 204800,
+    "totalTransferBytes": 307200
+  },
+  "field": {
+    "lcpP75Ms": 2500,
+    "clsP75": 0.1,
+    "inpP75Ms": 200
+  }
+}
