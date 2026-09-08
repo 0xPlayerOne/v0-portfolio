@@ -21,10 +21,10 @@ repository secrets before making the workflows ready for production:
 - `CLOUDFLARE_API_TOKEN`: a token scoped to deploy the `v0-portfolio` Worker
 - `CLOUDFLARE_ACCOUNT_ID`: `d825b2cc4fce823f4243ca8617d1ef9b`
 
-| Workflow                | Trigger                      | Wrangler operation          |
-| ----------------------- | ---------------------------- | --------------------------- |
-| `Cloudflare Preview`    | Ready or updated PR          | `wrangler versions upload`  |
-| `Cloudflare Production` | Push to `main` or manual run | `wrangler deploy`           |
+| Workflow                | Trigger                      | Wrangler operation         |
+| ----------------------- | ---------------------------- | -------------------------- |
+| `Cloudflare Preview`    | Ready or updated PR          | `wrangler versions upload` |
+| `Cloudflare Production` | Push to `main` or manual run | `wrangler deploy`          |
 
 The repository’s `bun.lock` and `packageManager` field keep the build on Bun.
 For an explicit local Workers-runtime preview, run `bun run preview`; for a
