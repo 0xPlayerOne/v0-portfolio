@@ -15,15 +15,16 @@ Any changes you make to your deployed app will be automatically pushed to this r
 This project is deployed to the `v0-portfolio` Cloudflare Worker.
 
 The repository includes the OpenNext adapter and Wrangler configuration used by
-Cloudflare Workers Builds. Configure the Worker’s build settings as follows:
+the repository-owned GitHub Actions deployment workflows. Configure these
+repository secrets before making the workflows ready for production:
 
-| Setting                       | Value                          |
-| ----------------------------- | ------------------------------ |
-| Production branch             | `main`                         |
-| Root directory                | `.`                            |
-| Build command                 | `bun run build`                |
-| Deploy command                | `npx wrangler versions upload` |
-| Non-production deploy command | `npx wrangler versions upload` |
+- `CLOUDFLARE_API_TOKEN`: a token scoped to deploy the `v0-portfolio` Worker
+- `CLOUDFLARE_ACCOUNT_ID`: `d825b2cc4fce823f4243ca8617d1ef9b`
+
+| Workflow                | Trigger                      | Wrangler operation          |
+| ----------------------- | ---------------------------- | --------------------------- |
+| `Cloudflare Preview`    | Ready or updated PR          | `wrangler versions upload`  |
+| `Cloudflare Production` | Push to `main` or manual run | `wrangler deploy`           |
 
 The repository’s `bun.lock` and `packageManager` field keep the build on Bun.
 For an explicit local Workers-runtime preview, run `bun run preview`; for a
@@ -52,7 +53,8 @@ Continue building your app on:
 1. Create and modify your project using [v0.dev](https://v0.dev)
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
-4. Cloudflare Workers Builds deploys the latest version from this repository
+4. The repository-owned Cloudflare workflows deploy the latest version from
+   this repository
 
 ## Environment Variables
 
