@@ -90,12 +90,17 @@ try {
   }
 
   console.log('Lighthouse mobile measurements:')
-  console.log(
-    `  ${checkMinimum(
-      'performanceScore',
-      measurements.performanceScore,
-      budgets.lab.performanceScore
-    )}`
+  const failures = []
+  const report = (check) => {
+    try {
+      console.log(`  ${check()}`)
+    } catch (error) {
+      failures.push(error.message)
+      console.error(`  ${error.message}`)
+    }
+  }
+  report(() =>
+    checkMinimum('performanceScore', measurements.performanceScore, budgets.lab.performanceScore)
   )
   for (const name of [
     'ttfbMs',
@@ -105,7 +110,7 @@ try {
     'javascriptTransferBytes',
     'totalTransferBytes',
   ]) {
-    console.log(`  ${checkMaximum(name, measurements[name], budgets.lab[name])}`)
+    report(() => checkMaximum(name, measurements[name], budgets.lab[name]))
   }
   console.log(
     `  Field p75 targets (release review): LCP ${budgets.field.lcpP75Ms} ms, CLS ${budgets.field.clsP75}, INP ${budgets.field.inpP75Ms} ms`
@@ -115,6 +120,9 @@ try {
     reportPath,
     JSON.stringify({ measuredAt: lhr.fetchTime, url, measurements }, null, 2) + '\n'
   )
+  if (failures.length > 0) {
+    throw new Error(`Performance budget failed:\n${failures.join('\n')}`)
+  }
 } finally {
   server.kill('SIGTERM')
 }
