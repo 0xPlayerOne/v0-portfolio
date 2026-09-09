@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useCallback } from 'react'
 import { ExternalLink, Star, GitFork, RefreshCw, Pin } from 'lucide-react'
 import { Github } from '@/lib/brand-icons'
@@ -72,6 +70,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
         <Button
           variant="outline"
           size="sm"
+          aria-label="Refresh projects"
           onClick={() => loadProjects()}
           disabled={loading}
           className="border-0 hover:scale-105"

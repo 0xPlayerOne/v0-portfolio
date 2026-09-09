@@ -2,11 +2,13 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "v0-portfolio",
   "account_id": "d825b2cc4fce823f4243ca8617d1ef9b",
-  "main": ".open-next/worker.js",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-08-29",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "compatibility_flags": ["global_fetch_strictly_public"],
   "assets": {
-    "directory": ".open-next/assets",
+    "directory": "./dist",
     "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/projects", "/api/projects/*"],
   },
 }

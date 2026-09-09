@@ -7,12 +7,11 @@ import {
   PINNED_REPO_CONFIGS,
 } from '@/constants/github'
 
-const GITHUB_FETCH_OPTIONS: RequestInit & { next: { revalidate: number } } = {
+const GITHUB_FETCH_OPTIONS: RequestInit = {
   headers: {
     Accept: 'application/vnd.github.v3+json',
     'User-Agent': 'AndrewMF-Portfolio',
   },
-  next: { revalidate: 3600 },
 }
 
 // Hoisted to module scope — this map is static and was previously re-created
@@ -80,7 +79,7 @@ async function fetchSpecificRepos(
       try {
         const response = await fetch(
           `https://api.github.com/repos/${config.owner}/${config.repo}`,
-          GITHUB_FETCH_OPTIONS
+          { ...GITHUB_FETCH_OPTIONS, signal: AbortSignal.timeout(5000) }
         )
 
         if (response.status === 403) {
@@ -107,7 +106,7 @@ async function fetchPopularRepositories(): Promise<Omit<PinnedRepo, 'languages'>
   try {
     const response = await fetch(
       'https://api.github.com/users/0xPlayerOne/repos?sort=stars&per_page=20',
-      GITHUB_FETCH_OPTIONS
+      { ...GITHUB_FETCH_OPTIONS, signal: AbortSignal.timeout(5000) }
     )
 
     if (response.status === 403) {
@@ -128,7 +127,7 @@ async function fetchPopularRepositories(): Promise<Omit<PinnedRepo, 'languages'>
           repo.description && // Must have description
           !repo.name.toLowerCase().includes('fork') // Exclude obvious forks
       )
-      .sort((a, b) => {
+      .toSorted((a, b) => {
         // Sort by popularity (stars + forks)
         const scoreA = a.stargazers_count + a.forks_count
         const scoreB = b.stargazers_count + b.forks_count
@@ -150,10 +149,10 @@ async function fetchRepoLanguages(
   repoName: string
 ): Promise<{ name: string; percentage: number }[]> {
   try {
-    const response = await fetch(
-      `https://api.github.com/repos/${owner}/${repoName}/languages`,
-      GITHUB_FETCH_OPTIONS
-    )
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repoName}/languages`, {
+      ...GITHUB_FETCH_OPTIONS,
+      signal: AbortSignal.timeout(5000),
+    })
 
     if (response.status === 403) {
       console.warn(`Rate limited for languages ${owner}/${repoName}`)
@@ -174,7 +173,7 @@ async function fetchRepoLanguages(
         name,
         percentage: Math.round((bytes / total) * 100),
       }))
-      .sort((a, b) => b.percentage - a.percentage)
+      .toSorted((a, b) => b.percentage - a.percentage)
       .slice(0, MAX_LANGUAGES)
   } catch (error) {
     console.error(`Error fetching languages for ${owner}/${repoName}:`, error)

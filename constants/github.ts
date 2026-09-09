@@ -1,4 +1,4 @@
-import { PinnedRepo, PinnedRepoConfig } from '@/types/github'
+import type { PinnedRepo, PinnedRepoConfig } from '@/types/github'
 
 export const MAX_LANGUAGES = 5
 export const MAX_PROJECTS = 6

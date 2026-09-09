@@ -1,34 +1,28 @@
-import { readdir, stat } from 'node:fs/promises'
+import { readdir, stat, mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import budgets from '../performance-budgets.json' with { type: 'json' }
 import { checkMaximum } from './performance-budget.mjs'
 
 async function filesUnder(directory) {
   const entries = await readdir(directory, { withFileTypes: true })
-  const files = await Promise.all(
+  const groups = await Promise.all(
     entries.map(async (entry) => {
       const path = join(directory, entry.name)
-      return entry.isDirectory() ? filesUnder(path) : [path]
+      return entry.isDirectory() ? filesUnder(path) : [{ path, size: (await stat(path)).size }]
     })
   )
-  return files.flat()
+  return groups.flat()
 }
-
-async function totalBytes(files) {
-  const sizes = await Promise.all(files.map(async (file) => (await stat(file)).size))
-  return sizes.reduce((total, size) => total + size, 0)
-}
-
-const openNextFiles = await filesUnder('.open-next')
-const assetFiles = await filesUnder('.open-next/assets')
+const assets = await filesUnder('dist')
+const worker = await filesUnder('.worker-build')
+const sum = (files) => files.reduce((total, file) => total + file.size, 0)
 const measurements = {
-  openNextBytes: await totalBytes(openNextFiles),
-  openNextAssetsBytes: await totalBytes(assetFiles),
-  openNextJavaScriptBytes: await totalBytes(assetFiles.filter((file) => file.endsWith('.js'))),
-  serverHandlerBytes: (await stat('.open-next/server-functions/default/handler.mjs')).size,
+  outputBytes: sum(assets) + sum(worker),
+  assetBytes: sum(assets),
+  javascriptBytes: sum(assets.filter((file) => file.path.endsWith('.js'))),
+  workerBytes: sum(worker.filter((file) => /\.(?:js|mjs)$/.test(file.path))),
 }
-
-console.log('OpenNext artifact measurements:')
-for (const [name, actual] of Object.entries(measurements)) {
-  console.log(`  ${checkMaximum(name, actual, budgets.artifacts[name])}`)
-}
+for (const [key, value] of Object.entries(measurements))
+  console.log(checkMaximum(key, value, budgets.artifacts[key]))
+await mkdir('artifacts/performance', { recursive: true })
+await writeFile('artifacts/performance/build.json', JSON.stringify(measurements, null, 2) + '\n')

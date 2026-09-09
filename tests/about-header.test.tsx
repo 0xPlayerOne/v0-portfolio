@@ -57,7 +57,14 @@ describe('AboutSection', () => {
   it('switches to the journey timeline and back to the overview', () => {
     render(<AboutSection />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Journey' }))
+    const overview = screen.getByRole('button', { name: 'Overview' })
+    const journey = screen.getByRole('button', { name: 'Journey' })
+    expect(overview.getAttribute('aria-pressed')).toBe('true')
+    expect(journey.getAttribute('aria-pressed')).toBe('false')
+
+    fireEvent.click(journey)
+    expect(journey.getAttribute('aria-pressed')).toBe('true')
+    expect(overview.getAttribute('aria-pressed')).toBe('false')
     expect(screen.getByText('Started Coding')).not.toBeNull()
     expect(screen.getByText('Founded Nifty League')).not.toBeNull()
     expect(screen.queryByText('Innovation')).toBeNull()

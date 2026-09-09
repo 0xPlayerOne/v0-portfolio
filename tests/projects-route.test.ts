@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
-import { GET } from '@/app/api/projects/route'
+import { GET } from '@/lib/projects-response'
 
 describe('projects API route', () => {
   beforeEach(() => {

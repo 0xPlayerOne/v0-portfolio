@@ -1,5 +1,3 @@
-'use client'
-
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
@@ -61,6 +59,8 @@ const TabButton = memo(function TabButton({
 }) {
   return (
     <button
+      type="button"
+      aria-pressed={isActive}
       onClick={onClick}
       className={cn(
         'rounded-md border-0 px-4 py-2 text-sm font-medium transition-all duration-300',

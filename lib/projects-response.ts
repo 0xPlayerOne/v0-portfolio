@@ -1,8 +1,6 @@
 import { FALLBACK_PINNED_REPOS, FALLBACK_POPULAR_REPOS } from '@/constants/github'
 import { fetchPinnedRepos } from '@/lib/github'
 
-export const revalidate = 3600
-
 export async function GET() {
   try {
     const projects = await fetchPinnedRepos()

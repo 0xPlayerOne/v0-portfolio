@@ -1,0 +1,44 @@
+---
+import '../styles/fonts.css'
+import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url'
+import pixelFont from '@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2?url'
+import '../styles/globals.css'
+import { SITE_BORDER_COLOR, SITE_BTN_COLOR_40 } from '../../constants/colors'
+
+interface Props { title?: string; description?: string; noindex?: boolean }
+const {
+  title = 'AndrewMF',
+  description = 'Portfolio website for Andrew Mahoney-Fernandes',
+  noindex = false,
+} = Astro.props
+const canonical = new URL(Astro.url.pathname, Astro.site)
+const variables = `--font-press-start-2p: "Press Start 2P"; --skill-hover-shadow: 0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR_40}`
+---
+
+<!doctype html>
+<html lang="en" class="portfolio-document" style={variables}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="preload" href={interFont} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={pixelFont} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="icon" href="/android-chrome-192x192.png" sizes="192x192" type="image/png" />
+    <link rel="icon" href="/android-chrome-512x512.png" sizes="512x512" type="image/png" />
+  </head>
+  <body><slot /></body>
+</html>

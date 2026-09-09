@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { RetroCanvas } from './retro-canvas'
 import { RetroNavbar } from './retro-navbar'
