@@ -25,7 +25,6 @@ test('renders crawlable content, metadata, and project links without JavaScript'
     expect(await page.locator('#projects a[href^="https://github.com/"]').count()).toBeGreaterThan(
       1
     )
-    expect(await page.locator('script[src*="/_next/"]').count()).toBe(0)
     await expect(
       page.locator('#skills').getByText('Web & Full-Stack', { exact: true })
     ).toBeVisible()

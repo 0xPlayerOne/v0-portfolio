@@ -36,7 +36,6 @@ out/
 coverage/
 htmlcov/
 .coverage*
-.next/
 artifacts/
 performance-results.json
 performance-results/
@@ -77,9 +76,6 @@ mise.local.toml
 mise.local.lock
 .mise.local.lock
 *.code-workspace
-
-# Legacy framework output is kept ignored for local rollback/rebuild work.
-.open-next/
 
 # Astro / local Workers / browser and performance reports
 .astro/
