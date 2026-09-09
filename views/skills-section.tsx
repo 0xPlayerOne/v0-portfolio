@@ -1,5 +1,3 @@
-'use client'
-
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
@@ -13,7 +11,7 @@ import {
   SKILL_BAR_SHADOW,
 } from '@/constants/colors'
 import { SKILLS_DATA } from '@/constants/content'
-import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
+import { CARD_BASE_STYLE } from '@/lib/card-styles'
 import { Code2, Gamepad2, Users, Briefcase, Palette, Blocks } from 'lucide-react'
 
 const SKILL_ICONS = {
@@ -26,7 +24,6 @@ const SKILL_ICONS = {
 } as const
 
 export function SkillsSection() {
-  const { handleMouseEnter, handleMouseLeave } = useCardHover()
   return (
     <Section id="skills">
       <Typography variant="h2" align="center" color="primary" gutterBottom>
@@ -46,8 +43,6 @@ export function SkillsSection() {
                 key={skillGroup.category}
                 className="group border-0 transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 style={CARD_BASE_STYLE}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
               >
                 <CardContent className="p-4 sm:p-6">
                   <div className="mb-4 flex items-center gap-3">

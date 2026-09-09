@@ -1,6 +1,14 @@
 import { describe, expect, it, mock } from 'bun:test'
 import { createProjectsHandler } from '../worker/projects-cache'
 
+function fixtureResponse() {
+  return Response.json([{ title: 'Fixture' }], {
+    headers: {
+      'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400',
+    },
+  })
+}
+
 function fixture() {
   const entries = new Map<string, Response>()
   const cache = {
@@ -17,13 +25,7 @@ function fixture() {
       background.push(promise)
     },
   }
-  const response = () =>
-    Response.json([{ title: 'Fixture' }], {
-      headers: {
-        'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400',
-      },
-    })
-  const load = mock(async () => response())
+  const load = mock(async () => fixtureResponse())
   let clock = 1_800_000_000_000
   const handle = createProjectsHandler(load, () => clock)
   const request = new Request('https://andrewmf.com/api/projects?cache-buster=1')

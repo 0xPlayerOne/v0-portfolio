@@ -16,7 +16,6 @@ node_modules/
 .pnp.js
 .turbo/
 *.tsbuildinfo
-next-env.d.ts
 
 # Python
 .venv/
@@ -79,13 +78,12 @@ mise.local.lock
 .mise.local.lock
 *.code-workspace
 
-# Repository-specific rules
+# Legacy framework output is kept ignored for local rollback/rebuild work.
 .open-next/
 
 # Astro / local Workers / browser and performance reports
 .astro/
-dist/
+.wrangler/
 .worker-build/
-artifacts/
 playwright-report/
 test-results/

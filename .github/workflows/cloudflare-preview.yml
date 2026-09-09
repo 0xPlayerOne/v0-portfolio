@@ -3,7 +3,7 @@ name: Cloudflare Preview
 on:
   pull_request:
     branches: [main]
-    types: [ready_for_review, synchronize, converted_to_draft]
+    types: [opened, reopened, ready_for_review, synchronize, converted_to_draft]
 
 concurrency:
   group: cloudflare-preview-${{ github.event.pull_request.number }}

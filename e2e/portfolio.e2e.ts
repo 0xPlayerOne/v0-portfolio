@@ -113,17 +113,17 @@ test('preserves the canvas pause behavior when offscreen', async ({ page }) => {
       calls++
       return original.apply(this, args)
     }
-    Object.defineProperty(window, '__pongDrawCalls', { get: () => calls })
+    Object.defineProperty(window, 'pongDrawCalls', { get: () => calls })
   })
   await page.goto('/')
   await page.locator('#contact').scrollIntoViewIfNeeded()
   await page.waitForTimeout(700)
   const before = await page.evaluate(
-    () => (window as unknown as { __pongDrawCalls: number }).__pongDrawCalls
+    () => (window as unknown as { pongDrawCalls: number }).pongDrawCalls
   )
   await page.waitForTimeout(1000)
   const after = await page.evaluate(
-    () => (window as unknown as { __pongDrawCalls: number }).__pongDrawCalls
+    () => (window as unknown as { pongDrawCalls: number }).pongDrawCalls
   )
   expect(after - before).toBe(0)
 })

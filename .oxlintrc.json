@@ -9,6 +9,7 @@
     ".next/**",
     ".open-next/**",
     "coverage/**",
+    ".wrangler/**",
     "public/**",
     "dist/**",
     ".astro/**",

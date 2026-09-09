@@ -7,8 +7,6 @@ const SECURITY_TXT = [
   '',
 ].join('\n')
 
-export const dynamic = 'force-static'
-
 export function GET() {
   return new Response(SECURITY_TXT, {
     headers: {

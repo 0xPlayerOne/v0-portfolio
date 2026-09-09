@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect, useRef, useCallback } from 'react'
 import type { GameState, PongColors } from './types'
 import { createGame, updateGame } from './game'

@@ -127,7 +127,7 @@ async function fetchPopularRepositories(): Promise<Omit<PinnedRepo, 'languages'>
           repo.description && // Must have description
           !repo.name.toLowerCase().includes('fork') // Exclude obvious forks
       )
-      .sort((a, b) => {
+      .toSorted((a, b) => {
         // Sort by popularity (stars + forks)
         const scoreA = a.stargazers_count + a.forks_count
         const scoreB = b.stargazers_count + b.forks_count
@@ -173,7 +173,7 @@ async function fetchRepoLanguages(
         name,
         percentage: Math.round((bytes / total) * 100),
       }))
-      .sort((a, b) => b.percentage - a.percentage)
+      .toSorted((a, b) => b.percentage - a.percentage)
       .slice(0, MAX_LANGUAGES)
   } catch (error) {
     console.error(`Error fetching languages for ${owner}/${repoName}:`, error)

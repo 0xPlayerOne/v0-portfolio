@@ -122,7 +122,7 @@ export function summarize(samples) {
   if (samples.length === 0) throw new Error('Cannot summarize an empty sample')
   return Object.fromEntries(
     Object.keys(samples[0].measurements).map((key) => {
-      const values = samples.map((sample) => sample.measurements[key]).sort((a, b) => a - b)
+      const values = samples.map((sample) => sample.measurements[key]).toSorted((a, b) => a - b)
       return [key, values[Math.floor(values.length / 2)]]
     })
   )

@@ -27,8 +27,7 @@
     "type:check": "astro check",
     "performance:artifacts": "bun scripts/check-performance-artifacts.mjs",
     "performance:audit": "bun scripts/audit-performance.mjs",
-    "test:e2e": "bun run build && bunx playwright install chromium && playwright test",
-    "performance:compare": "bun scripts/compare-performance.mjs"
+    "test:e2e": "bun run build && bunx playwright install chromium && playwright test"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",

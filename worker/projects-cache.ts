@@ -13,7 +13,7 @@ const STALE_FOR = 'X-Portfolio-Stale-For'
 export function createProjectsHandler(load: ProjectLoader, now = Date.now) {
   const inFlight = new Map<string, Promise<Response>>()
 
-  function refresh(key: Request, cache: ProjectCache): Promise<Response> {
+  async function refresh(key: Request, cache: ProjectCache): Promise<Response> {
     const pending = inFlight.get(key.url)
     if (pending) return pending.then((response) => response.clone())
 

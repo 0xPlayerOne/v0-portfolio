@@ -49,15 +49,6 @@ bun run test:coverage
 bun run build
 bun run test:e2e
 bun run performance:audit
-bun run performance:compare --base a3c43a0abe578513b338ea253c167c9776e89b13 --runs 3
 ```
 
-The comparison command creates disposable worktrees, installs each committed lockfile, builds both versions with identical fixture data, serves both through local Wrangler, alternates three cold-browser mobile Lighthouse samples per version, and writes raw reports and medians under `artifacts/performance/comparison/`. It never resets your working tree. Node, Bun, Git, npm/npx, Chrome, and network access to install dependencies are required. Both refs must be available locally (`git fetch origin` first in a shallow checkout).
-
-For deployed Cloudflare checks, use the same harness with the existing production URL and the PR preview URL:
-
-```sh
-bun run performance:compare --base-url https://andrewmf.com --head-url https://YOUR-PREVIEW-URL --runs 3
-```
-
-The [historical Next.js baseline](docs/performance-baseline.md) is retained unchanged. Fresh comparisons and browser screenshots are evidence for review, not an assumption that Astro is faster. Navigation Lighthouse does not measure representative field INP.
+After `bun run build`, `performance:audit` measures the current Astro/Worker preview with repeated mobile Lighthouse runs, writes raw reports under `artifacts/performance/audit/`, and enforces the configured lab budgets. The [historical Next.js baseline](docs/performance-baseline.md) and one-time migration comparison ([results](docs/astro-performance-comparison.md)) are retained as historical evidence. Navigation Lighthouse does not measure representative field INP.

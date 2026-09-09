@@ -1,5 +1,3 @@
-'use client'
-
 import { memo, useMemo } from 'react'
 import { PongGame } from '@/lib/games/pong'
 import { CANVAS_COLOR, BALL_COLOR, PIXEL_COLOR, HIT_COLOR, PADDLE_COLOR } from '@/constants/colors'

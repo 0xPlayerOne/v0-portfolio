@@ -27,9 +27,9 @@ The strongest result is reduced JavaScript and transfer size. The approximately 
 
 Next.js performance scores were 87, 97, and 99; Astro scores were 99, 100, and 99. Next.js LCP samples were 1,867.14, 2,555.78, and 1,834.26 ms; Astro samples were 1,823.41, 1,669.26, and 1,821.87 ms. Next.js TBT samples were 497, 69, and 81 ms; all three Astro samples were 0 ms.
 
-All six raw Lighthouse reports, sample environment information, and JSON/Markdown summaries are retained in the workflow artifact. Build commands took 19.857 seconds for Next/OpenNext and 2.882 seconds for Astro/Worker dry-run in this one run; these one-off timings are informational rather than a controlled build-speed benchmark.
+The one-time workflow retained all six raw Lighthouse reports, sample environment information, and JSON/Markdown summaries in its artifact. Build commands took 19.857 seconds for Next/OpenNext and 2.882 seconds for Astro/Worker dry-run in this one run; these one-off timings are informational rather than a controlled build-speed benchmark.
 
-The initial artifact's `metadata.node` field came from Bun's Node-compatibility `process.version`, not the actual Node executable. The harness now queries `node --version` explicitly. This reporting correction does not alter the Lighthouse measurements. The workflow itself provisions Node 24 and Bun 1.4.0.
+The initial artifact's `metadata.node` field came from Bun's Node-compatibility `process.version`, not the actual Node executable. The harness now queries `node --version` explicitly. This reporting correction does not alter the Lighthouse measurements. That one-time workflow provisioned Node 24 and Bun 1.4.0.
 
 ## Functional validation
 
@@ -37,12 +37,8 @@ Formatting, lint, type checking, 136 unit tests, Astro production build, Worker 
 
 Hero and project screenshots are included for visual review. They are not a pixel-difference comparison against the old application. Review the deployed preview before merge, especially navigation, typography, layout, and reduced-motion behavior.
 
-## Repeat and interpret
+## Historical record
 
-```sh
-bun run performance:compare --base a3c43a0abe578513b338ea253c167c9776e89b13 --runs 3
-```
+This comparison was a one-time migration gate. The comparison harness and its temporary workflow were removed after Astro adoption; the linked run and retained measurements remain useful historical evidence. Ongoing checks use `bun run performance:audit` against the current Astro/Worker build.
 
-The read-only `Portfolio Regression Checks` workflow can also be run manually with a baseline ref. To compare deployed URLs, pass both `--base-url` and `--head-url`; keep test location, browser, throttling, and content comparable. The historical Next.js baseline remains unchanged in `performance-baseline.md`.
-
-Initial GitHub cards are a build-time snapshot after this migration, rather than hourly ISR. Explicit refresh still uses the hourly cached API. This freshness tradeoff must be reviewed separately from the performance improvements.
+Initial GitHub cards are a build-time snapshot after this migration, rather than hourly ISR. Explicit refresh still uses the hourly cached API. This freshness tradeoff remains part of the deployed behavior.
