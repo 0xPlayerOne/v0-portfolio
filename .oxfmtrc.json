@@ -7,8 +7,6 @@
     "CHANGELOG.md",
     ".github/.code-foundry",
     ".github/actions/",
-    ".next",
-    ".open-next",
     ".wrangler",
     "coverage",
     "node_modules",

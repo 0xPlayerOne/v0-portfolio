@@ -6,8 +6,6 @@
   },
   "ignorePatterns": [
     "node_modules/**",
-    ".next/**",
-    ".open-next/**",
     "coverage/**",
     ".wrangler/**",
     "public/**",

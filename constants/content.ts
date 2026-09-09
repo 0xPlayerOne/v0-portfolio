@@ -4,7 +4,7 @@ export const SKILLS_DATA = [
   {
     category: 'Web & Full-Stack',
     skills: [
-      { name: 'React / Next.js', level: 95 },
+      { name: 'React / Astro', level: 95 },
       { name: 'TypeScript / JavaScript', level: 95 },
       { name: 'Node.js (Express/Fastify)', level: 80 },
       { name: 'Python (FastAPI/Django)', level: 65 },

@@ -78,7 +78,6 @@ runs:
       shell: bash
       run: |
         echo 'TURBO_TELEMETRY_DISABLED=1' >> "$GITHUB_ENV"
-        echo 'NEXT_TELEMETRY_DISABLED=1' >> "$GITHUB_ENV"
     - name: Detect project profile
       id: profile
       shell: bash
@@ -327,7 +326,7 @@ runs:
         printf 'turbo_task=%s\n' "$turbo_task" >> "$GITHUB_OUTPUT"
 
         build=false
-        if has_tracked_regex '(^|/)(next\.config\.[^/]*|vite\.config\.[^/]*|tsconfig[^/]*\.json)$'; then
+        if has_tracked_regex '(^|/)(vite\.config\.[^/]*|tsconfig[^/]*\.json)$'; then
           build=true
           echo 'build=true' >> "$GITHUB_OUTPUT"
         else
@@ -552,10 +551,9 @@ runs:
         # Avoid a second, often-empty framework cache archive in that mode;
         # Turbo Type-Check tasks do not need framework build state either.
         path: |
-          **/.next/cache
           **/node_modules/.vite
           **/*.tsbuildinfo
-        key: ${{ runner.os }}-javascript-build-${{ github.workflow }}-${{ github.job }}-${{ hashFiles('**/package.json', '**/bun.lock', '**/bun.lockb', '**/pnpm-lock.yaml', '**/yarn.lock', '**/package-lock.json', '**/next.config.*', '**/vite.config.*', '**/tsconfig*.json', '.mise.toml', 'mise.lock') }}
+        key: ${{ runner.os }}-javascript-build-${{ github.workflow }}-${{ github.job }}-${{ hashFiles('**/package.json', '**/bun.lock', '**/bun.lockb', '**/pnpm-lock.yaml', '**/yarn.lock', '**/package-lock.json', '**/vite.config.*', '**/tsconfig*.json', '.mise.toml', 'mise.lock') }}
         # Keep primary saves isolated so parallel jobs cannot race. A cache
         # from another workflow job is still a valid warm fallback.
         restore-keys: |
