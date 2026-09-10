@@ -21,12 +21,14 @@
     "typecheck": "astro check",
     "test": "bun test --dom --isolate",
     "test:unit": "bun run test:coverage",
-    "test:integration": "bun run build && bun run performance:audit",
+    "test:integration": "bun run cloudflare:build && bun run performance:audit",
     "test:coverage": "bun test --coverage --dom --isolate --max-concurrency=1",
     "test:watch": "bun test --dom --watch",
     "type:check": "astro check",
+    "performance:check": "bun run build",
     "performance:artifacts": "bun scripts/check-performance-artifacts.mjs",
     "performance:audit": "bun scripts/audit-performance.mjs",
+    "canary:check": "bun run format:check && bun run lint && bun run typecheck && bun run test:unit && bun run performance:check && bun run performance:audit",
     "test:e2e": "bun run build && bunx playwright install chromium && playwright test"
   },
   "dependencies": {
