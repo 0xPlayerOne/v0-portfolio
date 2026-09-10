@@ -16,6 +16,7 @@ node_modules/
 .pnp.js
 .turbo/
 *.tsbuildinfo
+next-env.d.ts
 
 # Python
 .venv/
@@ -36,15 +37,18 @@ out/
 coverage/
 htmlcov/
 .coverage*
+.next/
 artifacts/
 performance-results.json
 performance-results/
+eval-results.json
+eval-results/
 cache/
 !.github/actions/cache/
 !.github/actions/cache/action.yml
 typechain/
 coverage.json
-performance-results/
+.code-foundry/
 tests/.bin/
 **/.app/
 
@@ -77,6 +81,7 @@ mise.local.lock
 .mise.local.lock
 *.code-workspace
 
+# Repository-specific rules
 # Astro / local Workers / browser and performance reports
 .astro/
 .wrangler/
