@@ -3,7 +3,7 @@
 Performance-lane activation and a repository-owned validation command for runtime upgrades.
 
 **Scope:** Current Astro/React/Cloudflare portfolio.
-**Activation:** Existing Foundry script discovery; no runtime bump or new dependency.
+**Activation:** Existing Foundry script discovery; this rollout pins Foundry to v1.28.2 without adding a new dependency.
 
 `bun run performance:check` is the dedicated Foundry performance entrypoint. It
 builds the Astro site and local Worker bundle once, then runs the existing artifact
@@ -38,7 +38,8 @@ inventory of the rest of the application fleet and is not evidence of a complete
 canary rollout.
 
 The existing `performance-budgets.json`, artifact/lab checks, coverage threshold,
-Foundry runtime pin, dependencies, lockfile, and production workflows are unchanged.
+dependencies, lockfile, and production workflows are unchanged; this rollout updates
+the Foundry runtime pin to v1.28.2.
 Separate CI jobs still build independently because their filesystems are isolated;
 this change removes redundant checks within each lane and duplicates in the
 combined canary, not necessary builds in independent runners. Existing ordinary
