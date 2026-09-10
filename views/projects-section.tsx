@@ -34,28 +34,25 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  const loadProjects = useCallback(async (signal?: AbortSignal) => {
+  const loadProjects = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
       const response = await fetch('/api/projects', {
         headers: { Accept: 'application/json' },
-        signal,
       })
       if (!response.ok) {
         throw new Error(`Projects API error: ${response.status}`)
       }
 
       const repos = (await response.json()) as PinnedRepo[]
-      if (signal?.aborted) return
       setProjects(repos)
       setLastUpdated(new Date())
     } catch (err) {
-      if (err instanceof DOMException && err.name === 'AbortError') return
       setError('Failed to load projects')
       console.error('Error loading projects:', err)
     } finally {
-      if (!signal?.aborted) setLoading(false)
+      setLoading(false)
     }
   }, [])
 

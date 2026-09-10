@@ -33,9 +33,9 @@ export function SkillsSection() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
           {SKILLS_DATA.map((skillGroup) => {
             const IconComponent = SKILL_ICONS[skillGroup.category as keyof typeof SKILL_ICONS]
-            const skills: ReadonlyArray<{ name: string; level: number }> = skillGroup.skills
             const avgLevel = Math.round(
-              skills.reduce((sum, skill) => sum + skill.level, 0) / skills.length
+              skillGroup.skills.reduce((sum, skill) => sum + skill.level, 0) /
+                skillGroup.skills.length
             )
 
             return (
@@ -64,7 +64,7 @@ export function SkillsSection() {
                   </div>
 
                   <div className="space-y-3">
-                    {skills.map((skill) => {
+                    {skillGroup.skills.map((skill) => {
                       const filledDots = Math.round((skill.level / 100) * 5)
                       return (
                         <div key={skill.name} className="group/skill">
@@ -105,7 +105,9 @@ export function SkillsSection() {
 
                   <div className="mt-4 border-t pt-4" style={{ borderColor: SITE_BORDER_COLOR_40 }}>
                     <div className="flex items-center justify-between text-xs">
-                      <span style={{ color: SITE_TEXT_COLOR }}>{skills.length} core skills</span>
+                      <span style={{ color: SITE_TEXT_COLOR }}>
+                        {skillGroup.skills.length} core skills
+                      </span>
                       <span
                         className="rounded px-2 py-1 font-mono"
                         style={{ backgroundColor: SITE_BTN_COLOR_20 }}
