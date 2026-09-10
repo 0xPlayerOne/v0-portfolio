@@ -13,9 +13,11 @@ function commands(name, parents = []) {
     return alias ? commands(alias[1], [...parents, name]) : [command]
   })
 }
-const builds = (commands) => commands.filter((command) => command === 'astro build').length
-const artifacts = (commands) => commands.filter((command) => command === 'bun scripts/check-performance-artifacts.mjs').length
-const audits = (commands) => commands.filter((command) => command === 'bun scripts/audit-performance.mjs').length
+const builds = (tasks) => tasks.filter((command) => command === 'astro build').length
+const artifacts = (tasks) =>
+  tasks.filter((command) => command === 'bun scripts/check-performance-artifacts.mjs').length
+const audits = (tasks) =>
+  tasks.filter((command) => command === 'bun scripts/audit-performance.mjs').length
 
 test('Foundry discovers one self-contained deterministic artifact check', () => {
   const tasks = commands('performance:check')
