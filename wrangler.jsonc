@@ -11,4 +11,8 @@
     "not_found_handling": "404-page",
     "run_worker_first": ["/api/projects", "/api/projects/*"],
   },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+  },
 }
