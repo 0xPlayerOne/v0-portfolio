@@ -4,9 +4,10 @@ import { useRafThrottle } from '@/hooks/use-raf-throttle'
 interface UseScrollSpyProps {
   sectionIds: readonly string[]
   offset?: number
+  onScroll?: (scrollY: number) => void
 }
 
-export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
+export const useScrollSpy = ({ sectionIds, offset = 0, onScroll }: UseScrollSpyProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(null)
   const activeSectionRef = useRef<string | null>(null)
 
@@ -16,6 +17,7 @@ export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
   const throttledScrollHandler = useCallback(() => {
     let currentSection: string | null = null
     const scrollY = window.scrollY
+    onScroll?.(scrollY)
 
     // Iterate in reverse order to find the closest section above current scroll position
     // This is more efficient as we can break early once we find a match
@@ -38,7 +40,7 @@ export const useScrollSpy = ({ sectionIds, offset = 0 }: UseScrollSpyProps) => {
       activeSectionRef.current = currentSection
       setActiveSection(currentSection)
     }
-  }, [sectionIds, offset])
+  }, [sectionIds, offset, onScroll])
 
   const handleScroll = useRafThrottle(throttledScrollHandler)
 

@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { RetroCanvas } from './retro-canvas'
 import { RetroNavbar } from './retro-navbar'
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
-import { useRafThrottle } from '@/hooks/use-raf-throttle'
 import { NAVBAR_HEIGHT, NAVIGATION_SECTIONS } from '@/constants/navigation'
 
 export function PongHeader() {
@@ -10,43 +9,25 @@ export function PongHeader() {
 
   // Memoize section IDs to prevent unnecessary recalculations
   const sectionIds = useMemo(() => NAVIGATION_SECTIONS.map((section) => section.id), [])
-  const activeSection = useScrollSpy({
-    sectionIds,
-    offset: NAVBAR_HEIGHT + 50,
-  })
 
-  // Helper function to check sticky state.
-  // Uses the functional setState form so the callback has no dependencies —
-  // React bails out when the state is unchanged, and the scroll listener is
-  // registered exactly once instead of being torn down/re-added on every
-  // sticky flip (same pattern as useScrollSpy).
+  // Share one throttled scroll listener between navigation spy and sticky state.
   const checkStickyState = useCallback(() => {
     const scrollPosition = window.scrollY
-    // The navbar should stick when we scroll past the header minus the navbar height
-    // This ensures the navbar is at the bottom of the header and sticks when scrolled past
+    // The navbar should stick when we scroll past the header minus the navbar height.
+    // This keeps it at the bottom of the header until that threshold is crossed.
     const headerHeight = window.innerHeight - NAVBAR_HEIGHT
     const shouldBeSticky = scrollPosition > headerHeight
 
-    // Only update state if the sticky state has changed
+    // React bails out when the state is unchanged.
     setIsSticky((prev) => (prev === shouldBeSticky ? prev : shouldBeSticky))
   }, [])
 
-  // Optimized scroll handler with throttling and useCallback
-  const handleScroll = useRafThrottle(checkStickyState)
-
-  useEffect(() => {
-    // Use passive event listener for better performance
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    // Initial check on mount
-    handleScroll()
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [handleScroll])
-
-  // Memoize the active section string to prevent unnecessary re-renders
-  const activeSectionString = useMemo(() => activeSection || '', [activeSection])
+  const activeSection = useScrollSpy({
+    sectionIds,
+    offset: NAVBAR_HEIGHT + 50,
+    onScroll: checkStickyState,
+  })
+  const activeSectionString = activeSection || ''
 
   return (
     <>

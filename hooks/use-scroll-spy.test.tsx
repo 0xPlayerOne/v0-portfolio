@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import { beforeEach, describe, expect, it, spyOn } from 'bun:test'
+import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
 
@@ -143,6 +143,53 @@ describe('useScrollSpy', () => {
     const { result } = renderHook(() => useScrollSpy({ sectionIds: ['ghost', 'real'] }))
 
     expect(result.current).toBe('real')
+  })
+
+  it('uses one passive scroll listener across scroll updates', () => {
+    const addEventListener = spyOn(window, 'addEventListener')
+    const removeEventListener = spyOn(window, 'removeEventListener')
+    insertSection('about', 0)
+    insertSection('projects', 500)
+    setScrollY(50)
+    stubRaf()
+
+    const { result, unmount } = renderHook(() =>
+      useScrollSpy({ sectionIds: ['about', 'projects'] })
+    )
+
+    expect(result.current).toBe('about')
+    expect(addEventListener.mock.calls.filter(([event]) => event === 'scroll')).toHaveLength(1)
+    expect(addEventListener).toHaveBeenCalledWith('scroll', expect.any(Function), {
+      passive: true,
+    })
+
+    setScrollY(600)
+    act(() => {
+      window.dispatchEvent(new Event('scroll'))
+    })
+    expect(result.current).toBe('projects')
+
+    unmount()
+    expect(removeEventListener.mock.calls.filter(([event]) => event === 'scroll')).toHaveLength(1)
+  })
+
+  it('notifies scroll position during initial and scroll-driven checks', () => {
+    const onScroll = mock()
+    insertSection('about', 0)
+    setScrollY(0)
+    stubRaf()
+
+    const { result } = renderHook(() => useScrollSpy({ sectionIds: ['about'], onScroll }))
+
+    expect(result.current).toBe('about')
+    expect(onScroll).toHaveBeenCalledWith(0)
+
+    setScrollY(50)
+    act(() => {
+      window.dispatchEvent(new Event('scroll'))
+    })
+
+    expect(onScroll).toHaveBeenCalledWith(50)
   })
 
   it('works without requestAnimationFrame (raf null/undefined)', () => {
