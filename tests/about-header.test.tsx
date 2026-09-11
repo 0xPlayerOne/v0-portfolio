@@ -1,8 +1,12 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 const smoothScrollToSection = mock()
-const useScrollSpy = mock(() => 'skills')
+let scrollSpyOptions: { onScroll?: () => void } | undefined
+const useScrollSpy = mock((options: { onScroll?: () => void }) => {
+  scrollSpyOptions = options
+  return 'skills'
+})
 
 mock.module('@/lib/smooth-scroll', () => ({ smoothScrollToSection }))
 mock.module('@/hooks/use-scroll-spy', () => ({ useScrollSpy }))
@@ -19,6 +23,7 @@ import { AboutSection } from '@/views/about-section'
 
 beforeEach(() => {
   mock.restore()
+  scrollSpyOptions = undefined
   Object.defineProperty(window, 'innerHeight', {
     configurable: true,
     value: 900,
@@ -85,6 +90,7 @@ describe('PongHeader', () => {
     expect(useScrollSpy).toHaveBeenCalledWith({
       sectionIds: ['about', 'skills', 'projects', 'contact'],
       offset: 150,
+      onScroll: expect.any(Function),
     })
 
     const skills = screen.getByRole('button', { name: 'SKILLS' })
@@ -106,10 +112,16 @@ describe('PongHeader', () => {
       value: 801,
     })
     fireEvent.scroll(window)
+    act(() => {
+      scrollSpyOptions?.onScroll?.()
+    })
     await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(2))
 
     Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 })
     fireEvent.scroll(window)
+    act(() => {
+      scrollSpyOptions?.onScroll?.()
+    })
     await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(1))
     unmount()
   })
@@ -125,27 +137,10 @@ describe('PongHeader', () => {
     })
 
     render(<PongHeader />)
+    act(() => {
+      scrollSpyOptions?.onScroll?.()
+    })
 
     await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(2))
-  })
-
-  it('registers the scroll listener once across sticky state flips', async () => {
-    const addEventListener = spyOn(window, 'addEventListener')
-
-    const { unmount } = render(<PongHeader />)
-    expect(addEventListener.mock.calls.filter(([event]) => event === 'scroll')).toHaveLength(1)
-
-    // Flip sticky on, then off — the stable callback must not re-register
-    Object.defineProperty(window, 'scrollY', { configurable: true, value: 801 })
-    fireEvent.scroll(window)
-    await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(2))
-
-    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 })
-    fireEvent.scroll(window)
-    await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(1))
-
-    expect(addEventListener.mock.calls.filter(([event]) => event === 'scroll')).toHaveLength(1)
-
-    unmount()
   })
 })
