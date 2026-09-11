@@ -14,6 +14,33 @@ const ALIGN_CLASSES = {
   justify: 'text-justify',
 } as const
 
+const COLOR_CLASSES = {
+  primary: SITE_HEADER_COLOR,
+  secondary: SITE_SUBHEADER_COLOR,
+  textPrimary: SITE_TEXT_COLOR,
+  textSecondary: SITE_SUBTEXT_COLOR,
+  inherit: 'inherit',
+} as const
+
+const VARIANT_CLASSES = {
+  h1: {
+    element: 'h1',
+    classes: 'text-4xl sm:text-5xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
+  },
+  h2: {
+    element: 'h2',
+    classes: 'text-3xl sm:text-4xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
+  },
+  h3: { element: 'h3', classes: 'text-lg sm:text-xl font-semibold' },
+  h4: { element: 'h4', classes: 'text-base sm:text-lg font-semibold' },
+  h5: { element: 'h5', classes: 'text-sm sm:text-base font-semibold' },
+  h6: { element: 'h6', classes: 'text-xs sm:text-sm font-semibold' },
+  body1: { element: 'p', classes: 'text-base sm:text-lg' },
+  body2: { element: 'p', classes: 'text-sm sm:text-base' },
+  caption: { element: 'span', classes: 'text-xs sm:text-sm' },
+  overline: { element: 'span', classes: 'text-xs uppercase tracking-wide' },
+} as const
+
 export function Typography({
   variant = 'body1',
   align = 'left',
@@ -27,38 +54,10 @@ export function Typography({
 }: TypographyProps) {
   const alignClass = ALIGN_CLASSES[align as keyof typeof ALIGN_CLASSES] ?? ALIGN_CLASSES.left
   const gutterClass = gutterBottom ? 'mb-4' : ''
-
-  const colorMap = {
-    primary: SITE_HEADER_COLOR,
-    secondary: SITE_SUBHEADER_COLOR,
-    textPrimary: SITE_TEXT_COLOR,
-    textSecondary: SITE_SUBTEXT_COLOR,
-    inherit: 'inherit',
-  }
-
-  const variantMap = {
-    h1: {
-      element: 'h1',
-      classes: 'text-4xl sm:text-5xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
-    },
-    h2: {
-      element: 'h2',
-      classes: 'text-3xl sm:text-4xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
-    },
-    h3: { element: 'h3', classes: 'text-lg sm:text-xl font-semibold' },
-    h4: { element: 'h4', classes: 'text-base sm:text-lg font-semibold' },
-    h5: { element: 'h5', classes: 'text-sm sm:text-base font-semibold' },
-    h6: { element: 'h6', classes: 'text-xs sm:text-sm font-semibold' },
-    body1: { element: 'p', classes: 'text-base sm:text-lg' },
-    body2: { element: 'p', classes: 'text-sm sm:text-base' },
-    caption: { element: 'span', classes: 'text-xs sm:text-sm' },
-    overline: { element: 'span', classes: 'text-xs uppercase tracking-wide' },
-  }
-
-  const resolved = variantMap[variant] ?? variantMap.body1
+  const resolved = VARIANT_CLASSES[variant] ?? VARIANT_CLASSES.body1
   const { element: Element, classes } = resolved
   const Component = component || Element
-  const colorStyle = { color: colorMap[color] || SITE_TEXT_COLOR }
+  const colorStyle = { color: COLOR_CLASSES[color] || SITE_TEXT_COLOR }
   const mergedStyle = style ? { ...colorStyle, ...style } : colorStyle
 
   return (
