@@ -17,7 +17,7 @@ jobs:
   preview:
     name: Cloudflare Preview / v0-portfolio
     if: github.event.pull_request.draft == false
-    uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.28.11
+    uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.28.14
     with:
       mode: preview
       working-directory: .
