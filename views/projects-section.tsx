@@ -79,7 +79,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
 
       {error && (
         <div className="mb-6 text-center">
-          <Typography variant="body2" style={{ color: '#ff6b6b' }}>
+          <Typography variant="body2" className="text-red-400">
             {error} - Showing fallback projects
           </Typography>
         </div>

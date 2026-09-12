@@ -35,7 +35,6 @@ export const SITE_CARD_COLOR = BG
 export const SITE_BTN_COLOR_20 = `${SITE_BTN_COLOR}20` as const
 export const SITE_BTN_COLOR_40 = `${SITE_BTN_COLOR}40` as const
 export const SITE_BTN_COLOR_50 = `${SITE_BTN_COLOR}50` as const
-export const SITE_BTN_COLOR_60 = `${SITE_BTN_COLOR}60` as const
 export const SITE_TEXT_COLOR_20 = `${SITE_TEXT_COLOR}20` as const
 export const SITE_TEXT_COLOR_30 = `${SITE_TEXT_COLOR}30` as const
 export const SITE_BORDER_COLOR_20 = `${SITE_BORDER_COLOR}20` as const
@@ -51,8 +50,8 @@ export const SECTION_SHADOW =
 export const CARD_SHADOW =
   `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR_40}` as const
 export const TIMELINE_DOT_SHADOW =
-  `0 0 0 2px ${SITE_BORDER_COLOR}, 0 0 15px ${SITE_BTN_COLOR_60}` as const
-export const SKILL_BAR_SHADOW = `0 0 8px ${SITE_BTN_COLOR_60}` as const
+  `0 0 0 2px ${SITE_BORDER_COLOR}, 0 0 15px ${SITE_BTN_COLOR}60` as const
+export const SKILL_BAR_SHADOW = `0 0 8px ${SITE_BTN_COLOR}60` as const
 export const PINNED_BADGE_BORDER = `1px solid ${SITE_BTN_COLOR_40}` as const
 export const NAVBAR_SHADOW =
   `0 0 0 1px ${NAV_BORDER_COLOR}, 0 0 10px ${NAV_BORDER_COLOR_60}` as const
