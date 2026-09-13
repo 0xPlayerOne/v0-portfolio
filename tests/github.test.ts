@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 import { fetchPinnedRepos } from '@/lib/github'
+import { FALLBACK_PINNED_REPOS } from '@/constants/github'
 
 function githubRepo(name: string, overrides: Record<string, unknown> = {}) {
   return {
@@ -102,6 +103,27 @@ describe('GitHub project loading', () => {
     expect(console.error).toHaveBeenCalled()
   })
 
+  it('uses curated pinned fallbacks when pinned repository requests fail', async () => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
+      const url = String(input)
+
+      if (url.endsWith('/languages')) return jsonResponse({}, 500)
+      if (url.includes('/users/0xPlayerOne/repos')) return jsonResponse([])
+      if (url.includes('/repos/NiftyLeague/')) return jsonResponse({}, 503)
+      return jsonResponse({}, 404)
+    })
+    globalThis.fetch = fetchMock as any
+
+    const projects = await fetchPinnedRepos()
+
+    expect(projects).toHaveLength(FALLBACK_PINNED_REPOS.length)
+    expect(projects.every((project) => project.isPinned)).toBe(true)
+    expect(projects.map((project) => project.url)).toEqual(
+      FALLBACK_PINNED_REPOS.map((project) => project.url)
+    )
+    expect(projects.every((project) => project.languages.length > 0)).toBe(true)
+  })
+
   it('drops unsafe homepage URLs from GitHub metadata', async () => {
     const fetchMock = mock(async (input: string | URL | Request) => {
       const url = String(input)
@@ -114,6 +136,13 @@ describe('GitHub project loading', () => {
           })
         )
       }
+      if (url.endsWith('/repos/NiftyLeague/nifty-smart-contracts')) {
+        return jsonResponse(
+          githubRepo('nifty-smart-contracts', {
+            html_url: 'https://github.com/NiftyLeague/nifty-smart-contracts',
+          })
+        )
+      }
       if (url.endsWith('/languages')) return jsonResponse({ TypeScript: 100 })
       return jsonResponse({}, 403)
     })
@@ -121,7 +150,7 @@ describe('GitHub project loading', () => {
 
     const projects = await fetchPinnedRepos()
 
-    expect(projects).toHaveLength(1)
+    expect(projects).toHaveLength(2)
     expect(projects[0].homepage).toBeUndefined()
   })
 
@@ -132,21 +161,29 @@ describe('GitHub project loading', () => {
       if (url.includes('/users/0xPlayerOne/repos')) {
         return jsonResponse([], 403)
       }
-      if (url.endsWith('/languages')) {
-        return jsonResponse({ TypeScript: 100 }, 200)
+      if (url.endsWith('/repos/NiftyLeague/nifty-fe-monorepo')) {
+        return jsonResponse(
+          githubRepo('nifty-fe-monorepo', {
+            html_url: 'https://github.com/NiftyLeague/nifty-fe-monorepo',
+          }),
+          200
+        )
       }
-      return jsonResponse(
-        githubRepo('nifty-fe-monorepo', {
-          html_url: 'https://github.com/NiftyLeague/nifty-fe-monorepo',
-        }),
-        200
-      )
+      if (url.endsWith('/repos/NiftyLeague/nifty-smart-contracts')) {
+        return jsonResponse(
+          githubRepo('nifty-smart-contracts', {
+            html_url: 'https://github.com/NiftyLeague/nifty-smart-contracts',
+          }),
+          200
+        )
+      }
+      return jsonResponse({}, 403)
     })
     globalThis.fetch = fetchMock as any
 
     const projects = await fetchPinnedRepos()
 
-    // Popular repos return [] on 403, so only pinned repos are included
+    // Popular repos return [] on 403, so only the live pinned repos are included.
     expect(projects.length).toBe(2)
     expect(projects.every((p) => p.isPinned)).toBe(true)
   })
@@ -204,6 +241,20 @@ describe('GitHub project loading', () => {
           200
         )
       }
+      if (url.endsWith('/repos/NiftyLeague/nifty-fe-monorepo')) {
+        return jsonResponse(
+          githubRepo('nifty-fe-monorepo', {
+            html_url: 'https://github.com/NiftyLeague/nifty-fe-monorepo',
+          })
+        )
+      }
+      if (url.endsWith('/repos/NiftyLeague/nifty-smart-contracts')) {
+        return jsonResponse(
+          githubRepo('nifty-smart-contracts', {
+            html_url: 'https://github.com/NiftyLeague/nifty-smart-contracts',
+          })
+        )
+      }
       if (url.endsWith('/languages')) {
         return jsonResponse({ TypeScript: 100 }, 200)
       }
@@ -213,12 +264,15 @@ describe('GitHub project loading', () => {
 
     const projects = await fetchPinnedRepos()
 
-    // All three pass the filter (no "fork" in name, all have descriptions)
-    // Sort by score (stars + forks): beta(23) > alpha(15) > gamma(6)
-    expect(projects.length).toBe(3)
-    expect(projects[0].title).toBe('Beta Tool')
-    expect(projects[1].title).toBe('Alpha Tool')
-    expect(projects[2].title).toBe('Gamma Tool')
+    // All three pass the filter (no "fork" in name, all have descriptions).
+    // The live pinned projects stay first; popular repos sort by score:
+    // beta(23) > alpha(15) > gamma(6).
+    expect(projects).toHaveLength(5)
+    expect(projects.slice(2).map((project) => project.title)).toEqual([
+      'Beta Tool',
+      'Alpha Tool',
+      'Gamma Tool',
+    ])
   })
 
   it('returns empty languages when rate-limited (403) and uses fallback when available', async () => {
@@ -245,10 +299,13 @@ describe('GitHub project loading', () => {
 
     const projects = await fetchPinnedRepos()
 
-    // The popular repo has no fallback, so languages stay empty after 403
-    expect(projects.length).toBe(1)
-    expect(projects[0].languages).toHaveLength(0)
-    expect(projects[0].title).toBe('Unknown Project')
+    // The popular repo has no fallback, so its languages stay empty after 403.
+    expect(projects).toHaveLength(FALLBACK_PINNED_REPOS.length + 1)
+    const unknownProject = projects.find((project) => project.title === 'Unknown Project')
+    expect(unknownProject?.languages).toHaveLength(0)
+    expect(projects.filter((project) => project.isPinned)).toHaveLength(
+      FALLBACK_PINNED_REPOS.length
+    )
     expect(console.warn).toHaveBeenCalled()
   })
 
