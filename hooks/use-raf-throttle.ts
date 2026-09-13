@@ -25,10 +25,15 @@ export function useRafThrottle(callback: () => void): () => void {
     }
     if (rafIdRef.current !== null) return
 
-    rafIdRef.current = window.requestAnimationFrame(() => {
+    let frameCompletedSynchronously = false
+    const frameId = window.requestAnimationFrame(() => {
+      frameCompletedSynchronously = true
       rafIdRef.current = null
       callbackRef.current()
     })
+    if (!frameCompletedSynchronously) {
+      rafIdRef.current = frameId
+    }
   }, [])
 
   // Cleanup any pending frame on unmount.
