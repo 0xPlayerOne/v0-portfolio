@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef } from 'react'
 
 /**
  * Coalesces rapid callbacks (e.g. scroll/resize) to at most one invocation
- * per animation frame. Subsequent calls within the same frame cancel the
- * pending frame and schedule a new one — preventing queue buildup on
- * high-frequency events like trackpad scroll.
+ * per animation frame. Calls while a frame is pending are ignored, which
+ * prevents both queue buildup and callback starvation on high-frequency
+ * events like trackpad scroll.
  *
  * Returns a stable `schedule` callback and handles cleanup automatically
  * when the consumer unmounts.
@@ -23,13 +23,17 @@ export function useRafThrottle(callback: () => void): () => void {
       callbackRef.current()
       return
     }
-    if (rafIdRef.current !== null) {
-      cancelAnimationFrame(rafIdRef.current)
-    }
-    rafIdRef.current = window.requestAnimationFrame(() => {
+    if (rafIdRef.current !== null) return
+
+    let frameCompletedSynchronously = false
+    const frameId = window.requestAnimationFrame(() => {
+      frameCompletedSynchronously = true
       rafIdRef.current = null
       callbackRef.current()
     })
+    if (!frameCompletedSynchronously) {
+      rafIdRef.current = frameId
+    }
   }, [])
 
   // Cleanup any pending frame on unmount.
