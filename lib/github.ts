@@ -28,16 +28,22 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
     fetchPopularRepositories(),
   ])
 
-  // Filter out pinned repos from popular repos to avoid duplicates
+  // Keep curated pinned projects visible when an individual GitHub request
+  // fails. Popular results still fill the remaining slots afterward.
   const pinnedUrls = new Set(pinnedRepos.map((repo) => repo.url))
-  const filteredPopularRepos = popularRepos.filter((repo) => !pinnedUrls.has(repo.url))
+  const pinnedReposWithFallbacks = [
+    ...pinnedRepos,
+    ...FALLBACK_PINNED_REPOS.filter((repo) => !pinnedUrls.has(repo.url)),
+  ]
+  const pinnedAndFallbackUrls = new Set(pinnedReposWithFallbacks.map((repo) => repo.url))
+  const filteredPopularRepos = popularRepos.filter((repo) => !pinnedAndFallbackUrls.has(repo.url))
 
   // Combine pinned repos (first) with popular repos to reach MAX_PROJECTS
-  const neededPopular = Math.max(0, MAX_PROJECTS - pinnedRepos.length)
-  const selectedRepos = [...pinnedRepos, ...filteredPopularRepos.slice(0, neededPopular)].slice(
-    0,
-    MAX_PROJECTS
-  )
+  const neededPopular = Math.max(0, MAX_PROJECTS - pinnedReposWithFallbacks.length)
+  const selectedRepos = [
+    ...pinnedReposWithFallbacks,
+    ...filteredPopularRepos.slice(0, neededPopular),
+  ].slice(0, MAX_PROJECTS)
 
   // Resolve fallback languages once instead of re-spreading per repo
   // (FALLBACK_PROJECT_MAP is hoisted to module scope)
