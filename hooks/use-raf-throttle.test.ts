@@ -49,6 +49,22 @@ describe('useRafThrottle', () => {
     expect(callback).toHaveBeenCalledTimes(1)
   })
 
+  it('keeps one pending frame during a sustained event burst', () => {
+    const callback = mock()
+    const { result } = renderHook(() => useRafThrottle(callback))
+    const raf = stubRaf()
+
+    result.current()
+    result.current()
+    result.current()
+
+    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1)
+    expect(window.cancelAnimationFrame).not.toHaveBeenCalled()
+
+    raf.tick()
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
+
   it('calls the callback immediately when requestAnimationFrame is unavailable', () => {
     const callback = mock()
     const { result } = renderHook(() => useRafThrottle(callback))
