@@ -11,10 +11,10 @@ describe('cn', () => {
   })
 
   it('handles conditional (falsy) values', () => {
-    expect(cn('base', false, null, undefined, 'active')).toBe('base active')
+    expect(cn('p-4', false, null, undefined, 'm-2')).toBe('p-4 m-2')
   })
 
   it('merges object syntax from clsx', () => {
-    expect(cn('base', { 'is-on': true, 'is-off': false })).toBe('base is-on')
+    expect(cn('p-4', { 'm-2': true, hidden: false })).toBe('p-4 m-2')
   })
 })

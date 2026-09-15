@@ -1,12 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'bun:test'
 
-import {
-  SITE_HEADER_COLOR,
-  SITE_SUBHEADER_COLOR,
-  SITE_TEXT_COLOR,
-  SITE_SUBTEXT_COLOR,
-} from '@/constants/colors'
 import { Typography } from '@/components/ui/typography'
 
 describe('Typography', () => {
@@ -52,33 +46,34 @@ describe('Typography', () => {
 
   describe('color', () => {
     const colorCases: [string, string][] = [
-      ['primary', SITE_HEADER_COLOR],
-      ['secondary', SITE_SUBHEADER_COLOR],
-      ['textPrimary', SITE_TEXT_COLOR],
-      ['textSecondary', SITE_SUBTEXT_COLOR],
-      ['inherit', 'inherit'],
+      ['primary', 'text-site-header'],
+      ['secondary', 'text-site-subheader'],
+      ['textPrimary', 'text-site-text'],
+      ['textSecondary', 'text-site-subtext'],
+      ['inherit', 'text-inherit'],
+      ['destructive', 'text-destructive'],
     ]
 
-    for (const [color, expectedCss] of colorCases) {
-      it(`applies color="${color}" as inline style "${expectedCss}"`, () => {
+    for (const [color, expectedClass] of colorCases) {
+      it(`applies color="${color}" as class "${expectedClass}"`, () => {
         render(
           <Typography color={color as any} variant="body1">
             colored
           </Typography>
         )
         const el = screen.getByText('colored')
-        expect(el.style.color).toBe(expectedCss)
+        expect(el.className).toContain(expectedClass)
       })
     }
 
-    it('falls back to SITE_TEXT_COLOR for an unknown color value', () => {
+    it('falls back to text-site-text for an unknown color value', () => {
       render(
         <Typography color={'nonexistent' as any} variant="body1">
           unknown
         </Typography>
       )
       const el = screen.getByText('unknown')
-      expect(el.style.color).toBe(SITE_TEXT_COLOR)
+      expect(el.className).toContain('text-site-text')
     })
   })
 
@@ -163,23 +158,23 @@ describe('Typography', () => {
   describe('className passthrough', () => {
     it('merges additional className via cn()', () => {
       const { container } = render(
-        <Typography variant="body1" className="my-custom-class">
+        <Typography variant="body1" className="mt-2">
           custom
         </Typography>
       )
       const el = container.querySelector('p')
-      expect(el?.className).toContain('my-custom-class')
+      expect(el?.className).toContain('mt-2')
     })
 
     it('preserves variant classes when className is added', () => {
       const { container } = render(
-        <Typography variant="h1" className="extra-class">
+        <Typography variant="h1" className="mb-2">
           extra
         </Typography>
       )
       const el = container.querySelector('h1')
       expect(el?.className).toContain('font-pixel')
-      expect(el?.className).toContain('extra-class')
+      expect(el?.className).toContain('mb-2')
     })
   })
 })

@@ -80,10 +80,10 @@ describe('PongGame', () => {
           paddle: '#0f0',
         }}
         headerText={['X', 'Y']}
-        className="extra"
+        className="mt-2"
       />
     )
-    expect(container.querySelector('canvas')?.className).toContain('extra')
+    expect(container.querySelector('canvas')?.className).toContain('mt-2')
   })
 
   it('debounces resize events and reinitializes the game after the timeout', () => {

@@ -14,7 +14,13 @@ export type TypographyVariant =
 
 export type TypographyAlign = 'left' | 'center' | 'right' | 'justify'
 
-export type TypographyColor = 'primary' | 'secondary' | 'textPrimary' | 'textSecondary' | 'inherit'
+export type TypographyColor =
+  | 'primary'
+  | 'secondary'
+  | 'textPrimary'
+  | 'textSecondary'
+  | 'inherit'
+  | 'destructive'
 
 export interface TypographyProps {
   variant?: TypographyVariant

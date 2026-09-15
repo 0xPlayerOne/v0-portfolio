@@ -1,7 +1,8 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, type CSSProperties } from 'react'
 import { RetroCanvas } from './retro-canvas'
 import { RetroNavbar } from './retro-navbar'
 import { useScrollSpy } from '@/hooks/use-scroll-spy'
+import { cn } from '@/lib/utils'
 import { NAVBAR_HEIGHT, NAVIGATION_SECTIONS } from '@/constants/navigation'
 
 export function PongHeader() {
@@ -36,7 +37,10 @@ export function PongHeader() {
           <RetroCanvas navbarHeight={NAVBAR_HEIGHT} />
         </div>
         {/* Use opacity to manage default navbar visibility to maintain layout space */}
-        <div style={{ opacity: isSticky ? 0 : 1, height: NAVBAR_HEIGHT }}>
+        <div
+          className={cn('h-(--nav-h)', isSticky ? 'opacity-0' : 'opacity-100')}
+          style={{ '--nav-h': `${NAVBAR_HEIGHT}px` } as CSSProperties}
+        >
           <RetroNavbar
             height={NAVBAR_HEIGHT}
             isSticky={false}

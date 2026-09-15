@@ -1,9 +1,42 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "jsPlugins": ["@shadcn/lint"],
   "categories": {
     "correctness": "error",
     "suspicious": "warn"
   },
+  "rules": {
+    "shadcn/no-restyle": [
+      "error",
+      {
+        "allow": ["layout"],
+        "contracts": [
+          { "pattern": "^Card$", "allow": ["layout", "animate-*", "shadow-*"] },
+          { "pattern": "^CardContent$", "allow": ["layout", "spacing"] },
+          { "pattern": "^Button$", "allow": ["layout", "typography"] },
+          {
+            "pattern": "^Typography$",
+            "allow": ["layout", "typography", "motion", "glow-text"]
+          }
+        ]
+      }
+    ],
+    "shadcn/no-raw-colors": ["error", { "scanAllStrings": true }],
+    "shadcn/no-arbitrary-values": ["error", { "scanAllStrings": true }],
+    "shadcn/no-inline-styles": "error",
+    "shadcn/no-unknown-classes": "error",
+    "shadcn/require-static-classes": "error"
+  },
+  "overrides": [
+    {
+      "files": ["components/ui/**"],
+      "rules": {
+        "shadcn/no-restyle": "off",
+        "shadcn/no-arbitrary-values": "off",
+        "shadcn/require-static-classes": "off"
+      }
+    }
+  ],
   "ignorePatterns": [
     "node_modules/**",
     "coverage/**",

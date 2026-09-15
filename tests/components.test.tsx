@@ -57,7 +57,7 @@ describe('portfolio sections', () => {
 
     await waitFor(() => {
       const section = document.querySelector<HTMLElement>('#skills')
-      expect(section?.style.minHeight).toBe('max(600px, calc(100dvh - 100px))')
+      expect(section?.className).toContain('100dvh')
     })
   })
 
@@ -81,6 +81,6 @@ describe('portfolio sections', () => {
     )
 
     await waitFor(() => expect(document.querySelector('#resizable')).not.toBeNull())
-    expect(document.querySelector<HTMLElement>('#resizable')?.style.minHeight).toContain('100dvh')
+    expect(document.querySelector<HTMLElement>('#resizable')?.className).toContain('100dvh')
   })
 })

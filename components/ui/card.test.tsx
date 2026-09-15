@@ -22,9 +22,9 @@ describe('Card', () => {
   })
 
   it('merges additional className', () => {
-    const { container } = render(<Card className="my-card">merged</Card>)
+    const { container } = render(<Card className="mt-2">merged</Card>)
     const el = container.querySelector('div')
-    expect(el?.className).toContain('my-card')
+    expect(el?.className).toContain('mt-2')
     expect(el?.className).toContain('rounded-lg')
   })
 
@@ -48,9 +48,9 @@ describe('CardHeader', () => {
   })
 
   it('merges additional className', () => {
-    const { container } = render(<CardHeader className="custom-header">merged</CardHeader>)
+    const { container } = render(<CardHeader className="mb-2">merged</CardHeader>)
     const el = container.querySelector('div')
-    expect(el?.className).toContain('custom-header')
+    expect(el?.className).toContain('mb-2')
     expect(el?.className).toContain('flex')
   })
 })
@@ -67,9 +67,9 @@ describe('CardTitle', () => {
   })
 
   it('merges additional className', () => {
-    const { container } = render(<CardTitle className="custom-title">Title</CardTitle>)
+    const { container } = render(<CardTitle className="mt-1">Title</CardTitle>)
     const el = container.querySelector('div')
-    expect(el?.className).toContain('custom-title')
+    expect(el?.className).toContain('mt-1')
     expect(el?.className).toContain('font-semibold')
   })
 })
@@ -85,9 +85,9 @@ describe('CardDescription', () => {
   })
 
   it('merges additional className', () => {
-    const { container } = render(<CardDescription className="custom-desc">desc</CardDescription>)
+    const { container } = render(<CardDescription className="px-2">desc</CardDescription>)
     const el = container.querySelector('div')
-    expect(el?.className).toContain('custom-desc')
+    expect(el?.className).toContain('px-2')
     expect(el?.className).toContain('text-muted-foreground')
   })
 })
@@ -103,9 +103,9 @@ describe('CardContent', () => {
   })
 
   it('merges additional className', () => {
-    const { container } = render(<CardContent className="custom-body">body</CardContent>)
+    const { container } = render(<CardContent className="pb-2">body</CardContent>)
     const el = container.querySelector('div')
-    expect(el?.className).toContain('custom-body')
+    expect(el?.className).toContain('pb-2')
     expect(el?.className).toContain('p-6')
   })
 })
@@ -123,9 +123,9 @@ describe('CardFooter', () => {
   })
 
   it('merges additional className', () => {
-    const { container } = render(<CardFooter className="custom-footer">footer</CardFooter>)
+    const { container } = render(<CardFooter className="mt-4">footer</CardFooter>)
     const el = container.querySelector('div')
-    expect(el?.className).toContain('custom-footer')
+    expect(el?.className).toContain('mt-4')
     expect(el?.className).toContain('flex')
   })
 })

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, type CSSProperties } from 'react'
 import { ExternalLink, Star, GitFork, RefreshCw, Pin } from 'lucide-react'
 import { Github } from '@/lib/brand-icons'
 
@@ -12,15 +12,7 @@ import { GameCreditsCard } from '@/components/game-credits'
 import type { PinnedRepo } from '@/types/github'
 import { GITHUB_LINK } from '@/constants/links'
 import { LANGUAGES_DISPLAYED, MAX_PROJECTS } from '@/constants/github'
-import {
-  SITE_BTN_COLOR,
-  SITE_BTN_COLOR_20,
-  PINNED_BADGE_BORDER,
-  CANVAS_COLOR,
-  SITE_TEXT_COLOR,
-  OUTLINE_BTN_STYLE,
-} from '@/constants/colors'
-import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
+import { useCardHover } from '@/lib/card-styles'
 import { getLanguageColor } from '@/lib/language-colors'
 import { cn } from '@/lib/utils'
 
@@ -65,13 +57,12 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
           Projects
         </Typography>
         <Button
-          variant="outline"
+          variant="site-outline"
           size="sm"
           aria-label="Refresh projects"
           onClick={() => loadProjects()}
           disabled={loading}
-          className="border-0 hover:scale-105"
-          style={OUTLINE_BTN_STYLE}
+          className="hover:scale-105"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
         </Button>
@@ -79,7 +70,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
 
       {error && (
         <div className="mb-6 text-center">
-          <Typography variant="body2" className="text-red-400">
+          <Typography variant="body2" color="destructive">
             {error} - Showing fallback projects
           </Typography>
         </div>
@@ -97,14 +88,14 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
         {loading ? (
           <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
             {[...Array(MAX_PROJECTS)].map((_, index) => (
-              <Card key={index} className="animate-pulse border-0" style={CARD_BASE_STYLE}>
+              <Card key={index} variant="site" className="animate-pulse">
                 <CardContent className="p-6 sm:p-8">
-                  <div className="mb-4 h-6 rounded bg-gray-600"></div>
-                  <div className="mb-2 h-4 rounded bg-gray-700"></div>
-                  <div className="mb-4 h-4 w-3/4 rounded bg-gray-700"></div>
+                  <div className="bg-skeleton mb-4 h-6 rounded"></div>
+                  <div className="bg-skeleton-deep mb-2 h-4 rounded"></div>
+                  <div className="bg-skeleton-deep mb-4 h-4 w-3/4 rounded"></div>
                   <div className="flex gap-2">
-                    <div className="h-6 w-16 rounded bg-gray-600"></div>
-                    <div className="h-6 w-20 rounded bg-gray-600"></div>
+                    <div className="bg-skeleton h-6 w-16 rounded"></div>
+                    <div className="bg-skeleton h-6 w-20 rounded"></div>
                   </div>
                 </CardContent>
               </Card>
@@ -115,21 +106,14 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
             {projects.map((project) => (
               <Card
                 key={project.url}
-                className="group relative border-0 transition-all duration-300 hover:scale-105"
-                style={CARD_BASE_STYLE}
+                variant="site"
+                className="group relative hover:scale-105"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 {project.isPinned && (
                   <div className="absolute top-3 left-3 z-10">
-                    <div
-                      className="flex items-center gap-1 rounded-full px-2 py-1 text-xs"
-                      style={{
-                        backgroundColor: SITE_BTN_COLOR_20,
-                        color: SITE_BTN_COLOR,
-                        border: PINNED_BADGE_BORDER,
-                      }}
-                    >
+                    <div className="border-site-btn-40 bg-site-btn-20 text-site-btn flex items-center gap-1 rounded-full border px-2 py-1 text-xs">
                       <Pin size={12} />
                       <span>Pinned</span>
                     </div>
@@ -147,24 +131,20 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
                     {/* Stars and forks display - horizontal, right-aligned */}
                     <div
                       className={cn(
-                        'flex min-w-[120px] items-center justify-end gap-4',
+                        'flex min-w-30 items-center justify-end gap-4',
                         project.isPinned ? 'mt-8' : ''
                       )}
                     >
                       {project.forks > 0 && (
                         <div className="flex items-center gap-1">
-                          <GitFork size={14} style={{ color: SITE_BTN_COLOR }} />
-                          <Typography variant="caption" style={{ color: SITE_TEXT_COLOR }}>
-                            {project.forks}
-                          </Typography>
+                          <GitFork size={14} className="text-site-btn" />
+                          <Typography variant="caption">{project.forks}</Typography>
                         </div>
                       )}
                       {project.stars > 0 && (
                         <div className="flex items-center gap-1">
-                          <Star size={14} style={{ color: SITE_BTN_COLOR }} />
-                          <Typography variant="caption" style={{ color: SITE_TEXT_COLOR }}>
-                            {project.stars}
-                          </Typography>
+                          <Star size={14} className="text-site-btn" />
+                          <Typography variant="caption">{project.stars}</Typography>
                         </div>
                       )}
                     </div>
@@ -180,21 +160,15 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
                       {project.languages.slice(0, LANGUAGES_DISPLAYED).map((lang) => (
                         <div key={lang.name} className="flex items-center gap-1.5 text-sm">
                           <div
-                            className="h-3 w-3 flex-shrink-0 rounded-full"
-                            style={{
-                              backgroundColor: getLanguageColor(lang.name),
-                            }}
+                            className="h-3 w-3 flex-shrink-0 rounded-full bg-(--lang-color)"
+                            style={{ '--lang-color': getLanguageColor(lang.name) } as CSSProperties}
                           />
-                          <span className="text-sm" style={{ color: SITE_TEXT_COLOR }}>
-                            {lang.name}
-                          </span>
-                          <span className="text-xs" style={{ color: SITE_TEXT_COLOR }}>
-                            ({lang.percentage}%)
-                          </span>
+                          <span className="text-site-text text-sm">{lang.name}</span>
+                          <span className="text-site-text text-xs">({lang.percentage}%)</span>
                         </div>
                       ))}
                       {project.languages.length > LANGUAGES_DISPLAYED && (
-                        <span className="text-sm" style={{ color: SITE_TEXT_COLOR }}>
+                        <span className="text-site-text text-sm">
                           +{project.languages.length - LANGUAGES_DISPLAYED} more
                         </span>
                       )}
@@ -204,14 +178,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
                   {project.tech.length > 0 && (
                     <div className="mb-6 flex flex-wrap gap-2">
                       {project.tech.slice(0, 4).map((tech) => (
-                        <Badge
-                          key={tech}
-                          variant="secondary"
-                          style={{
-                            backgroundColor: SITE_BTN_COLOR,
-                            color: CANVAS_COLOR,
-                          }}
-                        >
+                        <Badge key={tech} variant="site">
                           {tech}
                         </Badge>
                       ))}
@@ -220,11 +187,10 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
 
                   <div className="flex gap-3">
                     <Button
-                      variant="outline"
+                      variant="site-outline"
                       size="sm"
                       asChild
-                      className="flex-1 border-0 transition-transform duration-300 hover:scale-105"
-                      style={OUTLINE_BTN_STYLE}
+                      className="flex-1 hover:scale-105"
                     >
                       <a href={project.url} target="_blank" rel="noopener noreferrer">
                         <Github size={16} className="mr-2" />
@@ -232,16 +198,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
                       </a>
                     </Button>
                     {project.homepage && (
-                      <Button
-                        variant="default"
-                        size="sm"
-                        asChild
-                        className="flex-1 transition-transform duration-300 hover:scale-105"
-                        style={{
-                          backgroundColor: SITE_BTN_COLOR,
-                          color: CANVAS_COLOR,
-                        }}
-                      >
+                      <Button variant="site" size="sm" asChild className="flex-1 hover:scale-105">
                         <a href={project.homepage} target="_blank" rel="noopener noreferrer">
                           <ExternalLink size={16} className="mr-2" />
                           Live
@@ -257,12 +214,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
       </div>
 
       <div className="mt-8 text-center">
-        <Button
-          variant="outline"
-          asChild
-          className="border-0 transition-transform duration-300 hover:scale-105"
-          style={OUTLINE_BTN_STYLE}
-        >
+        <Button variant="site-outline" asChild className="hover:scale-105">
           <a href={GITHUB_LINK} target="_blank" rel="noopener noreferrer">
             <Github size={16} className="mr-2" />
             View All Projects on GitHub

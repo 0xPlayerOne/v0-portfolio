@@ -2,19 +2,9 @@ import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  SITE_CARD_COLOR,
-  SITE_CARD_COLOR_80,
-  SITE_BORDER_COLOR,
-  TIMELINE_DOT_SHADOW,
-  SITE_BTN_COLOR,
-  SITE_BTN_COLOR_20,
-  SITE_BTN_COLOR_50,
-  SITE_BTN_BORDER,
-} from '@/constants/colors'
 import { cn } from '@/lib/utils'
 import { ABOUT_CONTENT } from '@/constants/content'
-import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
+import { useCardHover } from '@/lib/card-styles'
 import { useState, memo } from 'react'
 import {
   Zap,
@@ -30,7 +20,7 @@ import {
   Eye,
 } from 'lucide-react'
 
-const STAT_CARD_HOVER = { enterSize: '25px', enterGlow: SITE_BTN_COLOR_50 }
+const STAT_CARD_HOVER = { enterSize: '25px', enterGlow: 'var(--color-site-btn-50)' }
 
 // Memoize the icon map to prevent recreation on each render
 const ICON_MAP = {
@@ -63,14 +53,11 @@ const TabButton = memo(function TabButton({
       aria-pressed={isActive}
       onClick={onClick}
       className={cn(
-        'rounded-md border-0 px-4 py-2 text-sm font-medium transition-all duration-300',
-        isActive ? 'scale-105' : 'transition-transform duration-300 hover:scale-105'
+        'rounded-md px-4 py-2 text-sm font-medium transition-all duration-300',
+        isActive
+          ? 'scale-105 border-0 bg-site-btn text-site-card'
+          : 'border border-site-btn bg-transparent text-site-btn hover:scale-105'
       )}
-      style={{
-        backgroundColor: isActive ? SITE_BTN_COLOR : 'transparent',
-        color: isActive ? SITE_CARD_COLOR : SITE_BTN_COLOR,
-        border: isActive ? 'none' : SITE_BTN_BORDER,
-      }}
     >
       {label}
     </button>
@@ -89,21 +76,17 @@ const ValueCard = memo(function ValueCard({
 
   return (
     <Card
-      className="group border-0 transition-all duration-300 hover:scale-105"
-      style={CARD_BASE_STYLE}
+      variant="site"
+      className="group hover:scale-105"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <CardContent className="p-6 text-center">
         <div className="mb-4 flex justify-center">
-          <div
-            className="rounded-lg p-3 transition-transform duration-300 group-hover:scale-110"
-            style={{ backgroundColor: SITE_BTN_COLOR_20 }}
-          >
+          <div className="bg-site-btn-20 rounded-lg p-3 transition-transform duration-300 group-hover:scale-110">
             <IconComponent
               size={32}
-              style={{ color: SITE_BTN_COLOR }}
-              className="transition-transform duration-300 group-hover:rotate-12"
+              className="text-site-btn transition-transform duration-300 group-hover:rotate-12"
             />
           </div>
         </div>
@@ -126,21 +109,17 @@ const StatCard = memo(function StatCard({ stat }: { stat: (typeof ABOUT_CONTENT.
 
   return (
     <Card
-      className="group border-0 transition-all duration-300 hover:scale-110"
-      style={CARD_BASE_STYLE}
+      variant="site"
+      className="group hover:scale-110"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <CardContent className="p-6 text-center">
         <div className="mb-4 flex justify-center">
-          <div
-            className="rounded-lg p-3 transition-transform duration-300 group-hover:scale-125"
-            style={{ backgroundColor: SITE_BTN_COLOR_20 }}
-          >
+          <div className="bg-site-btn-20 rounded-lg p-3 transition-transform duration-300 group-hover:scale-125">
             <IconComponent
               size={32}
-              style={{ color: SITE_BTN_COLOR }}
-              className="transition-transform duration-300 group-hover:rotate-12"
+              className="text-site-btn transition-transform duration-300 group-hover:rotate-12"
             />
           </div>
         </div>
@@ -148,7 +127,7 @@ const StatCard = memo(function StatCard({ stat }: { stat: (typeof ABOUT_CONTENT.
           variant="h2"
           align="center"
           color="primary"
-          className="group-hover:text-glow mb-2 transition-all duration-300"
+          className="group-hover:glow-text mb-2 transition-all duration-300"
         >
           {stat.value}
         </Typography>
@@ -171,28 +150,14 @@ const JourneyItem = memo(function JourneyItem({
   return (
     <div className="relative flex items-start gap-6">
       {/* Timeline dot with icon */}
-      <div
-        className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border-0 hover:scale-105"
-        style={{
-          backgroundColor: SITE_CARD_COLOR,
-          boxShadow: TIMELINE_DOT_SHADOW,
-        }}
-      >
-        <IconComponent size={24} style={{ color: SITE_BTN_COLOR }} />
+      <div className="bg-site-card glow-dot flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border-0 hover:scale-105">
+        <IconComponent size={24} className="text-site-btn" />
       </div>
 
-      <Card
-        className="group flex-1 border-0 transition-all duration-300 hover:scale-102"
-        style={CARD_BASE_STYLE}
-      >
+      <Card variant="site" className="group flex-1 hover:scale-102">
         <CardContent className="p-6">
           <div className="mb-2 flex items-center gap-3">
-            <Badge
-              variant="secondary"
-              style={{ backgroundColor: SITE_BTN_COLOR, color: SITE_CARD_COLOR }}
-            >
-              {item.year}
-            </Badge>
+            <Badge variant="site">{item.year}</Badge>
             <Typography variant="h3" color="secondary">
               {item.title}
             </Typography>
@@ -219,7 +184,7 @@ export const AboutSection = memo(function AboutSection() {
 
       {/* Tab Navigation */}
       <div className="mb-4 flex justify-center">
-        <div className="flex gap-2 rounded-lg p-1" style={{ backgroundColor: SITE_CARD_COLOR_80 }}>
+        <div className="bg-site-card-80 flex gap-2 rounded-lg p-1">
           <TabButton
             label="Overview"
             isActive={activeTab === 'overview'}
@@ -264,10 +229,7 @@ export const AboutSection = memo(function AboutSection() {
           <div className="mx-auto max-w-4xl">
             <div className="relative">
               {/* Timeline line */}
-              <div
-                className="absolute top-0 bottom-0 left-8 w-0.5"
-                style={{ backgroundColor: SITE_BORDER_COLOR }}
-              />
+              <div className="bg-site-border absolute top-0 bottom-0 left-8 w-0.5" />
 
               <div className="space-y-8">
                 {ABOUT_CONTENT.journey.map((item) => (
