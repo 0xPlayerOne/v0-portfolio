@@ -2,8 +2,7 @@ import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { SITE_BTN_COLOR, SITE_BTN_COLOR_20, CANVAS_COLOR } from '@/constants/colors'
-import { CARD_BASE_STYLE, useCardHover } from '@/lib/card-styles'
+import { useCardHover } from '@/lib/card-styles'
 import { CONTACT_LINKS, CONTACT_CONTENT } from '@/constants/content'
 import { X, Mail } from 'lucide-react'
 import { Github, Linkedin } from '@/lib/brand-icons'
@@ -11,9 +10,9 @@ import { Github, Linkedin } from '@/lib/brand-icons'
 // Hoisted platform lookups — CONTACT_LINKS is static, so the icon/URL
 // mappings are built once at module scope instead of per item per render.
 const CONTACT_ICONS = {
-  twitter: <X size={24} style={{ color: SITE_BTN_COLOR }} />,
-  github: <Github size={24} style={{ color: SITE_BTN_COLOR }} />,
-  linkedin: <Linkedin size={24} style={{ color: SITE_BTN_COLOR }} />,
+  twitter: <X size={24} className="text-site-btn" />,
+  github: <Github size={24} className="text-site-btn" />,
+  linkedin: <Linkedin size={24} className="text-site-btn" />,
 } as const
 
 const CONTACT_URLS = {
@@ -52,8 +51,8 @@ export function ContactSection() {
             return (
               <Card
                 key={contact.platform}
-                className="group cursor-pointer border-0 transition-all duration-300 hover:scale-105"
-                style={CARD_BASE_STYLE}
+                variant="site"
+                className="group cursor-pointer hover:scale-105"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
@@ -65,10 +64,7 @@ export function ContactSection() {
                     className="block text-center"
                   >
                     <div className="mb-3 flex justify-center">
-                      <div
-                        className="rounded-lg p-3 transition-transform duration-300 group-hover:scale-110"
-                        style={{ backgroundColor: SITE_BTN_COLOR_20 }}
-                      >
+                      <div className="bg-site-btn-20 rounded-lg p-3 transition-transform duration-300 group-hover:scale-110">
                         {CONTACT_ICONS[platform] ?? null}
                       </div>
                     </div>
@@ -85,9 +81,9 @@ export function ContactSection() {
           })}
         </div>
         <Button
+          variant="site"
           size="lg"
-          className="group text-base transition-transform duration-300 hover:scale-105 sm:text-lg"
-          style={{ backgroundColor: SITE_BTN_COLOR, color: CANVAS_COLOR }}
+          className="group text-base hover:scale-105 sm:text-lg"
           onClick={handleContactClick}
         >
           <Mail

@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'bun:test'
 
 import { Section } from '@/components/ui/section'
-import { SITE_BG_COLOR, SITE_TEXT_COLOR, SITE_BORDER_COLOR } from '@/constants/colors'
 
 describe('Section', () => {
   it('renders the section element with the given id and children', () => {
@@ -35,16 +34,16 @@ describe('Section', () => {
   it('uses CSS viewport units with a 600px floor without runtime resize state', () => {
     const { container } = render(<Section id="h1">x</Section>)
     const section = container.querySelector<HTMLElement>('section')
-    expect(section?.style.minHeight).toBe('max(600px, calc(100dvh - 100px))')
+    expect(section?.className).toContain('min-h-')
+    expect(section?.className).toContain('100dvh')
   })
 
   it('applies static style with site colors', () => {
     const { container } = render(<Section id="styled">x</Section>)
     const section = container.querySelector<HTMLElement>('section')
-    expect(section?.style.backgroundColor).toBe(SITE_BG_COLOR)
-    expect(section?.style.color).toBe(SITE_TEXT_COLOR)
-    expect(section?.style.boxShadow).toContain(SITE_BORDER_COLOR)
-    expect(section?.style.boxShadow).toContain('20')
+    expect(section?.className).toContain('bg-site-bg')
+    expect(section?.className).toContain('text-site-text')
+    expect(section?.className).toContain('surface-section')
   })
 
   it('renders multiple independent sections with distinct ids', () => {

@@ -1,11 +1,5 @@
 import { cn } from '@/lib/utils'
-import {
-  SITE_HEADER_COLOR,
-  SITE_SUBHEADER_COLOR,
-  SITE_TEXT_COLOR,
-  SITE_SUBTEXT_COLOR,
-} from '@/constants/colors'
-import type { TypographyProps } from '@/types/typography'
+import type { TypographyProps, TypographyVariant } from '@/types/typography'
 
 const ALIGN_CLASSES = {
   left: 'text-left',
@@ -15,31 +9,39 @@ const ALIGN_CLASSES = {
 } as const
 
 const COLOR_CLASSES = {
-  primary: SITE_HEADER_COLOR,
-  secondary: SITE_SUBHEADER_COLOR,
-  textPrimary: SITE_TEXT_COLOR,
-  textSecondary: SITE_SUBTEXT_COLOR,
-  inherit: 'inherit',
+  primary: 'text-site-header',
+  secondary: 'text-site-subheader',
+  textPrimary: 'text-site-text',
+  textSecondary: 'text-site-subtext',
+  inherit: 'text-inherit',
+  destructive: 'text-destructive',
 } as const
 
 const VARIANT_CLASSES = {
-  h1: {
-    element: 'h1',
-    classes: 'text-4xl sm:text-5xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
-  },
-  h2: {
-    element: 'h2',
-    classes: 'text-3xl sm:text-4xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
-  },
-  h3: { element: 'h3', classes: 'text-lg sm:text-xl font-semibold' },
-  h4: { element: 'h4', classes: 'text-base sm:text-lg font-semibold' },
-  h5: { element: 'h5', classes: 'text-sm sm:text-base font-semibold' },
-  h6: { element: 'h6', classes: 'text-xs sm:text-sm font-semibold' },
-  body1: { element: 'p', classes: 'text-base sm:text-lg' },
-  body2: { element: 'p', classes: 'text-sm sm:text-base' },
-  caption: { element: 'span', classes: 'text-xs sm:text-sm' },
-  overline: { element: 'span', classes: 'text-xs uppercase tracking-wide' },
+  h1: 'text-4xl sm:text-5xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
+  h2: 'text-3xl sm:text-4xl font-bold font-pixel uppercase [word-spacing:-0.5em]',
+  h3: 'text-lg sm:text-xl font-semibold',
+  h4: 'text-base sm:text-lg font-semibold',
+  h5: 'text-sm sm:text-base font-semibold',
+  h6: 'text-xs sm:text-sm font-semibold',
+  body1: 'text-base sm:text-lg',
+  body2: 'text-sm sm:text-base',
+  caption: 'text-xs sm:text-sm',
+  overline: 'text-xs uppercase tracking-wide',
 } as const
+
+function defaultElement(variant: TypographyVariant) {
+  switch (variant) {
+    case 'body1':
+    case 'body2':
+      return 'p'
+    case 'caption':
+    case 'overline':
+      return 'span'
+    default:
+      return variant
+  }
+}
 
 export function Typography({
   variant = 'body1',
@@ -54,16 +56,20 @@ export function Typography({
 }: TypographyProps) {
   const alignClass = ALIGN_CLASSES[align as keyof typeof ALIGN_CLASSES] ?? ALIGN_CLASSES.left
   const gutterClass = gutterBottom ? 'mb-4' : ''
-  const resolved = VARIANT_CLASSES[variant] ?? VARIANT_CLASSES.body1
-  const { element: Element, classes } = resolved
-  const Component = component || Element
-  const colorStyle = { color: COLOR_CLASSES[color] || SITE_TEXT_COLOR }
-  const mergedStyle = style ? { ...colorStyle, ...style } : colorStyle
+  const resolvedVariant = variant in VARIANT_CLASSES ? variant : 'body1'
+  const Component = component || defaultElement(resolvedVariant)
+  const colorClass = COLOR_CLASSES[color] ?? COLOR_CLASSES.textPrimary
 
   return (
     <Component
-      className={cn(classes, alignClass, gutterClass, className)}
-      style={mergedStyle}
+      className={cn(
+        VARIANT_CLASSES[resolvedVariant],
+        colorClass,
+        alignClass,
+        gutterClass,
+        className
+      )}
+      style={style}
       {...props}
     >
       {children}

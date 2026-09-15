@@ -1,17 +1,9 @@
 import { Section } from '@/components/ui/section'
 import { Typography } from '@/components/ui/typography'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  SITE_TEXT_COLOR,
-  SITE_TEXT_COLOR_20,
-  SITE_TEXT_COLOR_30,
-  SITE_BORDER_COLOR_40,
-  SITE_BTN_COLOR,
-  SITE_BTN_COLOR_20,
-  SKILL_BAR_SHADOW,
-} from '@/constants/colors'
+import type { CSSProperties } from 'react'
+import { cn } from '@/lib/utils'
 import { SKILLS_DATA } from '@/constants/content'
-import { CARD_BASE_STYLE } from '@/lib/card-styles'
 import { Code2, Gamepad2, Users, Briefcase, Palette, Blocks } from 'lucide-react'
 
 const SKILL_ICONS = {
@@ -41,20 +33,16 @@ export function SkillsSection() {
             return (
               <Card
                 key={skillGroup.category}
-                className="group border-0 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                style={CARD_BASE_STYLE}
+                variant="site"
+                className="group hover:scale-105 hover:shadow-lg"
               >
                 <CardContent className="p-4 sm:p-6">
                   <div className="mb-4 flex items-center gap-3">
                     {IconComponent && (
-                      <div
-                        className="rounded-lg p-2 transition-colors duration-300 group-hover:scale-110"
-                        style={{ backgroundColor: SITE_BTN_COLOR_20 }}
-                      >
+                      <div className="bg-site-btn-20 rounded-lg p-2 transition-colors duration-300 group-hover:scale-110">
                         <IconComponent
                           size={24}
-                          style={{ color: SITE_BTN_COLOR }}
-                          className="transition-transform duration-300 group-hover:rotate-12"
+                          className="text-site-btn transition-transform duration-300 group-hover:rotate-12"
                         />
                       </div>
                     )}
@@ -76,26 +64,18 @@ export function SkillsSection() {
                               {[...Array(5)].map((_, i) => (
                                 <div
                                   key={i}
-                                  className="h-2 w-2 rounded-full transition-all duration-300"
-                                  style={{
-                                    backgroundColor:
-                                      i < filledDots ? SITE_BTN_COLOR : SITE_TEXT_COLOR_30,
-                                  }}
+                                  className={cn(
+                                    'h-2 w-2 rounded-full transition-all duration-300',
+                                    i < filledDots ? 'bg-site-btn' : 'bg-site-text-30'
+                                  )}
                                 />
                               ))}
                             </div>
                           </div>
-                          <div
-                            className="h-1 rounded-full transition-all duration-500 group-hover/skill:h-2"
-                            style={{ backgroundColor: SITE_TEXT_COLOR_20 }}
-                          >
+                          <div className="bg-site-text-20 h-1 rounded-full transition-all duration-500 group-hover/skill:h-2">
                             <div
-                              className="h-full rounded-full transition-all duration-700 ease-out"
-                              style={{
-                                backgroundColor: SITE_BTN_COLOR,
-                                width: `${skill.level}%`,
-                                boxShadow: SKILL_BAR_SHADOW,
-                              }}
+                              className="bg-site-btn glow-bar h-full w-(--skill-level) rounded-full transition-all duration-700 ease-out"
+                              style={{ '--skill-level': `${skill.level}%` } as CSSProperties}
                             />
                           </div>
                         </div>
@@ -103,15 +83,10 @@ export function SkillsSection() {
                     })}
                   </div>
 
-                  <div className="mt-4 border-t pt-4" style={{ borderColor: SITE_BORDER_COLOR_40 }}>
+                  <div className="border-site-border-40 mt-4 border-t pt-4">
                     <div className="flex items-center justify-between text-xs">
-                      <span style={{ color: SITE_TEXT_COLOR }}>
-                        {skillGroup.skills.length} core skills
-                      </span>
-                      <span
-                        className="rounded px-2 py-1 font-mono"
-                        style={{ backgroundColor: SITE_BTN_COLOR_20 }}
-                      >
+                      <span className="text-site-text">{skillGroup.skills.length} core skills</span>
+                      <span className="bg-site-btn-20 rounded px-2 py-1 font-mono">
                         <Typography variant="caption" color="textSecondary">
                           LVL {avgLevel}
                         </Typography>

@@ -26,9 +26,9 @@ describe('Github brand icon', () => {
   })
 
   it('forwards additional HTML props like className', () => {
-    const { container } = render(<Github className="icon-large" />)
+    const { container } = render(<Github className="h-8" />)
     const svg = container.querySelector('svg')
-    expect(svg?.getAttribute('class')).toBe('icon-large')
+    expect(svg?.getAttribute('class')).toBe('h-8')
   })
 
   it('renders a path element for the icon shape', () => {

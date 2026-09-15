@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'bun:test'
 
-import { SITE_BORDER_COLOR, SITE_BTN_COLOR } from '@/constants/colors'
 import { CONTACT_CONTENT, CONTACT_LINKS } from '@/constants/content'
 import { ContactSection } from '@/views/contact-section'
 
@@ -34,10 +33,10 @@ describe('ContactSection', () => {
     const card = container.querySelector<HTMLElement>('.cursor-pointer')
     expect(card).not.toBeNull()
 
-    const restShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 10px ${SITE_BORDER_COLOR}40`
-    const hoverShadow = `0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR}40`
+    const restShadow = '0 0 0 1px var(--color-site-border), 0 0 10px var(--color-site-border-40)'
+    const hoverShadow = '0 0 0 1px var(--color-site-border), 0 0 20px var(--color-site-btn-40)'
 
-    expect(card!.style.boxShadow).toBe(restShadow)
+    expect(card!.className).toContain('surface-card')
 
     fireEvent.mouseEnter(card!)
     expect(card!.style.boxShadow).toBe(hoverShadow)

@@ -3,7 +3,6 @@ import '../styles/fonts.css'
 import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url'
 import pixelFont from '@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2?url'
 import '../styles/globals.css'
-import { SITE_BORDER_COLOR, SITE_BTN_COLOR_40 } from '../../constants/colors'
 
 interface Props { title?: string; description?: string; noindex?: boolean }
 const {
@@ -12,7 +11,7 @@ const {
   noindex = false,
 } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site)
-const variables = `--font-press-start-2p: "Press Start 2P"; --skill-hover-shadow: 0 0 0 1px ${SITE_BORDER_COLOR}, 0 0 20px ${SITE_BTN_COLOR_40}`
+const variables = `--font-press-start-2p: "Press Start 2P"; --skill-hover-shadow: 0 0 0 1px var(--color-site-border), 0 0 20px var(--color-site-btn-40)`
 ---
 
 <!doctype html>

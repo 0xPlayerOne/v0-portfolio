@@ -2,6 +2,41 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  /* Site palette — mirrors constants/colors.ts for class-based styling */
+  --color-site-bg: #18161a;
+  --color-site-header: #33ff33;
+  --color-site-subheader: #b19cd9;
+  --color-site-text: #90ee90;
+  --color-site-subtext: #b19cd9;
+  --color-site-btn: #b19cd9;
+  --color-site-card: #18161a;
+  --color-site-border: #9933ff;
+  --color-canvas: #18161a;
+  --color-nav-bg: #18161a;
+  --color-nav-border: #9933ff;
+  --color-nav-text: #33ff33;
+  --color-nav-hover: #226622;
+
+  /* Alpha variants (hex alpha suffix: 20≈12%, 30≈19%, 40≈25%, 50≈31%, 60≈38%, 80≈50%, f8≈97%) */
+  --color-site-btn-20: #b19cd920;
+  --color-site-btn-40: #b19cd940;
+  --color-site-btn-50: #b19cd950;
+  --color-site-text-20: #90ee9020;
+  --color-site-text-30: #90ee9030;
+  --color-site-border-20: #9933ff20;
+  --color-site-border-30: #9933ff30;
+  --color-site-border-40: #9933ff40;
+  --color-site-card-80: #18161a80;
+  --color-site-btn-60: #b19cd960;
+  --color-nav-bg-f8: #18161af8;
+  --color-nav-border-60: #9933ff60;
+
+  /* Skeleton placeholders (raw gray-600/gray-700 equivalents) */
+  --color-skeleton: #4b5563;
+  --color-skeleton-deep: #374151;
+}
+
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -54,10 +89,56 @@
 }
 
 /* Pixel font styling — variable supplied by the Astro layout */
-.font-pixel {
+@utility font-pixel {
   font-family: var(--font-press-start-2p), 'Press Start 2P', cursive;
   letter-spacing: 0.05em;
   line-height: 1.5;
+}
+
+/* Neon glow for emphasized text (e.g. stats on card hover) */
+@utility glow-text {
+  text-shadow:
+    0 0 6px var(--color-site-header),
+    0 0 14px var(--color-site-btn);
+}
+
+/* Nav link text treatment: crisp pixel rendering */
+@utility nav-link {
+  color: var(--color-nav-text);
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+}
+
+/* Sticky navbar backdrop (includes the WebKit-prefixed variant) */
+@utility nav-blur {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Composite box-shadow treatments (mirror constants/colors.ts) */
+@utility surface-section {
+  box-shadow:
+    0 0 0 1px var(--color-site-border-20),
+    0 0 5px var(--color-site-border-30);
+}
+@utility surface-card {
+  box-shadow:
+    0 0 0 1px var(--color-site-border),
+    0 0 10px var(--color-site-border-40);
+}
+@utility surface-nav {
+  box-shadow:
+    0 0 0 1px var(--color-nav-border),
+    0 0 10px var(--color-nav-border-60);
+}
+@utility glow-dot {
+  box-shadow:
+    0 0 0 2px var(--color-site-border),
+    0 0 15px var(--color-site-btn-60);
+}
+@utility glow-bar {
+  box-shadow: 0 0 8px var(--color-site-btn-60);
 }
 
 body {

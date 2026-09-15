@@ -1,5 +1,3 @@
-import { SITE_BTN_COLOR } from '@/constants/colors'
-
 // Hoisted to module scope — this map is static and was previously re-created
 // on every getLanguageColor() call from inside the render loop.
 const LANGUAGE_COLORS: Record<string, string> = {
@@ -24,4 +22,5 @@ const LANGUAGE_COLORS: Record<string, string> = {
   Shell: '#89e051',
 }
 
-export const getLanguageColor = (language: string) => LANGUAGE_COLORS[language] || SITE_BTN_COLOR
+export const getLanguageColor = (language: string) =>
+  LANGUAGE_COLORS[language] || 'var(--color-site-btn)'
