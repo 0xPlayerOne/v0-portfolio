@@ -150,7 +150,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
                     </div>
                   </div>
 
-                  <Typography variant="body1" gutterBottom className="mb-4">
+                  <Typography variant="body1" gutterBottom>
                     {project.description}
                   </Typography>
 

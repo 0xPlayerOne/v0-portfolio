@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import type { MouseEvent } from 'react'
 
 const DEFAULT_ENTER_SIZE = '20px'
 const DEFAULT_ENTER_GLOW = 'var(--color-site-btn-40)'
@@ -17,14 +18,14 @@ export function useCardHover(options?: {
   const leaveGlow = options?.leaveGlow ?? DEFAULT_LEAVE_GLOW
 
   const handleMouseEnter = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+    (e: MouseEvent<HTMLDivElement>) => {
       e.currentTarget.style.boxShadow = `0 0 0 1px var(--color-site-border), 0 0 ${enterSize} ${enterGlow}`
     },
     [enterSize, enterGlow]
   )
 
   const handleMouseLeave = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+    (e: MouseEvent<HTMLDivElement>) => {
       e.currentTarget.style.boxShadow = `0 0 0 1px var(--color-site-border), 0 0 ${leaveSize} ${leaveGlow}`
     },
     [leaveSize, leaveGlow]
