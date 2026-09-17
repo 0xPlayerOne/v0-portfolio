@@ -46,7 +46,7 @@ test('the canary runs one build and each audit exactly once', () => {
 test('canary preserves formatting, lint, types and coverage checks', () => {
   const tasks = commands('canary:check')
   assert.ok(tasks.includes('oxfmt --check .'))
-  assert.ok(tasks.includes('oxlint'))
+  assert.ok(tasks.some((task) => /^oxlint\b/.test(task)))
   assert.ok(tasks.includes('astro check'))
   assert.ok(tasks.includes('bun test --coverage --dom --isolate --max-concurrency=1'))
 })
