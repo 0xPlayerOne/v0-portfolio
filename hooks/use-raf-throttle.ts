@@ -25,13 +25,17 @@ export function useRafThrottle(callback: () => void): () => void {
     }
     if (rafIdRef.current !== null) return
 
-    let frameCompletedSynchronously = false
+    // Track whether the RAF callback fires before this line executes
+    // (e.g. when requestAnimationFrame is stubbed to run synchronously in tests).
+    // If it fires synchronously, the callback already cleared the ref and we
+    // must not overwrite it with the new frame ID.
+    let synced = false
     const frameId = window.requestAnimationFrame(() => {
-      frameCompletedSynchronously = true
+      synced = true
       rafIdRef.current = null
       callbackRef.current()
     })
-    if (!frameCompletedSynchronously) {
+    if (!synced) {
       rafIdRef.current = frameId
     }
   }, [])
