@@ -73,6 +73,20 @@ describe('portfolio sections', () => {
     await waitFor(() => expect(fetchProjects).toHaveBeenCalledTimes(1))
   })
 
+  it('shows error state when projects API fails', async () => {
+    const failingFetch = mock(async () => new Response(null, { status: 500 }))
+    globalThis.fetch = failingFetch as unknown as typeof fetch
+
+    const { ProjectsSection } = await import('@/views/projects-section')
+    render(<ProjectsSection initialProjects={[project]} />)
+
+    fireEvent.click(screen.getByRole('button'))
+    await waitFor(() =>
+      expect(screen.getByText('Failed to load projects - Showing fallback projects')).not.toBeNull()
+    )
+    expect(failingFetch).toHaveBeenCalledTimes(1)
+  })
+
   it('uses CSS viewport sizing without a resize listener', async () => {
     render(
       <Section id="resizable">
