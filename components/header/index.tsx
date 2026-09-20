@@ -36,16 +36,12 @@ export function PongHeader() {
         <div className="flex-grow">
           <RetroCanvas navbarHeight={NAVBAR_HEIGHT} />
         </div>
-        {/* Use opacity to manage default navbar visibility to maintain layout space */}
+        {/* Keep the in-flow space while avoiding a duplicate, focusable navbar. */}
         <div
           className={cn('h-(--nav-h)', isSticky ? 'opacity-0' : 'opacity-100')}
           style={{ '--nav-h': `${NAVBAR_HEIGHT}px` } as CSSProperties}
         >
-          <RetroNavbar
-            height={NAVBAR_HEIGHT}
-            isSticky={false}
-            activeSection={activeSectionString}
-          />
+          {!isSticky && <RetroNavbar height={NAVBAR_HEIGHT} activeSection={activeSectionString} />}
         </div>
       </header>
 

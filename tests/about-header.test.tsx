@@ -95,10 +95,10 @@ describe('PongHeader', () => {
 
     const skills = screen.getByRole('button', { name: 'SKILLS' })
     expect(skills.style.borderColor).not.toBe('transparent')
+    expect(skills.getAttribute('aria-current')).toBe('location')
     const about = screen.getByRole('button', { name: 'ABOUT' })
-    fireEvent.mouseEnter(about)
-    expect(about.style.color).not.toBe('')
-    fireEvent.mouseLeave(about)
+    expect(about.getAttribute('aria-current')).toBeNull()
+    expect(about.className).toContain('hover:text-nav-hover')
     fireEvent.click(about)
     expect(smoothScrollToSection).toHaveBeenCalledWith('about', 100)
   })
@@ -115,7 +115,7 @@ describe('PongHeader', () => {
     act(() => {
       scrollSpyOptions?.onScroll?.()
     })
-    await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(2))
+    await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(1))
 
     Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 })
     fireEvent.scroll(window)
@@ -141,6 +141,6 @@ describe('PongHeader', () => {
       scrollSpyOptions?.onScroll?.()
     })
 
-    await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(2))
+    await waitFor(() => expect(screen.getAllByRole('navigation')).toHaveLength(1))
   })
 })
