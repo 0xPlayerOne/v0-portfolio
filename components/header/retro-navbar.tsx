@@ -9,10 +9,8 @@ interface RetroNavbarProps {
   activeSection?: string
 }
 
-// Memoized NavItem — hover is handled via direct DOM mutation (no React
-// state) so hovering any of the 4 items never re-renders the navbar or its
-// siblings. This replaces the previous `hoveredItem` useState which tore down
-// and recreated handlers on every enter/leave.
+// Memoized NavItem — hover styling stays in CSS so pointer movement never
+// creates React work or mutates DOM styles imperatively.
 const NavItem = memo(function NavItem({
   item,
   isActive,
@@ -26,24 +24,16 @@ const NavItem = memo(function NavItem({
     smoothScrollToSection(item.id, height)
   }, [item.id, height])
 
-  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.color = 'var(--color-nav-hover)'
-  }, [])
-
-  const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.color = 'var(--color-nav-text)'
-  }, [])
-
   return (
     <li className="flex-shrink-0">
       <button
+        type="button"
         onClick={handleClick}
         className={cn(
-          'nav-link font-pixel m-0 block border-b border-solid px-1 py-2.5 align-baseline leading-none whitespace-nowrap transition-colors sm:px-2',
+          'nav-link font-pixel m-0 block border-b border-solid px-1 py-2.5 align-baseline leading-none whitespace-nowrap transition-colors hover:text-nav-hover sm:px-2',
           isActive ? 'border-nav-border' : 'border-transparent'
         )}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        aria-current={isActive ? 'location' : undefined}
       >
         {item.label}
       </button>
@@ -59,6 +49,7 @@ export const RetroNavbar = memo(function RetroNavbar({
 }: RetroNavbarProps) {
   return (
     <nav
+      aria-label="Primary navigation"
       className={cn(
         'surface-nav mt-px flex h-(--nav-h) items-center border-0',
         isSticky ? 'nav-blur bg-nav-bg-f8' : 'bg-nav-bg'
