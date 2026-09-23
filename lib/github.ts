@@ -48,9 +48,7 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
   // Fetch languages for each repo
   const reposWithLanguages = await Promise.all(
     selectedRepos.map(async (repo) => {
-      const urlParts = repo.url.split('/')
-      const owner = urlParts[urlParts.length - 2]
-      const repoName = urlParts[urlParts.length - 1]
+      const { owner, repoName } = parseRepoUrl(repo.url)
       let languages = await fetchRepoLanguages(owner, repoName)
 
       // If languages fetch failed and this is a fallback project, use fallback languages
@@ -181,6 +179,17 @@ async function fetchRepoLanguages(
   } catch (error) {
     console.error(`Error fetching languages for ${owner}/${repoName}:`, error)
     return []
+  }
+}
+
+function parseRepoUrl(url: string): { owner: string; repoName: string } {
+  const parts = url
+    .replace(/^https?:\/\/(www\.)?/, '')
+    .replace(/\/$/, '')
+    .split('/')
+  return {
+    owner: parts[parts.length - 2] ?? '',
+    repoName: parts[parts.length - 1] ?? '',
   }
 }
 
