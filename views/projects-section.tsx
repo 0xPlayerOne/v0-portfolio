@@ -71,7 +71,7 @@ export function ProjectsSection({ initialProjects }: ProjectsSectionProps) {
       {error && (
         <div className="mb-6 text-center">
           <Typography variant="body2" color="destructive">
-            {error} - Showing fallback projects
+            {error} — showing last available data
           </Typography>
         </div>
       )}

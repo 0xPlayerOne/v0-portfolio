@@ -82,7 +82,9 @@ describe('portfolio sections', () => {
 
     fireEvent.click(screen.getByRole('button'))
     await waitFor(() =>
-      expect(screen.getByText('Failed to load projects - Showing fallback projects')).not.toBeNull()
+      expect(
+        screen.getByText('Failed to load projects — showing last available data')
+      ).not.toBeNull()
     )
     expect(failingFetch).toHaveBeenCalledTimes(1)
   })

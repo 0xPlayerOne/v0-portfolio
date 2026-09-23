@@ -15,6 +15,12 @@ const SKILL_ICONS = {
   Product: Palette,
 } as const
 
+// Precomputed on module scope — SKILLS_DATA is a frozen const, so these
+// values never change at runtime and need not be recalculated per render.
+const SKILL_AVG_LEVELS = SKILLS_DATA.map((group) =>
+  Math.round(group.skills.reduce((sum, skill) => sum + skill.level, 0) / group.skills.length)
+)
+
 export function SkillsSection() {
   return (
     <Section id="skills">
@@ -23,12 +29,8 @@ export function SkillsSection() {
       </Typography>
       <div className="mx-auto mt-8 max-w-6xl">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
-          {SKILLS_DATA.map((skillGroup) => {
+          {SKILLS_DATA.map((skillGroup, index) => {
             const IconComponent = SKILL_ICONS[skillGroup.category as keyof typeof SKILL_ICONS]
-            const avgLevel = Math.round(
-              skillGroup.skills.reduce((sum, skill) => sum + skill.level, 0) /
-                skillGroup.skills.length
-            )
 
             return (
               <Card
@@ -88,7 +90,7 @@ export function SkillsSection() {
                       <span className="text-site-text">{skillGroup.skills.length} core skills</span>
                       <span className="bg-site-btn-20 rounded px-2 py-1 font-mono">
                         <Typography variant="caption" color="textSecondary">
-                          LVL {avgLevel}
+                          LVL {SKILL_AVG_LEVELS[index]}
                         </Typography>
                       </span>
                     </div>
