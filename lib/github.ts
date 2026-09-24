@@ -45,13 +45,15 @@ export async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
     ...filteredPopularRepos.slice(0, neededPopular),
   ].slice(0, MAX_PROJECTS)
 
-  // Fetch languages for each repo
+  // Fetch languages for each repo. Fallback projects already carry curated
+  // language data — only fall back to it when the live fetch returns nothing
+  // (rate limit, 5xx, network error), so successful live responses still
+  // surface real language percentages.
   const reposWithLanguages = await Promise.all(
     selectedRepos.map(async (repo) => {
       const { owner, repoName } = parseRepoUrl(repo.url)
       let languages = await fetchRepoLanguages(owner, repoName)
 
-      // If languages fetch failed and this is a fallback project, use fallback languages
       if (languages.length === 0) {
         const fallbackProject = FALLBACK_PROJECT_MAP.get(repo.url)
         if (fallbackProject) {
