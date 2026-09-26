@@ -37,7 +37,7 @@ performance_runner: ubuntu-latest
 performance: auto
 performance_command:
 performance_profile:
-performance_budget_file: performance-package-budgets.json
+performance_budget_file: performance-budgets.json
 draft_protection: true
 required_capabilities:
 coverage_enforcement: auto
