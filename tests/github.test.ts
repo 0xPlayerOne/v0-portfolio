@@ -309,6 +309,37 @@ describe('GitHub project loading', () => {
     expect(console.warn).toHaveBeenCalled()
   })
 
+  it('returns empty languages on a non-OK non-403 languages response', async () => {
+    const fetchMock = mock(async (input: string | URL | Request) => {
+      const url = String(input)
+
+      if (url.includes('/users/0xPlayerOne/repos')) {
+        return jsonResponse(
+          [
+            githubRepo('server-error-project', {
+              description: 'A project without fallback',
+              html_url: 'https://github.com/SomeOrg/server-error-project',
+            }),
+          ],
+          200
+        )
+      }
+      if (url.endsWith('/languages')) {
+        return jsonResponse({}, 500)
+      }
+      return jsonResponse({}, 403)
+    })
+    globalThis.fetch = fetchMock as any
+
+    const projects = await fetchPinnedRepos()
+
+    const erroredProject = projects.find((project) => project.title === 'Server Error Project')
+    expect(erroredProject?.languages).toHaveLength(0)
+    expect(console.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Languages fetch failed for SomeOrg/server-error-project: 500')
+    )
+  })
+
   it('returns the curated fallback list when every API request throws', async () => {
     const fetchMock = mock(async () => {
       throw new Error('network down')

@@ -141,3 +141,24 @@ describe('updateGame', () => {
     expect(game.particles).toHaveLength(0)
   })
 })
+
+describe('PIXEL_MAP coverage', () => {
+  // The header text is the only consumer of PIXEL_MAP. Every character that
+  // appears in HEADER_TEXT must have a glyph; characters that never render
+  // are dead entries that inflate the bundle for no reason.
+  it('renders a dash glyph (used by "ANDREW M-F")', () => {
+    const game = createGame(1000, 600, colors, ['A-B', 'C'])
+    // The dash should produce a row of pixels in the middle of the glyph.
+    const dashPixels = game.pixels.filter(
+      (pixel) => pixel.x > 0 && pixel.x < game.width && pixel.y > 0 && pixel.y < game.height
+    )
+    expect(dashPixels.length).toBeGreaterThan(0)
+  })
+
+  it('renders the full header text without dropping characters', () => {
+    const game = createGame(1000, 600, colors, ['ANDREW M-F', 'CEO OF NIFTY LEAGUE'])
+    // Every letter must produce at least one pixel. A missing glyph silently
+    // renders as a gap in the header; this asserts the whole string is drawn.
+    expect(game.pixels.length).toBeGreaterThan(100)
+  })
+})

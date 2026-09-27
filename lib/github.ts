@@ -163,6 +163,7 @@ async function fetchRepoLanguages(
     }
 
     if (!response.ok) {
+      console.warn(`Languages fetch failed for ${owner}/${repoName}: ${response.status}`)
       return []
     }
 
