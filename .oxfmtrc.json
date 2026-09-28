@@ -17,7 +17,7 @@
     "bun.lock",
     "dist/**",
     ".astro/**",
-    ".worker-build/**",
+    ".cloudflare/output/**",
     "artifacts/**"
   ]
 }

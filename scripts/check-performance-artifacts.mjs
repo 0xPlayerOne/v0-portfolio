@@ -14,7 +14,7 @@ async function filesUnder(directory) {
   return groups.flat()
 }
 const assets = await filesUnder('dist')
-const worker = await filesUnder('.worker-build')
+const worker = await filesUnder('.cloudflare/output/v0/workers/default/bundle')
 const sum = (files) => files.reduce((total, file) => total + file.size, 0)
 const measurements = {
   outputBytes: sum(assets) + sum(worker),
