@@ -9,5 +9,5 @@
     "skipLibCheck": true
   },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", ".worker-build", "node_modules", "artifacts"]
+  "exclude": ["dist", ".cloudflare/output", "node_modules", "artifacts"]
 }

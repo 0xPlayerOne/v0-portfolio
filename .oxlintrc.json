@@ -44,7 +44,7 @@
     "public/**",
     "dist/**",
     ".astro/**",
-    ".worker-build/**",
+    ".cloudflare/output/**",
     "artifacts/**"
   ]
 }

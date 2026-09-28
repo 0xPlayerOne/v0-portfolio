@@ -24,7 +24,7 @@ test('Foundry discovers one self-contained deterministic artifact check', () => 
   assert.equal(builds(tasks), 1)
   assert.equal(artifacts(tasks), 1)
   assert.equal(audits(tasks), 0)
-  assert.ok(tasks.includes('wrangler deploy --dry-run --outdir .worker-build'))
+  assert.ok(tasks.includes('cf deploy --dry-run'))
   assert.ok(tasks.every((task) => !/lighthouse|playwright|bunx|npx/.test(task)))
 })
 
@@ -40,7 +40,7 @@ test('the canary runs one build and each audit exactly once', () => {
   assert.equal(builds(tasks), 1)
   assert.equal(artifacts(tasks), 1)
   assert.equal(audits(tasks), 1)
-  assert.ok(tasks.indexOf('astro build') < tasks.indexOf('bun scripts/audit-performance.mjs'))
+  assert.ok(tasks.indexOf('cf build') < tasks.indexOf('bun scripts/audit-performance.mjs'))
 })
 
 test('canary preserves formatting, lint, types and coverage checks', () => {
