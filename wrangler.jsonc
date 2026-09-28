@@ -1,0 +1,23 @@
+// Legacy config retained ONLY for the CI deploy pipeline: the reusable
+// code-foundry deploy workflow (cloudflare-deploy.yml@v1.30.0) runs
+// `wrangler versions upload` / `wrangler deploy`, which read this file.
+// The cf CLI reads cloudflare.config.ts instead.
+// Remove this file once the shared workflow deploys via `cf deploy`.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "v0-portfolio",
+  "account_id": "d825b2cc4fce823f4243ca8617d1ef9b",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-08-29",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/projects", "/api/projects/*"],
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+  },
+}
