@@ -13,7 +13,7 @@ function commands(name, parents = []) {
     return alias ? commands(alias[1], [...parents, name]) : [command]
   })
 }
-const builds = (tasks) => tasks.filter((command) => command === 'cf build').length
+const builds = (tasks) => tasks.filter((command) => command === 'astro build').length
 const artifacts = (tasks) =>
   tasks.filter((command) => command === 'bun scripts/check-performance-artifacts.mjs').length
 const audits = (tasks) =>

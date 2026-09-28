@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "bun run cloudflare:build && bun run performance:artifacts",
     "start": "cf dev",
-    "cloudflare:build": "cf build && cf deploy --dry-run",
+    "cloudflare:build": "astro build && cf-wrangler build && cf deploy --dry-run",
     "cloudflare:deploy": "cf deploy",
     "cloudflare:upload": "cf previews deploy",
     "cloudflare:preview": "cf dev",
