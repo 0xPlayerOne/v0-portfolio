@@ -88,6 +88,5 @@ eval-results/
 .worker-build/
 playwright-report/
 test-results/
-
 # Cloudflare cf CLI build output
 .cloudflare/
