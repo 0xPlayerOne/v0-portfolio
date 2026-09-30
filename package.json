@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "bun run cloudflare:build && bun run performance:artifacts",
-    "start": "wrangler dev --local",
-    "cloudflare:build": "astro build && wrangler deploy --dry-run --outdir .worker-build",
-    "cloudflare:deploy": "wrangler deploy",
-    "cloudflare:upload": "wrangler versions upload",
-    "cloudflare:preview": "wrangler dev --local",
+    "start": "cf dev",
+    "cloudflare:build": "astro build && cf-wrangler build && cf deploy --dry-run",
+    "cloudflare:deploy": "cf deploy",
+    "cloudflare:upload": "cf previews deploy",
+    "cloudflare:preview": "cf dev",
     "preview": "bun run cloudflare:build && bun run cloudflare:preview",
     "deploy": "bun run cloudflare:build && bun run cloudflare:deploy",
     "upload": "bun run cloudflare:build && bun run cloudflare:upload",
@@ -56,17 +56,16 @@
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "cf": "^1.0.0-beta.5",
     "happy-dom": "^20.14.5",
     "lint-staged": "^17.5.1",
     "oxfmt": "^0.68.0",
     "oxlint": "^1.83.0",
     "typescript": "^6.0.3",
-    "wrangler": "^4.135.0"
+    "wrangler": "^4.143.0"
   },
   "overrides": {
-    "js-yaml": "4.3.2",
-    "postcss": "8.5.28",
-    "sharp": "0.35.4"
+    "undici": "8.10.2"
   },
   "engines": {
     "node": "24.18.0"

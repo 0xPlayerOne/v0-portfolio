@@ -22,7 +22,16 @@ export async function startServer(cwd, port) {
   const url = `http://127.0.0.1:${port}/`
   const server = spawn(
     'bunx',
-    ['wrangler', 'dev', '--local', '--ip', '127.0.0.1', '--port', String(port)],
+    [
+      'wrangler',
+      'dev',
+      '--experimental-new-config',
+      '--local',
+      '--ip',
+      '127.0.0.1',
+      '--port',
+      String(port),
+    ],
     {
       cwd,
       env: { ...process.env, CI: 'true', WRANGLER_SEND_METRICS: 'false' },
