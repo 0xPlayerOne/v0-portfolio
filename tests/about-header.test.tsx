@@ -36,6 +36,9 @@ beforeEach(() => {
 })
 
 describe('AboutSection', () => {
+  // The first test in this file pays the cold import of the AboutSection view
+  // graph, which spiked past Bun's 5s default on a loaded runner; the tests
+  // themselves are synchronous and warm to ~150ms.
   it('renders overview values and drives their hover styles', () => {
     render(<AboutSection />)
 
@@ -57,7 +60,7 @@ describe('AboutSection', () => {
     expect(statCard.style.boxShadow).toContain('25px')
     fireEvent.mouseLeave(statCard)
     expect(statCard.style.boxShadow).toContain('10px')
-  })
+  }, 15000)
 
   it('switches to the journey timeline and back to the overview', () => {
     render(<AboutSection />)
@@ -76,7 +79,7 @@ describe('AboutSection', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Overview' }))
     expect(screen.getByText('Innovation')).not.toBeNull()
-  })
+  }, 15000)
 })
 
 describe('PongHeader', () => {

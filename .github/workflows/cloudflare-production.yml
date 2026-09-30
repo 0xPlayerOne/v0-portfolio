@@ -12,7 +12,7 @@ permissions:
 jobs:
   production:
     name: Cloudflare Production / v0-portfolio
-    uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.36.4
+    uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.38.1
     with:
       mode: production
       working-directory: .
