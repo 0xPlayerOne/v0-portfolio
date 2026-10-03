@@ -5,3 +5,10 @@ GHSA-5p4m-2wfm-xmqj
 # required by Tailwind; the fixed nanoid requires postcss 8.5.26+ which pins
 # the ecosystem. Revisit on the next postcss bump.
 GHSA-2v37-7h3g-55p8
+
+# http-cache-semantics advisory (GHSA-ch52-4w7c-c8xp, high): no patched
+# release exists as of 2026-10-03 - 4.2.0 is the newest npm version and the
+# advisory's patched field is null. Transitive through astro's dev server
+# cache handling; the site is statically deployed, so the proxy-cache
+# disclosure scenario does not apply. Revisit when >4.2.0 publishes.
+GHSA-ch52-4w7c-c8xp
