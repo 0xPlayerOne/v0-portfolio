@@ -39,7 +39,7 @@
     "astro": "^7.3.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.48.0",
+    "lucide-react": "^1.49.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwind-merge": "^3.7.0",
@@ -56,13 +56,13 @@
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "cf": "^1.0.0-beta.5",
+    "cf": "^1.0.0-beta.10",
     "happy-dom": "^20.14.5",
     "lint-staged": "^17.6.0",
-    "oxfmt": "^0.70.0",
-    "oxlint": "^1.85.0",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
     "typescript": "^6.0.3",
-    "wrangler": "^4.143.0"
+    "wrangler": "^4.145.0"
   },
   "overrides": {
     "http-cache-semantics": "^4.3.0",
