@@ -23,7 +23,7 @@ jobs:
     # CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID are mirrored as Dependabot
     # secrets, which restores preview deployments for them.
     if: github.event.pull_request.draft == false && github.actor != 'dependabot[bot]'
-    uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.44.3
+    uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.47.1
     with:
       mode: preview
       working-directory: .
