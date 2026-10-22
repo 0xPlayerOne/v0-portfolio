@@ -12,13 +12,14 @@ permissions:
 jobs:
   production:
     name: Cloudflare Production / v0-portfolio
-    uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.47.1
+    uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.48.4
     with:
       mode: production
+      deploy-tool: cf
       working-directory: .
       install-working-directory: .
       build-script: cloudflare:build
-      bun-version: 1.4.0
+      bun-version: 1.4.4
       environment: Production - v0-portfolio
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

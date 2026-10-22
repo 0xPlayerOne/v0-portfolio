@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
+import { chromium } from '@playwright/test'
 import budgets from '../performance-budgets.json' with { type: 'json' }
 import { checkMaximum, checkMinimum } from './performance-budget.mjs'
 
@@ -89,16 +90,22 @@ export function runsFrom(value = 3) {
 export async function measure(url, directory, label, iteration) {
   await mkdir(directory, { recursive: true })
   const path = resolve(directory, `${label}-${iteration}.json`)
-  await command('npx', [
-    '--yes',
-    'lighthouse@13.0.1',
-    url,
-    '--quiet',
-    '--chrome-flags=--headless=new --no-sandbox --disable-gpu',
-    '--only-categories=performance',
-    '--output=json',
-    `--output-path=${path}`,
-  ])
+  await command(
+    'npx',
+    [
+      '--yes',
+      'lighthouse@13.0.1',
+      url,
+      '--quiet',
+      '--chrome-flags=--headless=new --no-sandbox --disable-gpu',
+      '--only-categories=performance',
+      '--output=json',
+      `--output-path=${path}`,
+    ],
+    {
+      env: { ...process.env, CHROME_PATH: process.env.CHROME_PATH || chromium.executablePath() },
+    }
+  )
   const lhr = JSON.parse(await readFile(path, 'utf8'))
   if (lhr.runtimeError) throw new Error(`Lighthouse runtime error: ${lhr.runtimeError.message}`)
   const audits = lhr.audits

@@ -2,6 +2,7 @@ import { describe, expect, it, mock, beforeEach, afterEach } from 'bun:test'
 import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { chromium } from '@playwright/test'
 import { checkMaximum, checkMinimum } from '../scripts/performance-budget.mjs'
 
 function writeExecutable(directory, name, source) {
@@ -158,6 +159,7 @@ describe('measure', () => {
     const reportDir = mkdtempSync(join(tmpdir(), 'perf-lighthouse-report-'))
     const originalPath = process.env.PATH
     const originalMode = process.env.FAKE_LIGHTHOUSE_MODE
+    const originalChromePath = process.env.CHROME_PATH
     writeExecutable(
       binDir,
       'npx',
@@ -170,7 +172,7 @@ const lhr = process.env.FAKE_LIGHTHOUSE_MODE === 'runtime'
       fetchTime: '2026-09-22T07:00:00.000Z',
       lighthouseVersion: '13.0.1',
       userAgent: 'fixture lighthouse',
-      environment: { networkUserAgent: 'fixture browser' },
+      environment: { networkUserAgent: 'fixture browser', chromePath: process.env.CHROME_PATH },
       categories: { performance: { score: 0.95 } },
       audits: {
         'server-response-time': { numericValue: 120 },
@@ -191,6 +193,7 @@ writeFileSync(outputArg.slice('--output-path='.length), JSON.stringify(lhr))`
     )
     process.env.PATH = `${binDir}:${originalPath ?? ''}`
     delete process.env.FAKE_LIGHTHOUSE_MODE
+    delete process.env.CHROME_PATH
 
     try {
       const { measure } = await import('../scripts/performance-harness.mjs')
@@ -201,7 +204,7 @@ writeFileSync(outputArg.slice('--output-path='.length), JSON.stringify(lhr))`
         measuredAt: '2026-09-22T07:00:00.000Z',
         lighthouseVersion: '13.0.1',
         userAgent: 'fixture lighthouse',
-        environment: { networkUserAgent: 'fixture browser' },
+        environment: { networkUserAgent: 'fixture browser', chromePath: chromium.executablePath() },
         measurements: {
           performanceScore: 0.95,
           ttfbMs: 120,
@@ -213,6 +216,10 @@ writeFileSync(outputArg.slice('--output-path='.length), JSON.stringify(lhr))`
         },
       })
 
+      process.env.CHROME_PATH = '/fixture/chromium'
+      const custom = await measure('http://127.0.0.1:4317/', reportDir, 'fixture', 3)
+      expect(custom.environment.chromePath).toBe('/fixture/chromium')
+
       process.env.FAKE_LIGHTHOUSE_MODE = 'runtime'
       await expect(measure('http://127.0.0.1:4317/', reportDir, 'fixture', 2)).rejects.toThrow(
         'Lighthouse runtime error: fixture runtime failure'
@@ -221,6 +228,8 @@ writeFileSync(outputArg.slice('--output-path='.length), JSON.stringify(lhr))`
       process.env.PATH = originalPath
       if (originalMode === undefined) delete process.env.FAKE_LIGHTHOUSE_MODE
       else process.env.FAKE_LIGHTHOUSE_MODE = originalMode
+      if (originalChromePath === undefined) delete process.env.CHROME_PATH
+      else process.env.CHROME_PATH = originalChromePath
       rmSync(binDir, { recursive: true, force: true })
       rmSync(reportDir, { recursive: true, force: true })
     }
