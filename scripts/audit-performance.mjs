@@ -1,4 +1,5 @@
 import {
+  command,
   startServer,
   runsFrom,
   measure,
@@ -6,9 +7,17 @@ import {
   saveSummary,
   enforce,
 } from './performance-harness.mjs'
+import { fileURLToPath } from 'node:url'
 
 const directory = 'artifacts/performance/audit'
 const count = runsFrom(process.env.PERFORMANCE_RUNS || 3)
+if (!process.env.CHROME_PATH) {
+  await command(process.execPath, [
+    fileURLToPath(import.meta.resolve('@playwright/test/cli')),
+    'install',
+    'chromium',
+  ])
+}
 const server = await startServer(process.cwd(), Number(process.env.PERFORMANCE_PORT || 4317))
 try {
   const samples = []
