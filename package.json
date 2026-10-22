@@ -18,13 +18,13 @@
     "lint": "oxlint --deny-warnings",
     "fmt": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "typecheck": "astro check",
+    "typecheck": "bun check --no-script && astro check",
     "test": "bun test --dom --isolate",
     "test:unit": "bun run test:coverage",
     "test:integration": "bun run cloudflare:build && bun run performance:audit",
     "test:coverage": "bun test --coverage --dom --isolate --max-concurrency=1",
     "test:watch": "bun test --dom --watch",
-    "type:check": "astro check",
+    "type:check": "bun check --no-script && astro check",
     "performance:check": "bun run build",
     "performance:artifacts": "bun scripts/check-performance-artifacts.mjs",
     "performance:audit": "bun scripts/audit-performance.mjs",
@@ -74,5 +74,5 @@
   "engines": {
     "node": "24.18.0"
   },
-  "packageManager": "bun@1.4.0"
+  "packageManager": "bun@1.4.4"
 }

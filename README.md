@@ -4,7 +4,7 @@ Personal portfolio at [andrewmf.com](https://andrewmf.com), built with Astro, Re
 
 ## Development
 
-Use the existing toolchain: Node 24 and Bun 1.4.0 (see `.mise.toml`).
+Use the existing toolchain: Node 24 and Bun 1.4.4 (see `.mise.toml`).
 
 ```sh
 bun install --frozen-lockfile
