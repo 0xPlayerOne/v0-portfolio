@@ -15,6 +15,7 @@ jobs:
     uses: 0xPlayerOne/code-foundry/.github/workflows/cloudflare-deploy.yml@v1.48.4
     with:
       mode: production
+      deploy-tool: cf
       working-directory: .
       install-working-directory: .
       build-script: cloudflare:build
