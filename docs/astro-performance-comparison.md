@@ -29,7 +29,7 @@ Next.js performance scores were 87, 97, and 99; Astro scores were 99, 100, and 9
 
 The one-time workflow retained all six raw Lighthouse reports, sample environment information, and JSON/Markdown summaries in its artifact. Build commands took 19.857 seconds for Next/OpenNext and 2.882 seconds for Astro/Worker dry-run in this one run; these one-off timings are informational rather than a controlled build-speed benchmark.
 
-The initial artifact's `metadata.node` field came from Bun's Node-compatibility `process.version`, not the actual Node executable. The harness now queries `node --version` explicitly. This reporting correction does not alter the Lighthouse measurements. That one-time workflow provisioned Node 24 and Bun 1.4.0.
+The harness queries `node --version` explicitly for the reported Node version.
 
 ## Functional validation
 

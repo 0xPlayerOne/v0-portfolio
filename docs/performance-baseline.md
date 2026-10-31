@@ -2,7 +2,7 @@
 
 This document defines the reproducible release baseline for the Next.js and
 OpenNext/Cloudflare application. It was established on 2026-09-08 from commit
-`02092d5` using Bun 1.4.0, Next.js 16.3.4, `@opennextjs/cloudflare` 1.20.6,
+`02092d5` using Bun 1.4.4, Next.js 16.3.4, `@opennextjs/cloudflare` 1.20.6,
 and Lighthouse 13.0.1.
 
 ## Release budgets
